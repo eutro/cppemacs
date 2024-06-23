@@ -36,6 +36,15 @@
 
 namespace cppemacs {
 
+/** \defgroup utilities
+ *
+ * @brief Utility types built on top of the core cppemacs API.
+ */
+
+/** \addtogroup utilities
+ * @{
+ */
+
 /** An environment that interns symbols on the C++-side. */
 struct intern_env : public env {
   template <typename...Args>
@@ -84,8 +93,8 @@ public:
 
   /** Get a cell from a value. */
   cell operator->*(value val) const noexcept { return env::operator->*(val); }
-  template <typename T> auto operator->*(T &&arg) const
-  { return *this->*to_emacs(expected_type_t<std::decay_t<T>>{}, *this, std::forward<T>(arg)); }
+  template <typename T> cell operator->*(T &&arg) const
+  { return *this->*to_emacs(expected_type_t<detail::decay_t<T>>{}, *this, std::forward<T>(arg)); }
   cell operator->*(const char *name) { return *this->*intern(name); }
 };
 
@@ -147,8 +156,8 @@ struct vec_cell : cell {
 /** Type-safe Emacs `user_ptr` representation. */
 template <typename T, typename Deleter = std::default_delete<T>>
 struct user_ptr {
-  static_assert(!std::is_reference_v<T>, "Must not be a reference type");
-  static_assert(std::is_default_constructible_v<Deleter>, "Deleter must be default-constructible");
+  static_assert(!std::is_reference<T>::value, "Must not be a reference type");
+  static_assert(std::is_default_constructible<Deleter>::value, "Deleter must be default-constructible");
   T *ptr;
   user_ptr(T *ptr) noexcept: ptr(ptr) {}
 
@@ -163,26 +172,24 @@ struct user_ptr {
       // TODO: log warnings?
     }
   }
+
+  /** Convert a `user_ptr` to Emacs, with the GC becoming responsible for the object. */
+  friend value to_emacs(expected_type_t<user_ptr>, env nv, const user_ptr &ptr)
+  { return nv.make_user_ptr(user_ptr<T, Deleter>::fin, reinterpret_cast<void*>(ptr.ptr)); }
+
+  /** Convert a `user_ptr` from Emacs, with the GC still responsible for the object. */
+  friend user_ptr from_emacs(expected_type_t<user_ptr>, env nv, value val) {
+    emacs_finalizer fin = nv.get_user_finalizer(val);
+    nv.maybe_non_local_exit();
+    if (fin != user_ptr<T, Deleter>::fin) {
+      throw std::runtime_error("User ptr type mismatch");
+    }
+    return user_ptr<T, Deleter>(reinterpret_cast<T*>(nv.get_user_ptr(val)));
+  }
 };
 
 template <typename T, typename...Args> inline user_ptr<T>
 make_user_ptr(Args &&...args) { return user_ptr<T>(new T(std::forward<Args>(args)...)); }
-
-/** Convert a `user_ptr` to Emacs, with the GC becoming responsible for the object. */
-template <typename T, typename Deleter>
-inline value to_emacs(expected_type_t<user_ptr<T, Deleter>>, env nv, const user_ptr<T, Deleter> &ptr)
-{ return nv.make_user_ptr(user_ptr<T, Deleter>::fin, reinterpret_cast<void*>(ptr.ptr)); }
-
-/** Convert a `user_ptr` from Emacs, with the GC still responsible for the object. */
-template <typename T, typename Deleter>
-inline user_ptr<T, Deleter> from_emacs(expected_type_t<user_ptr<T, Deleter>>, env nv, value val) {
-  emacs_finalizer fin = nv.get_user_finalizer(val);
-  nv.maybe_non_local_exit();
-  if (fin != user_ptr<T, Deleter>::fin) {
-    throw std::runtime_error("User ptr type mismatch");
-  }
-  return user_ptr<T, Deleter>(reinterpret_cast<T*>(nv.get_user_ptr(val)));
-}
 
 /**
  * Function representation, for storing C++ functions in Emacs
@@ -206,7 +213,7 @@ struct user_function_repr {
     // instance of F precisely until the finalizer is created,
     // at which point it is owned by the GC.
 
-    std::unique_ptr<F> fptr = std::make_unique(std::move(f));
+    std::unique_ptr<F> fptr(new F(std::move(f)));
     void *fptr_data = reinterpret_cast<void *>(fptr.get());
     emacs_finalizer fin = [](void *data) noexcept { delete reinterpret_cast<F *>(data); };
 
@@ -241,6 +248,15 @@ struct user_function_repr {
   }
 };
 
+namespace detail {
+template <typename T>
+struct can_stuff_into_void_ptr : std::integral_constant<bool, (
+  sizeof(T) <= sizeof(void*)
+  && std::is_trivially_copyable<T>::value
+  && std::is_trivially_destructible<T>::value
+)> {};
+}
+
 /**
  * Function representation, for storing C++ functions in Emacs
  * closures.
@@ -250,11 +266,7 @@ struct user_function_repr {
  * and provided that the type is trivially destructible and copyable.
  */
 template <typename F>
-struct user_function_repr<
-  F, std::enable_if_t<
-       sizeof(F) <= sizeof(void*)
-       && std::is_trivially_copyable_v<F>
-       && std::is_trivially_destructible_v<F>>>
+struct user_function_repr<F, detail::enable_if_t<detail::can_stuff_into_void_ptr<F>::value>>
 {
   static F &extract(void *&ptr) { return reinterpret_cast<F &>(ptr); }
   static value make(
@@ -268,9 +280,11 @@ struct user_function_repr<
 
 template <typename F>
 struct user_function {
-  static_assert(!std::is_reference_v<F>, "Must not be a reference type");
+  static_assert(!std::is_reference<F>::value, "Must not be a reference type");
+#ifdef __cpp_lib_is_invocable
   static_assert(std::is_nothrow_invocable_r_v<value, F&, emacs_env *, ptrdiff_t, value *>,
                 "Must be no-throw invocable with Emacs function arguments");
+#endif
 
   ptrdiff_t min_arity, max_arity;
   const char *doc;
@@ -300,22 +314,37 @@ struct user_function {
 };
 
 /** Make a user function with the given minimum and maximum arity. */
-template <typename F>
-auto make_user_function(
+template <typename F> auto make_user_function(
   ptrdiff_t min_arity, ptrdiff_t max_arity,
-  const char *doc, F &&f) {
-  return user_function<std::remove_reference_t<F>>(
+  const char *doc, F &&f
+) -> user_function<detail::remove_reference_t<F>> {
+  return user_function<detail::remove_reference_t<F>>(
     min_arity, max_arity, doc,
     std::forward<F>(f));
 }
 
-#if defined(__cpp_lib_integer_sequence) // required for spreader
-
 namespace detail {
+
+#if defined(__cpp_lib_integer_sequence)
+template <size_t...Idx> using index_sequence = std::index_sequence<Idx...>;
+template <size_t N> using make_index_sequence = std::make_index_sequence<N>;
+#else
+template <size_t...Idx> struct index_sequence {};
+
+template <size_t N, typename> struct index_sequence_snoc;
+template <size_t N, size_t...Idx> struct index_sequence_snoc<N, index_sequence<Idx...>>
+{ using type = index_sequence<Idx..., N>; };
+template <size_t N> struct make_index_sequence_ :
+    index_sequence_snoc<N, typename make_index_sequence_<N - 1>::type> {};
+template <> struct make_index_sequence_<0> { using type = index_sequence<>; };
+
+template <size_t N> using make_index_sequence = typename make_index_sequence_<N>::type;
+#endif
+
 struct unprovided_value_t {
   template <typename T> operator T() const {
     // explicitly no SFINAE
-    static_assert(std::is_default_constructible_v<T>, "Optional parameter must be default constructible");
+    static_assert(std::is_default_constructible<T>::value, "Optional parameter must be default constructible");
     return T();
   }
 };
@@ -326,45 +355,51 @@ struct spread_invoker {
   template <typename Arg>
   spread_invoker(Arg &&arg): f(std::forward<Arg>(arg)) {}
 
-  template <bool IsProvided> std::enable_if_t<IsProvided, cell>
+private:
+  template <bool IsProvided> detail::enable_if_t<IsProvided, cell>
   arg_or_default(env nv, value *args, size_t idx) noexcept(false) { return nv->*args[idx]; }
-  template <bool IsProvided> std::enable_if_t<!IsProvided, unprovided_value_t>
+  template <bool IsProvided> detail::enable_if_t<!IsProvided, unprovided_value_t>
   arg_or_default(env, value *, size_t) noexcept { return {}; }
 
-  template <size_t NArgs, size_t...Idx, bool IsVar = IsVariadic> std::enable_if_t<!IsVar, value>
-  invoke_with_arity(std::index_sequence<Idx...>, env nv, value *args) noexcept(false)
+  template <size_t NArgs, size_t...Idx, bool IsVar = IsVariadic> detail::enable_if_t<!IsVar, value>
+  invoke_with_arity(detail::index_sequence<Idx...>, env nv, value *args) noexcept(false)
   { return nv->*f(nv, arg_or_default<Idx < NArgs>(nv, args, Idx)...); }
-  template <size_t...Idx, bool IsVar = IsVariadic> std::enable_if_t<!IsVar, value>
-  invoke_variadic(std::index_sequence<Idx...>, env, ptrdiff_t, value *) noexcept(false) { return {}; }
+  template <size_t...Idx, bool IsVar = IsVariadic> detail::enable_if_t<!IsVar, value>
+  invoke_variadic(detail::index_sequence<Idx...>, env, ptrdiff_t, value *) noexcept(false) { return {}; }
 
-  template <size_t NArgs, size_t...Idx, bool IsVar = IsVariadic> std::enable_if_t<IsVar, value>
-  invoke_with_arity(std::index_sequence<Idx...>, env nv, value *args) noexcept(false)
+  template <size_t NArgs, size_t...Idx, bool IsVar = IsVariadic> detail::enable_if_t<IsVar, value>
+  invoke_with_arity(detail::index_sequence<Idx...>, env nv, value *args) noexcept(false)
   { return nv->*f(nv, arg_or_default<Idx < NArgs>(nv, args, Idx)..., {nullptr, 0}); }
-  template <size_t...Idx, bool IsVar = IsVariadic> std::enable_if_t<IsVar, value>
-  invoke_variadic(std::index_sequence<Idx...>, env nv, ptrdiff_t nargs, value *args) noexcept(false)
+  template <size_t...Idx, bool IsVar = IsVariadic> detail::enable_if_t<IsVar, value>
+  invoke_variadic(detail::index_sequence<Idx...>, env nv, ptrdiff_t nargs, value *args) noexcept(false)
   { return nv->*f(nv, arg_or_default<true>(nv, args, Idx)..., {args + MaxArity, nargs - MaxArity}); }
 
   template <size_t...OffIdx>
   value invoke(
-    std::index_sequence<OffIdx...>,
+    detail::index_sequence<OffIdx...>,
     env nv, ptrdiff_t nargs, value *args
   ) noexcept(false) {
-    value ret;
-    using arity_seq = std::make_index_sequence<MaxArity>;
-    if (!(((nargs == MinArity + OffIdx &&
-           (ret = invoke_with_arity<MinArity + OffIdx>(arity_seq(), nv, args), true))
-          || ...)
-          || (IsVariadic && (ret = invoke_variadic(arity_seq(), nv, nargs, args), true)))) {
+    using arity_seq = detail::make_index_sequence<MaxArity>;
+    if (IsVariadic && nargs > MaxArity) {
+      return invoke_variadic(arity_seq(), nv, nargs, args);
+    } else if (nargs < MinArity || nargs > MaxArity) {
       // should have been caught by Emacs
       throw std::runtime_error("Bad arity");
+    } else {
+      static constexpr value (*Vt[])(spread_invoker *, env, value*) = {
+        ([](spread_invoker *self, env nv, value *args)
+        { return self->invoke_with_arity<MinArity + OffIdx>(arity_seq(), nv, args); })
+        ...
+      };
+      return Vt[nargs](this, nv, args);
     }
-    return ret;
   }
 
+public:
   value operator()(env nv, ptrdiff_t nargs, value *args) noexcept {
     return nv.run_catching([&]() noexcept(false) {
       return invoke(
-        std::make_index_sequence<MaxArity - MinArity + 1>(),
+        detail::make_index_sequence<MaxArity - MinArity + 1>(),
         nv, nargs, args);
     });
   }
@@ -385,20 +420,21 @@ struct spread_invoker {
  */
 template <ptrdiff_t MaxArity, bool IsVariadic = false, ptrdiff_t MinArity = MaxArity, typename F>
 auto make_spreader_function(
-  const char *doc, F &&f) {
+  const char *doc, F &&f
+) -> user_function<detail::spread_invoker<MinArity, MaxArity, IsVariadic, detail::remove_reference_t<F>>> {
   static_assert(MaxArity >= MinArity, "MaxArity must be greater than or equal to MinArity");
   static_assert(MinArity >= 0, "MinArity must be nonnegative");
   return make_user_function(
     MinArity, IsVariadic ? emacs_variadic_function : MaxArity, doc,
     detail::spread_invoker<MinArity, MaxArity, IsVariadic,
-    std::remove_reference_t<F>>(std::forward<F>(f)));
+    detail::remove_reference_t<F>>(std::forward<F>(f)));
 }
-
-#endif
 
 inline std::ostream &operator<<(std::ostream &os, const cell &v) {
   return os << (v->*"format")(std::string("%s"), v).unwrap<std::string>();
 }
+
+/** @} */
 
 }
 

@@ -31,6 +31,29 @@
 
 namespace cppemacs {
 
+namespace detail {
+template <typename T>
+struct is_integral_smaller_than_intmax : std::integral_constant<bool, (
+  std::is_integral<T>::value &&
+  (std::numeric_limits<T>::digits <= std::numeric_limits<intmax_t>::digits)
+)> {};
+
+static constexpr ptrdiff_t uintmax_limb_count =
+  1 + // ceil division
+  (std::numeric_limits<emacs_limb_t>::digits - 1) /
+  std::numeric_limits<uintmax_t>::digits;
+}
+
+/** \defgroup conversions
+ *
+ * @brief Conversion functions between C++ and Emacs values.
+ */
+
+/**
+ * \addtogroup conversions
+ * @{
+ */
+
 /** Convert a string constant to a symbol. */
 inline value to_emacs(expected_type_t<const char *>, env nv, const char *name)
 { return nv.intern(name); }
@@ -62,15 +85,9 @@ inline value to_emacs(expected_type_t<bool>, env nv, bool x) { return nv.intern(
 inline bool from_emacs(expected_type_t<bool>, env nv, value x) { return nv.is_not_nil(x); }
 
 /** Convert a C++ integer to an Emacs integer. */
-template <typename T> inline std::enable_if_t<
-  std::is_integral_v<T> && (std::numeric_limits<T>::digits <= std::numeric_limits<intmax_t>::digits),
-  value> to_emacs(expected_type_t<T>, env nv, T n)
+template <typename Int, detail::enable_if_t<detail::is_integral_smaller_than_intmax<Int>::value, bool> = true>
+value to_emacs(expected_type_t<Int>, env nv, Int n)
 { return nv.make_integer(static_cast<intmax_t>(n)); }
-
-static constexpr ptrdiff_t uintmax_limb_count =
-      1 + // ceil division
-      (std::numeric_limits<emacs_limb_t>::digits - 1) /
-      std::numeric_limits<uintmax_t>::digits;
 
 #if (EMACS_MAJOR_VERSION >= 27) && defined(__cpp_if_constexpr)
 #define CPPEMACS_HAS_UINTMAX_CONVERSION 1
@@ -78,6 +95,7 @@ static constexpr ptrdiff_t uintmax_limb_count =
 /** Convert a C++ integer to an Emacs integer. */
 inline value to_emacs(expected_type_t<uintmax_t>, env nv, uintmax_t n) {
   CPPEMACS_CHECK_VERSION(nv, 27);
+  using namespace detail;
   // uintmax_t may overflow intmax_t (bad), so fallback to the bigint version
   if (n > static_cast<uintmax_t>(std::numeric_limits<intmax_t>::max())) {
     emacs_limb_t magnitude[uintmax_limb_count] = {0};
@@ -97,22 +115,21 @@ inline value to_emacs(expected_type_t<uintmax_t>, env nv, uintmax_t n) {
 #endif
 
 /** Convert an Emacs integer to a C++ integer. */
-template <typename T> inline std::enable_if_t<
-  std::is_integral_v<T> && (std::numeric_limits<T>::digits <= std::numeric_limits<intmax_t>::digits),
-  T>
-from_emacs(expected_type_t<T>, env nv, value val) {
+template <typename Int, detail::enable_if_t<detail::is_integral_smaller_than_intmax<Int>::value, bool> = true>
+inline Int from_emacs(expected_type_t<Int>, env nv, value val) {
   intmax_t int_val = nv.extract_integer(val);
   nv.maybe_non_local_exit();
-  if (int_val < static_cast<intmax_t>(std::numeric_limits<T>::min())
-      || int_val > static_cast<intmax_t>(std::numeric_limits<T>::max())) {
+  if (int_val < static_cast<intmax_t>(std::numeric_limits<Int>::min())
+      || int_val > static_cast<intmax_t>(std::numeric_limits<Int>::max())) {
     throw std::runtime_error("Integer out of range");
   }
-  return static_cast<T>(int_val);
+  return static_cast<Int>(int_val);
 }
 
 #ifdef CPPEMACS_HAS_UINTMAX_CONVERSION
 inline uintmax_t from_emacs(expected_type_t<uintmax_t>, env nv, value val) {
   CPPEMACS_CHECK_VERSION(nv, 27);
+  using namespace detail;
   // always use bigint conversion
   int sign = 0;
   ptrdiff_t count = uintmax_limb_count;
@@ -142,14 +159,14 @@ inline uintmax_t from_emacs(expected_type_t<uintmax_t>, env nv, value val) {
 #endif
 
 /** Convert a C++ float to an Emacs float. */
-template <typename T> inline std::enable_if_t<std::is_floating_point_v<T>, value>
-to_emacs(expected_type_t<T>, env nv, T d)
-{ return nv.make_float(d); }
+template <typename Float, detail::enable_if_t<std::is_floating_point<Float>::value, bool> = true>
+inline value to_emacs(expected_type_t<Float>, env nv, Float d)
+{ return nv.make_float(static_cast<double>(d)); }
 
 /** Convert an Emacs float to a C++ float. */
-template <typename T> inline std::enable_if_t<std::is_floating_point_v<T>, T>
-from_emacs(expected_type_t<T>, env nv, value val)
-{ return static_cast<T>(nv.extract_float(val)); }
+template <typename Float, detail::enable_if_t<std::is_floating_point<Float>::value, bool> = true>
+inline Float from_emacs(expected_type_t<Float>, env nv, value val)
+{ return static_cast<Float>(nv.extract_float(val)); }
 
 #if (EMACS_MAJOR_VERSION >= 27)
 /** Convert a C timespec to an Emacs timespec */
@@ -159,6 +176,8 @@ inline value to_emacs(expected_type_t<struct timespec>, env nv, struct timespec 
 inline struct timespec from_emacs(expected_type_t<struct timespec>, env nv, value val)
 { CPPEMACS_CHECK_VERSION(nv, 27); return nv.extract_time(val); }
 #endif
+
+/** @} */
 
 }
 

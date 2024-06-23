@@ -24,10 +24,6 @@
 #ifndef CPPEMACS_EMACS_HPP_
 #define CPPEMACS_EMACS_HPP_
 
-/**
- * Cppemacs -- C++11 Emacs module API wrapper.
- */
-
 #include <cassert>
 #include <cstring>
 #include <emacs-module.h>
@@ -36,8 +32,28 @@
 #include <limits>
 #include <stdexcept>
 #include <utility>
+#include <type_traits>
 
+/**
+ * @brief C++11 Emacs module API wrapper.
+ */
 namespace cppemacs {
+
+namespace detail {
+template <bool B, class T = void> using enable_if_t = typename std::enable_if<B, T>::type;
+template <typename T> using decay_t = typename std::decay<T>::type;
+template <typename T> using remove_reference_t = typename std::remove_reference<T>::type;
+template <typename T> using invoke_result_t = decltype(std::declval<detail::decay_t<T>>()());
+};
+
+/** \defgroup core
+ *
+ * @brief Core wrapper type definitions for the Emacs module API.
+ */
+
+/** \addtogroup core
+ * @{
+ */
 
 /** Alias for `emacs_value` */
 using value = emacs_value;
@@ -89,7 +105,7 @@ struct cell;
 /** Marker type for converting Emacs values to C++ values. */
 template <typename T> struct expected_type_t {};
 
-/** Transparent wrapper for an Emacs environment. */
+/** @brief General Emacs environment wrapper. */
 struct env {
 private:
   emacs_env *raw;
@@ -260,8 +276,7 @@ public:
    * Arbitrary conversions are performed using ADL for to_emacs(),
    * called with `*this`, `expected_type_t<decay_t<T>>` and (forwarded) `arg`.
    */
-  template <typename T> auto operator->*(T &&arg) const
-  { return *this->*to_emacs(expected_type_t<std::decay_t<T>>{}, *this, std::forward<T>(arg)); }
+  template <typename T> cell operator->*(T &&arg) const;
 
   /**
    * @brief Perform an arbitrary conversion from Emacs.
@@ -277,11 +292,11 @@ public:
   template <typename T> T unwrap(value val) const noexcept(false) { return unwrap(expected_type_t<T>{}, val); }
 
   template <typename F>
-  auto run_catching(F f) const noexcept {
-    using return_type = std::invoke_result_t<F>;
+  auto run_catching(F f) const noexcept -> detail::invoke_result_t<F> {
+    using return_type = detail::invoke_result_t<F>;
     static_assert(
-      std::is_void_v<return_type> ||
-      std::is_nothrow_default_constructible_v<return_type>,
+      std::is_void<return_type>::value ||
+      std::is_nothrow_default_constructible<return_type>::value,
       "Return type must be void or nothrow default constructible");
     try {
       return f();
@@ -317,7 +332,7 @@ public:
   }
 };
 
-/** A value in a specific env. */
+/** @brief General Emacs value wrapper */
 struct cell {
 protected:
   env nv;
@@ -328,8 +343,8 @@ public:
   cell(env nv, value val) noexcept: nv(nv), val(val) {}
 
   const env *operator->() const { return &nv; }
-  template <typename T>
-  auto operator->*(T &&arg) const { return nv->*std::forward<T>(arg); }
+  template <typename T> cell operator->*(T &&arg) const
+  { return nv->*std::forward<T>(arg); }
 
   operator value() const noexcept { return val; }
   cell &operator=(value new_val) noexcept { val = new_val; return *this; }
@@ -369,7 +384,15 @@ public:
 };
 
 inline cell env::operator->*(value value) const noexcept { return cell(*this, value); }
+template <typename T> cell env::operator->*(T &&arg) const
+{ return *this->*to_emacs(expected_type_t<detail::decay_t<T>>{}, *this, std::forward<T>(arg)); }
+
+#ifndef CPPEMACS_DOXYGEN_RUNNING
+inline cell from_emacs(expected_type_t<cell>, env nv, value x) { return cell(nv, x); }
 inline value to_emacs(expected_type_t<cell>, env, cell x) { return x; }
+#endif
+
+/** @} */
 
 }
 

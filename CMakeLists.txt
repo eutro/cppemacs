@@ -35,11 +35,14 @@ list(APPEND CMAKE_MODULE_PATH
   "${CMAKE_CURRENT_LIST_DIR}/cmake"
   "${CMAKE_CURRENT_LIST_DIR}/cmake/vendored")
 
+include(FetchContent)
+
 # Options
 include(GNUInstallDirs)
 
 option(CPPEMACS_Test "Run cppemacs tests" ${MAIN_PROJECT})
 option(CPPEMACS_Coverage "Test with code coverage" OFF)
+option(CPPEMACS_Documentation "Generate documentation" ${MAIN_PROJECT})
 option(CPPEMACS_Install "Add cppemacs as an install target" ${MAIN_PROJECT})
 
 set(CPPEMACS_TARGET_NAME ${PROJECT_NAME})
@@ -72,9 +75,51 @@ export(TARGETS ${CPPEMACS_TARGET_NAME}
   FILE ${CPPEMACS_PROJECT_TARGETS_FILE}
 )
 
-if (CPPEMACS_Test)
-  include(FetchContent)
+if (CPPEMACS_Documentation)
+  find_package(Doxygen
+    COMPONENTS dot)
+  if (Doxygen_FOUND)
+    message(STATUS "Doxygen found")
 
+    FetchContent_Declare(DoxygenAwesome
+      GIT_REPOSITORY https://github.com/jothepro/doxygen-awesome-css
+      GIT_TAG v2.3.3)
+    FetchContent_MakeAvailable(DoxygenAwesome)
+
+    set(DOXYGEN_GENERATE_TREEVIEW YES)
+    set(DOXYGEN_DISABLE_INDEX NO)
+    set(DOXYGEN_FULL_SIDEBAR NO)
+    set(DOXYGEN_HTML_COLORSTYLE LIGHT)
+    set(DOXYGEN_HTML_EXTRA_STYLESHEET
+      "${doxygenawesome_SOURCE_DIR}/doxygen-awesome.css"
+      "${doxygenawesome_SOURCE_DIR}/doxygen-awesome-sidebar-only.css"
+      "${doxygenawesome_SOURCE_DIR}/doxygen-awesome-sidebar-only-darkmode-toggle.css")
+    set(DOXYGEN_HTML_EXTRA_FILES
+      "${doxygenawesome_SOURCE_DIR}/doxygen-awesome-darkmode-toggle.js"
+      "${doxygenawesome_SOURCE_DIR}/doxygen-awesome-fragment-copy-button.js"
+      "${doxygenawesome_SOURCE_DIR}/doxygen-awesome-paragraph-link.js"
+      "${doxygenawesome_SOURCE_DIR}/doxygen-awesome-interactive-toc.js")
+    set(DOXYGEN_HTML_HEADER
+      "${CMAKE_CURRENT_SOURCE_DIR}/docs/header.html")
+
+    set(DOXYGEN_DOT_IMAGE_FORMAT svg)
+    set(DOXYGEN_DOT_TRANSPARENT YES)
+
+    set(DOXYGEN_PROJECT_BRIEF "C++11 Emacs module API wrapper")
+    set(DOXYGEN_INCLUDE_PATH "${CMAKE_CURRENT_SOURCE_DIR}")
+    set(DOXYGEN_PREDEFINED
+      EMACS_MAJOR_VERSION=29
+      CPPEMACS_DOXYGEN_RUNNING)
+    set(DOXYGEN_INLINE_SOURCES NO)
+
+    doxygen_add_docs(${PROJECT_NAME}_docs
+      ${CPPEMACS_HEADERS}
+      ALL USE_STAMP_FILE
+      WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR})
+  endif ()
+endif ()
+
+if (CPPEMACS_Test)
   FetchContent_Declare(Catch2
     GIT_REPOSITORY https://github.com/catchorg/Catch2
     GIT_TAG v3.6.0
@@ -94,6 +139,7 @@ if (CPPEMACS_Test)
   include(Catch)
 
   set(CPPEMACS_TEST_TARGET ${PROJECT_NAME}_test)
+  set(CPPEMACS_TEST2_TARGET ${PROJECT_NAME}_test_cxx_11)
 
   add_library(${CPPEMACS_TEST_TARGET} SHARED
     tests/main.cpp
@@ -107,6 +153,15 @@ if (CPPEMACS_Test)
     PRIVATE tests/common.hpp)
   target_link_libraries(${CPPEMACS_TEST_TARGET} PRIVATE
     cppemacs Catch2::Catch2)
+
+  # test with strict C++11 compliance
+  add_executable(${CPPEMACS_TEST2_TARGET} tests/test_inst_all.cpp)
+  target_link_libraries(${CPPEMACS_TEST2_TARGET} PRIVATE cppemacs)
+  set_target_properties(${CPPEMACS_TEST2_TARGET} PROPERTIES CXX_STANDARD 11)
+  set_target_properties(${CPPEMACS_TEST2_TARGET} PROPERTIES CXX_STANDARD_REQUIRED ON)
+  set_target_properties(${CPPEMACS_TEST2_TARGET} PROPERTIES CXX_EXTENSIONS OFF)
+  add_test(NAME ${CPPEMACS_TEST2_TARGET}
+    COMMAND ${CPPEMACS_TEST2_TARGET})
 
   find_program(EMACS_PATH emacs)
   if (NOT EMACS_PATH)
