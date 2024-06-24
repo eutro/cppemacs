@@ -21,6 +21,8 @@
  * SPDX-License-Identifier: GPL-3.0-or-later
  */
 
+#include "common.hpp"
+
 class Type1 {};
 class Type2 {};
 

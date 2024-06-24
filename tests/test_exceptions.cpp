@@ -21,6 +21,8 @@
  * SPDX-License-Identifier: GPL-3.0-or-later
  */
 
+#include "common.hpp"
+
 SCENARIO("throwing exceptions") {
   GIVEN("definitions of `cppemacs-funN'") {
     cell defalias = envp->*"defalias";

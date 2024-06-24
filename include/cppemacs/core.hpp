@@ -46,12 +46,12 @@ template <typename T> using remove_reference_t = typename std::remove_reference<
 template <typename T> using invoke_result_t = decltype(std::declval<detail::decay_t<T>>()());
 };
 
-/** \defgroup core
+/** \defgroup Core
  *
  * @brief Core wrapper type definitions for the Emacs module API.
  */
 
-/** \addtogroup core
+/** \addtogroup Core
  * @{
  */
 

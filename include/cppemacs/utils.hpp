@@ -36,12 +36,12 @@
 
 namespace cppemacs {
 
-/** \defgroup utilities
+/** \defgroup Utilities
  *
  * @brief Utility types built on top of the core cppemacs API.
  */
 
-/** \addtogroup utilities
+/** \addtogroup Utilities
  * @{
  */
 

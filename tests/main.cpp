@@ -21,6 +21,8 @@
  * SPDX-License-Identifier: GPL-3.0-or-later
  */
 
+#include "common.hpp"
+
 env cppemacs::envp = nullptr;
 
 static int run_tests(env nv, const std::vector<std::string> &args) {

@@ -44,13 +44,13 @@ static constexpr ptrdiff_t uintmax_limb_count =
   std::numeric_limits<uintmax_t>::digits;
 }
 
-/** \defgroup conversions
+/** \defgroup Conversions
  *
  * @brief Conversion functions between C++ and Emacs values.
  */
 
 /**
- * \addtogroup conversions
+ * \addtogroup Conversions
  * @{
  */
 

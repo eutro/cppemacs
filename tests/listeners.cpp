@@ -21,6 +21,8 @@
  * SPDX-License-Identifier: GPL-3.0-or-later
  */
 
+#include "common.hpp"
+
 static std::string translate_signal(signal const &sig) {
   return (envp->*"error-message-string")((envp->*"cons")(sig.symbol, sig.data))
     .unwrap<std::string>();

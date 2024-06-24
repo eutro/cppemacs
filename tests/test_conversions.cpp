@@ -21,7 +21,10 @@
  * SPDX-License-Identifier: GPL-3.0-or-later
  */
 
+#include "common.hpp"
+
 #include <cstdint>
+
 struct is_the_same {
   template <typename Lhs, typename Res>
   void operator()(expected_type_t<Res>, Lhs &&lhs, const cell &val) const {

@@ -21,7 +21,9 @@
  * SPDX-License-Identifier: GPL-3.0-or-later
  */
 
+#include "common.hpp"
 #include <vector>
+
 SCENARIO("using vec_cell") {
   GIVEN("a heterogenous vector") {
     vec_cell vec = (envp->*"vector")(1, 1.5, "hello"_Estr, "some-symbol");
