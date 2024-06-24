@@ -106,11 +106,11 @@ struct cell;
 template <typename T> struct expected_type_t {};
 
 /** @brief General Emacs environment wrapper. */
-struct env {
+struct envw {
 private:
   emacs_env *raw;
 public:
-  env(emacs_env *raw) noexcept: raw(raw) {}
+  envw(emacs_env *raw) noexcept: raw(raw) {}
   operator emacs_env *() const noexcept { return raw; }
   emacs_env *operator->() const noexcept { return raw; }
   emacs_env &operator*() const noexcept { return *raw; }
@@ -335,14 +335,14 @@ public:
 /** @brief General Emacs value wrapper */
 struct cell {
 protected:
-  env nv;
+  envw nv;
   value val;
 
 public:
   /** Construct a cell from an environment and value. */
-  cell(env nv, value val) noexcept: nv(nv), val(val) {}
+  cell(envw nv, value val) noexcept: nv(nv), val(val) {}
 
-  const env *operator->() const { return &nv; }
+  const envw *operator->() const { return &nv; }
   template <typename T> cell operator->*(T &&arg) const
   { return nv->*std::forward<T>(arg); }
 
@@ -383,13 +383,13 @@ public:
   void set(T &&new_val) { *this = nv->*std::forward<T>(new_val); }
 };
 
-inline cell env::operator->*(value value) const noexcept { return cell(*this, value); }
-template <typename T> cell env::operator->*(T &&arg) const
+inline cell envw::operator->*(value value) const noexcept { return cell(*this, value); }
+template <typename T> cell envw::operator->*(T &&arg) const
 { return *this->*to_emacs(expected_type_t<detail::decay_t<T>>{}, *this, std::forward<T>(arg)); }
 
 #ifndef CPPEMACS_DOXYGEN_RUNNING
-inline cell from_emacs(expected_type_t<cell>, env nv, value x) { return cell(nv, x); }
-inline value to_emacs(expected_type_t<cell>, env, cell x) { return x; }
+inline cell from_emacs(expected_type_t<cell>, envw nv, value x) { return cell(nv, x); }
+inline value to_emacs(expected_type_t<cell>, envw, cell x) { return x; }
 #endif
 
 /** @} */

@@ -46,9 +46,9 @@ namespace cppemacs {
  */
 
 /** An environment that interns symbols on the C++-side. */
-struct intern_env : public env {
+struct intern_env : public envw {
   template <typename...Args>
-  intern_env(Args &&...args): env(std::forward<Args>(args)...) {}
+  intern_env(Args &&...args): envw(std::forward<Args>(args)...) {}
 
 private:
   struct table_key {
@@ -83,7 +83,7 @@ public:
       std::forward_as_tuple(name, len),
       std::forward_as_tuple(nullptr));
     if (pair.second) {
-      return pair.first->second = env::intern(name);
+      return pair.first->second = envw::intern(name);
     } else {
       return pair.first->second;
     }
@@ -92,7 +92,7 @@ public:
   value intern(const char *name) noexcept { return intern(name, std::strlen(name)); }
 
   /** Get a cell from a value. */
-  cell operator->*(value val) const noexcept { return env::operator->*(val); }
+  cell operator->*(value val) const noexcept { return envw::operator->*(val); }
   template <typename T> cell operator->*(T &&arg) const
   { return *this->*to_emacs(expected_type_t<detail::decay_t<T>>{}, *this, std::forward<T>(arg)); }
   cell operator->*(const char *name) { return *this->*intern(name); }
@@ -174,11 +174,11 @@ struct user_ptr {
   }
 
   /** Convert a `user_ptr` to Emacs, with the GC becoming responsible for the object. */
-  friend value to_emacs(expected_type_t<user_ptr>, env nv, const user_ptr &ptr)
+  friend value to_emacs(expected_type_t<user_ptr>, envw nv, const user_ptr &ptr)
   { return nv.make_user_ptr(user_ptr<T, Deleter>::fin, reinterpret_cast<void*>(ptr.ptr)); }
 
   /** Convert a `user_ptr` from Emacs, with the GC still responsible for the object. */
-  friend user_ptr from_emacs(expected_type_t<user_ptr>, env nv, value val) {
+  friend user_ptr from_emacs(expected_type_t<user_ptr>, envw nv, value val) {
     emacs_finalizer fin = nv.get_user_finalizer(val);
     nv.maybe_non_local_exit();
     if (fin != user_ptr<T, Deleter>::fin) {
@@ -200,10 +200,10 @@ make_user_ptr(Args &&...args) { return user_ptr<T>(new T(std::forward<Args>(args
  * finalizer.
  */
 template <typename F, typename = void>
-struct user_function_repr {
-  static F &extract(void *ptr) { return *reinterpret_cast<F *>(ptr); }
+struct module_function_repr {
+  static F &extract(void *ptr) noexcept { return *reinterpret_cast<F *>(ptr); }
   static value make(
-    env nv, ptrdiff_t min_arity, ptrdiff_t max_arity,
+    envw nv, ptrdiff_t min_arity, ptrdiff_t max_arity,
     emacs_function fun, const char *doc, F &&f
   ) {
     nv.maybe_non_local_exit();
@@ -266,11 +266,11 @@ struct can_stuff_into_void_ptr : std::integral_constant<bool, (
  * and provided that the type is trivially destructible and copyable.
  */
 template <typename F>
-struct user_function_repr<F, detail::enable_if_t<detail::can_stuff_into_void_ptr<F>::value>>
+struct module_function_repr<F, detail::enable_if_t<detail::can_stuff_into_void_ptr<F>::value>>
 {
   static F &extract(void *&ptr) { return reinterpret_cast<F &>(ptr); }
   static value make(
-    env nv, ptrdiff_t min_arity, ptrdiff_t max_arity,
+    envw nv, ptrdiff_t min_arity, ptrdiff_t max_arity,
     emacs_function fun, const char *doc, F &&f) {
     return nv.make_function(
       min_arity, max_arity, fun, doc,
@@ -279,18 +279,19 @@ struct user_function_repr<F, detail::enable_if_t<detail::can_stuff_into_void_ptr
 };
 
 template <typename F>
-struct user_function {
+struct module_function {
   static_assert(!std::is_reference<F>::value, "Must not be a reference type");
 #ifdef __cpp_lib_is_invocable
   static_assert(std::is_nothrow_invocable_r_v<value, F&, emacs_env *, ptrdiff_t, value *>,
-                "Must be no-throw invocable with Emacs function arguments");
+                "Must be no-throw invocable with Emacs function arguments\n"
+                "Add `nothrow` and consider wraping with `env.run_catching`");
 #endif
 
   ptrdiff_t min_arity, max_arity;
   const char *doc;
   F f;
   template <typename...Args>
-  user_function(
+  module_function(
     ptrdiff_t min_arity, ptrdiff_t max_arity,
     const char *doc,
     Args &&...args):
@@ -300,25 +301,25 @@ struct user_function {
     f(std::forward<Args>(args)...)
   {}
 
-  using data_repr = user_function_repr<F>;
+  using data_repr = module_function_repr<F>;
 
   static value invoke(emacs_env *nv, ptrdiff_t nargs, value *args, void *data) noexcept {
     return data_repr::extract(data)(nv, nargs, args);
   }
 
-  friend value to_emacs(expected_type_t<user_function>, env nv, user_function &&func) {
+  friend value to_emacs(expected_type_t<module_function>, envw nv, module_function &&func) {
     return data_repr::make(
       nv, func.min_arity, func.max_arity, &invoke, func.doc,
       std::move(func.f));
   }
 };
 
-/** Make a user function with the given minimum and maximum arity. */
-template <typename F> auto make_user_function(
+/** Make a module function with the given minimum and maximum arity. */
+template <typename F> auto make_module_function(
   ptrdiff_t min_arity, ptrdiff_t max_arity,
   const char *doc, F &&f
-) -> user_function<detail::remove_reference_t<F>> {
-  return user_function<detail::remove_reference_t<F>>(
+) -> module_function<detail::remove_reference_t<F>> {
+  return module_function<detail::remove_reference_t<F>>(
     min_arity, max_arity, doc,
     std::forward<F>(f));
 }
@@ -357,27 +358,27 @@ struct spread_invoker {
 
 private:
   template <bool IsProvided> detail::enable_if_t<IsProvided, cell>
-  arg_or_default(env nv, value *args, size_t idx) noexcept(false) { return nv->*args[idx]; }
+  arg_or_default(envw nv, value *args, size_t idx) noexcept(false) { return nv->*args[idx]; }
   template <bool IsProvided> detail::enable_if_t<!IsProvided, unprovided_value_t>
-  arg_or_default(env, value *, size_t) noexcept { return {}; }
+  arg_or_default(envw, value *, size_t) noexcept { return {}; }
 
   template <size_t NArgs, size_t...Idx, bool IsVar = IsVariadic> detail::enable_if_t<!IsVar, value>
-  invoke_with_arity(detail::index_sequence<Idx...>, env nv, value *args) noexcept(false)
+  invoke_with_arity(detail::index_sequence<Idx...>, envw nv, value *args) noexcept(false)
   { return nv->*f(nv, arg_or_default<Idx < NArgs>(nv, args, Idx)...); }
   template <size_t...Idx, bool IsVar = IsVariadic> detail::enable_if_t<!IsVar, value>
-  invoke_variadic(detail::index_sequence<Idx...>, env, ptrdiff_t, value *) noexcept(false) { return {}; }
+  invoke_variadic(detail::index_sequence<Idx...>, envw, ptrdiff_t, value *) noexcept(false) { return {}; }
 
   template <size_t NArgs, size_t...Idx, bool IsVar = IsVariadic> detail::enable_if_t<IsVar, value>
-  invoke_with_arity(detail::index_sequence<Idx...>, env nv, value *args) noexcept(false)
+  invoke_with_arity(detail::index_sequence<Idx...>, envw nv, value *args) noexcept(false)
   { return nv->*f(nv, arg_or_default<Idx < NArgs>(nv, args, Idx)..., {nullptr, 0}); }
   template <size_t...Idx, bool IsVar = IsVariadic> detail::enable_if_t<IsVar, value>
-  invoke_variadic(detail::index_sequence<Idx...>, env nv, ptrdiff_t nargs, value *args) noexcept(false)
+  invoke_variadic(detail::index_sequence<Idx...>, envw nv, ptrdiff_t nargs, value *args) noexcept(false)
   { return nv->*f(nv, arg_or_default<true>(nv, args, Idx)..., {args + MaxArity, nargs - MaxArity}); }
 
   template <size_t...OffIdx>
   value invoke(
     detail::index_sequence<OffIdx...>,
-    env nv, ptrdiff_t nargs, value *args
+    envw nv, ptrdiff_t nargs, value *args
   ) noexcept(false) {
     using arity_seq = detail::make_index_sequence<MaxArity>;
     if (IsVariadic && nargs > MaxArity) {
@@ -386,8 +387,8 @@ private:
       // should have been caught by Emacs
       throw std::runtime_error("Bad arity");
     } else {
-      static constexpr value (*Vt[])(spread_invoker *, env, value*) = {
-        ([](spread_invoker *self, env nv, value *args)
+      static constexpr value (*Vt[])(spread_invoker *, envw, value*) = {
+        ([](spread_invoker *self, envw nv, value *args)
         { return self->invoke_with_arity<MinArity + OffIdx>(arity_seq(), nv, args); })
         ...
       };
@@ -396,7 +397,7 @@ private:
   }
 
 public:
-  value operator()(env nv, ptrdiff_t nargs, value *args) noexcept {
+  value operator()(envw nv, ptrdiff_t nargs, value *args) noexcept {
     return nv.run_catching([&]() noexcept(false) {
       return invoke(
         detail::make_index_sequence<MaxArity - MinArity + 1>(),
@@ -407,9 +408,9 @@ public:
 }
 
 /**
- * Make a spreader user function with the given minimum and maximum arity.
+ * Make a spreader module function with the given minimum and maximum arity.
  *
- * Returns a `user_function` that takes between `MinArity` and
+ * Returns a `module_function` that takes between `MinArity` and
  * `MaxArity` arguments. F will be invoked with an `emacs_env *`
  * followed by `MaxArity` value arguments. Arguments that are provided
  * by the caller will be given as `cell`s, whereas absent arguments
@@ -421,10 +422,10 @@ public:
 template <ptrdiff_t MaxArity, bool IsVariadic = false, ptrdiff_t MinArity = MaxArity, typename F>
 auto make_spreader_function(
   const char *doc, F &&f
-) -> user_function<detail::spread_invoker<MinArity, MaxArity, IsVariadic, detail::remove_reference_t<F>>> {
+) -> module_function<detail::spread_invoker<MinArity, MaxArity, IsVariadic, detail::remove_reference_t<F>>> {
   static_assert(MaxArity >= MinArity, "MaxArity must be greater than or equal to MinArity");
   static_assert(MinArity >= 0, "MinArity must be nonnegative");
-  return make_user_function(
+  return make_module_function(
     MinArity, IsVariadic ? emacs_variadic_function : MaxArity, doc,
     detail::spread_invoker<MinArity, MaxArity, IsVariadic,
     detail::remove_reference_t<F>>(std::forward<F>(f)));

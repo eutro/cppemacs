@@ -29,22 +29,22 @@ SCENARIO("throwing exceptions") {
 
     defalias("cppemacs-fun1", envp->*make_spreader_function<2>(
                "Equivalent to `signal'.",
-               [](env nv, value sym, value data) -> value
+               [](envw nv, value sym, value data) -> value
                { throw signal(sym, data); }));
 
     defalias("cppemacs-fun2", envp->*make_spreader_function<2>(
                "Equivalent to `throw'.",
-               [](env nv, value sym, value data) -> value
+               [](envw nv, value sym, value data) -> value
                { throw thrown(sym, data); }));
 
     defalias("cppemacs-fun3", envp->*make_spreader_function<1>(
                "Throw a C++ `runtime_error' with the argument.",
-               [](env nv, cell msg) -> value
+               [](envw nv, cell msg) -> value
                { throw std::runtime_error(msg.unwrap<std::string>()); }));
 
     defalias("cppemacs-fun4", envp->*make_spreader_function<0, true>(
                "Call `error'.",
-               [](env nv, std::pair<value *, size_t> rest) {
+               [](envw nv, std::pair<value *, size_t> rest) {
                  nv.funcall(nv->*"error", rest.second, rest.first);
                  nv.maybe_non_local_exit();
                  return false;

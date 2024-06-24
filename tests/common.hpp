@@ -28,7 +28,7 @@
 #include <catch2/catch_all.hpp>
 
 namespace cppemacs {
-extern env envp;
+extern envw envp;
 }
 
 using namespace cppemacs;

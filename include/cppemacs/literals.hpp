@@ -44,7 +44,7 @@ struct estring_literal {
 #endif
 
   /** Convert a C++ ""_Estr string to an Emacs string. */
-  friend value to_emacs(expected_type_t<estring_literal>, env nv, const estring_literal &str)
+  friend value to_emacs(expected_type_t<estring_literal>, envw nv, const estring_literal &str)
   { return nv.make_string(str.data, str.len); }
 
   friend std::ostream &operator<<(std::ostream &os, const estring_literal &str)

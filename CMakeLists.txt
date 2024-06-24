@@ -49,7 +49,7 @@ include(GNUInstallDirs)
 option(CPPEMACS_Test "Build cppemacs tests" ${MAIN_PROJECT})
 option(CPPEMACS_Coverage "Test with code coverage" OFF)
 option(CPPEMACS_Documentation "Generate documentation" OFF)
-option(CPPEMACS_Install "Add cppemacs as an install target" ${MAIN_PROJECT})
+option(CPPEMACS_Install "Add cppemacs installation rules" ${MAIN_PROJECT})
 
 set(CPPEMACS_TARGET_NAME ${PROJECT_NAME})
 set(CPPEMACS_LICENSE_FILE "${CMAKE_SOURCE_DIR}/COPYING")
@@ -99,10 +99,20 @@ export(TARGETS ${CPPEMACS_TARGET_NAME}
   FILE ${CPPEMACS_PROJECT_TARGETS_FILE}
 )
 
+if (CPPEMACS_Documentation OR CPPEMACS_Test)
+  if (${CMAKE_VERSION} VERSION_LESS 3.11)
+    message(WARNING "CMake >= 3.11 required to build tests or documentation")
+    return()
+  endif()
+
+  include(FetchContent)
+endif()
+
 if (CPPEMACS_Documentation)
   add_subdirectory(docs)
 endif()
 if (CPPEMACS_Test)
+  include(CTest)
   add_subdirectory(tests)
 endif()
 if (CPPEMACS_Install)

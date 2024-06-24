@@ -1,12 +1,27 @@
+# Copyright (C) 2024 Eutro <https://eutro.dev>
+#
+# This file is part of cppemacs.
+#
+# cppemacs is free software: you can redistribute it and/or modify it
+# under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# cppemacs is distributed in the hope that it will be useful, but
+# WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+# General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with cppemacs. If not, see <https://www.gnu.org/licenses/>.
+#
+# SPDX-FileCopyrightText: 2024 Eutro <https://eutro.dev>
+#
+# SPDX-License-Identifier: GPL-3.0-or-later
+
 message(STATUS "Building tests")
 
-if (${CMAKE_VERSION} VERSION_LESS 3.11)
-  message(WARNING "CMake >= 3.11 required to build tests")
-  return()
-endif()
-
-include(FetchContent)
-
+set(BUILD_SHARED_LIBS ON)
 FetchContent_Declare(Catch2
   GIT_REPOSITORY https://github.com/catchorg/Catch2
   GIT_TAG v3.6.0
@@ -14,16 +29,13 @@ FetchContent_Declare(Catch2
   # likely don't have on the system
 )
 
-set(BUILD_SHARED_LIBS ON)
-if (${CMAKE_VERSION} VERSION_LESS "3.14")
+FetchContent_GetProperties(Catch2)
+if(NOT Catch2_POPULATED)
   FetchContent_Populate(Catch2)
-  add_subdirectory(${catch2_SOURCE_DIR} ${catch2_BINARY_DIR})
-else()
-  FetchContent_MakeAvailable(Catch2)
 endif()
+add_subdirectory(${catch2_SOURCE_DIR} ${catch2_BINARY_DIR})
 list(APPEND CMAKE_MODULE_PATH "${catch2_SOURCE_DIR}/extras")
 
-include(CTest)
 include(Catch)
 
 set(CPPEMACS_TEST_TARGET ${PROJECT_NAME}_test)

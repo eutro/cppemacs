@@ -55,21 +55,21 @@ static constexpr ptrdiff_t uintmax_limb_count =
  */
 
 /** Convert a string constant to a symbol. */
-inline value to_emacs(expected_type_t<const char *>, env nv, const char *name)
+inline value to_emacs(expected_type_t<const char *>, envw nv, const char *name)
 { return nv.intern(name); }
 
 /** Convert a C++ string to an Emacs string. */
-inline value to_emacs(expected_type_t<std::string>, env nv, const std::string &str)
+inline value to_emacs(expected_type_t<std::string>, envw nv, const std::string &str)
 { return nv.make_string(str.data(), str.length()); }
 
 #ifdef __cpp_lib_string_view
 /** Convert a C++ string view to an Emacs string. */
-inline value to_emacs(expected_type_t<std::string_view>, env nv, const std::string_view &str)
+inline value to_emacs(expected_type_t<std::string_view>, envw nv, const std::string_view &str)
 { return nv.make_string(str.data(), str.length()); }
 #endif
 
 /** Convert an Emacs string to a C++ string. */
-inline std::string from_emacs(expected_type_t<std::string>, env nv, value val) {
+inline std::string from_emacs(expected_type_t<std::string>, envw nv, value val) {
   ptrdiff_t len = 0;
   if (nv.copy_string_contents(val, nullptr, len)) {
     std::string ret(len - 1, '\0');
@@ -81,19 +81,19 @@ inline std::string from_emacs(expected_type_t<std::string>, env nv, value val) {
   throw std::runtime_error("String conversion failed");
 }
 
-inline value to_emacs(expected_type_t<bool>, env nv, bool x) { return nv.intern(x ? "t" : "nil"); }
-inline bool from_emacs(expected_type_t<bool>, env nv, value x) { return nv.is_not_nil(x); }
+inline value to_emacs(expected_type_t<bool>, envw nv, bool x) { return nv.intern(x ? "t" : "nil"); }
+inline bool from_emacs(expected_type_t<bool>, envw nv, value x) { return nv.is_not_nil(x); }
 
 /** Convert a C++ integer to an Emacs integer. */
 template <typename Int, detail::enable_if_t<detail::is_integral_smaller_than_intmax<Int>::value, bool> = true>
-value to_emacs(expected_type_t<Int>, env nv, Int n)
+value to_emacs(expected_type_t<Int>, envw nv, Int n)
 { return nv.make_integer(static_cast<intmax_t>(n)); }
 
 #if (EMACS_MAJOR_VERSION >= 27) && defined(__cpp_if_constexpr)
 #define CPPEMACS_HAS_UINTMAX_CONVERSION 1
 
 /** Convert a C++ integer to an Emacs integer. */
-inline value to_emacs(expected_type_t<uintmax_t>, env nv, uintmax_t n) {
+inline value to_emacs(expected_type_t<uintmax_t>, envw nv, uintmax_t n) {
   CPPEMACS_CHECK_VERSION(nv, 27);
   using namespace detail;
   // uintmax_t may overflow intmax_t (bad), so fallback to the bigint version
@@ -116,7 +116,7 @@ inline value to_emacs(expected_type_t<uintmax_t>, env nv, uintmax_t n) {
 
 /** Convert an Emacs integer to a C++ integer. */
 template <typename Int, detail::enable_if_t<detail::is_integral_smaller_than_intmax<Int>::value, bool> = true>
-inline Int from_emacs(expected_type_t<Int>, env nv, value val) {
+inline Int from_emacs(expected_type_t<Int>, envw nv, value val) {
   intmax_t int_val = nv.extract_integer(val);
   nv.maybe_non_local_exit();
   if (int_val < static_cast<intmax_t>(std::numeric_limits<Int>::min())
@@ -127,7 +127,7 @@ inline Int from_emacs(expected_type_t<Int>, env nv, value val) {
 }
 
 #ifdef CPPEMACS_HAS_UINTMAX_CONVERSION
-inline uintmax_t from_emacs(expected_type_t<uintmax_t>, env nv, value val) {
+inline uintmax_t from_emacs(expected_type_t<uintmax_t>, envw nv, value val) {
   CPPEMACS_CHECK_VERSION(nv, 27);
   using namespace detail;
   // always use bigint conversion
@@ -160,20 +160,20 @@ inline uintmax_t from_emacs(expected_type_t<uintmax_t>, env nv, value val) {
 
 /** Convert a C++ float to an Emacs float. */
 template <typename Float, detail::enable_if_t<std::is_floating_point<Float>::value, bool> = true>
-inline value to_emacs(expected_type_t<Float>, env nv, Float d)
+inline value to_emacs(expected_type_t<Float>, envw nv, Float d)
 { return nv.make_float(static_cast<double>(d)); }
 
 /** Convert an Emacs float to a C++ float. */
 template <typename Float, detail::enable_if_t<std::is_floating_point<Float>::value, bool> = true>
-inline Float from_emacs(expected_type_t<Float>, env nv, value val)
+inline Float from_emacs(expected_type_t<Float>, envw nv, value val)
 { return static_cast<Float>(nv.extract_float(val)); }
 
 #if (EMACS_MAJOR_VERSION >= 27)
 /** Convert a C timespec to an Emacs timespec */
-inline value to_emacs(expected_type_t<struct timespec>, env nv, struct timespec time)
+inline value to_emacs(expected_type_t<struct timespec>, envw nv, struct timespec time)
 { CPPEMACS_CHECK_VERSION(nv, 27); return nv.make_time(time); }
 /** Convert a C timespec to an Emacs timespec */
-inline struct timespec from_emacs(expected_type_t<struct timespec>, env nv, value val)
+inline struct timespec from_emacs(expected_type_t<struct timespec>, envw nv, value val)
 { CPPEMACS_CHECK_VERSION(nv, 27); return nv.extract_time(val); }
 #endif
 

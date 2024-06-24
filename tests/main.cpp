@@ -23,9 +23,9 @@
 
 #include "common.hpp"
 
-env cppemacs::envp = nullptr;
+envw cppemacs::envp = nullptr;
 
-static int run_tests(env nv, const std::vector<std::string> &args) {
+static int run_tests(envw nv, const std::vector<std::string> &args) {
   std::vector<const char *> argv(args.size() + 1);
   {
     auto itl = argv.begin() + 1; auto itr = args.begin();
@@ -51,7 +51,7 @@ int emacs_module_init(emacs_runtime *rt) noexcept {
   nv.run_catching([&]() {
     (nv->*"defalias")(
       "cppemacs-test",
-      make_spreader_function<1>("Run cppemacs tests", [](env nv, vec_cell args) {
+      make_spreader_function<1>("Run cppemacs tests", [](envw nv, vec_cell args) {
         std::vector<std::string> sargs(args.size());
         for (size_t ii = 0; ii < sargs.size(); ++ii) {
           sargs[ii] = args[ii].get().unwrap<std::string>();
