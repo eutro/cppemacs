@@ -22,7 +22,6 @@
 *~
 venv
 build
-docs
 *.o
 .cache
 .idea

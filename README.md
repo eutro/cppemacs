@@ -32,6 +32,7 @@ For example:
 #include <cppemacs/all.hpp>
 
 extern "C" {
+
 int plugin_is_GPL_compatible;
 
 int emacs_module_init(emacs_runtime *rt) {
