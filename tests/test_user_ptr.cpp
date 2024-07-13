@@ -32,7 +32,7 @@ SCENARIO("using user_ptr") {
     cell ptrv = envp->*uptr;
 
     THEN("unwrapping it yields the same pointer") {
-      auto unwrapped = ptrv.unwrap<user_ptr<int>>();
+      auto unwrapped = ptrv.extract<user_ptr<int>>();
       REQUIRE(unwrapped.get() == uptr.get()); envp.maybe_non_local_exit();
     }
   }
@@ -42,13 +42,13 @@ SCENARIO("using user_ptr") {
     cell ptr2 = envp->*make_user_ptr<Type2>(); envp.maybe_non_local_exit();
 
     THEN("they can be unwrapped") {
-      REQUIRE_NOTHROW(ptr1.unwrap<user_ptr<Type1>>());
-      REQUIRE_NOTHROW(ptr2.unwrap<user_ptr<Type2>>());
+      REQUIRE_NOTHROW(ptr1.extract<user_ptr<Type1>>());
+      REQUIRE_NOTHROW(ptr2.extract<user_ptr<Type2>>());
     }
 
     THEN("they cannot be converted to each other") {
-      REQUIRE_THROWS(ptr1.unwrap<user_ptr<Type2>>());
-      REQUIRE_THROWS(ptr2.unwrap<user_ptr<Type1>>());
+      REQUIRE_THROWS(ptr1.extract<user_ptr<Type2>>());
+      REQUIRE_THROWS(ptr2.extract<user_ptr<Type1>>());
     }
   }
 }

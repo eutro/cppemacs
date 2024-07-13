@@ -25,11 +25,11 @@
 
 static std::string translate_signal(signal const &sig) {
   return (envp->*"error-message-string")((envp->*"cons")(sig.symbol, sig.data))
-    .unwrap<std::string>();
+    .extract<std::string>();
 }
 static std::string translate_throw(thrown const &sig) {
   return (envp->*"format")("(throw '%S '%S)"_Estr, sig.symbol, sig.data)
-    .unwrap<std::string>();
+    .extract<std::string>();
 }
 static std::string translate_non_local_exit(non_local_exit const &sig) {
   value symbol, data;

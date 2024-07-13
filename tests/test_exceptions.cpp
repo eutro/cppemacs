@@ -40,7 +40,7 @@ SCENARIO("throwing exceptions") {
     defalias("cppemacs-fun3", envp->*make_spreader_function<1>(
                "Throw a C++ `runtime_error' with the argument.",
                [](envw nv, cell msg) -> value
-               { throw std::runtime_error(msg.unwrap<std::string>()); }));
+               { throw std::runtime_error(msg.extract<std::string>()); }));
 
     defalias("cppemacs-fun4", envp->*make_spreader_function<0, true>(
                "Call `error'.",

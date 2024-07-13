@@ -29,7 +29,7 @@ struct is_the_same {
   template <typename Lhs, typename Res>
   void operator()(expected_type_t<Res>, Lhs &&lhs, const cell &val) const {
     THEN("is the same") {
-      REQUIRE(lhs == val.unwrap<Res>());
+      REQUIRE(lhs == val.extract<Res>());
     }
   }
 };
@@ -38,7 +38,7 @@ struct throws_an_exception {
   template <typename Lhs, typename Res>
   void operator()(expected_type_t<Res>, Lhs &&, const cell &val) const {
     THEN("throws an exception") {
-      REQUIRE_THROWS(val.unwrap<Res>());
+      REQUIRE_THROWS(val.extract<Res>());
     }
   }
 };

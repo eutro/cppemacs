@@ -23,50 +23,10 @@
 
 # cppemacs
 
-cppemacs is C++11 API wrapper for writing Emacs [dynamic
+cppemacs is a C++11 API wrapper for writing Emacs [dynamic
 modules](https://www.gnu.org/software/emacs/manual/html_node/elisp/Dynamic-Modules.html).
 
-For example:
-
-```c++
-#include <cppemacs/all.hpp>
-
-extern "C" {
-
-int plugin_is_GPL_compatible;
-
-int emacs_module_init(emacs_runtime *rt) {
-  using namespace cppemacs;
-  using namespace cppemacs::literals;
-
-  envw env(rt->get_environment(rt));
-
-  // check that the features you want to use are available
-  if (env->size < sizeof(emacs_env_28))
-    return 1;
-
-  env.run_catching([&]() {
-    // define functions from C++
-    (env->*"defalias")(
-      "cppemacs-hello-world",
-      make_module_function(
-        0, 0, "Run Hello, world!",
-        [](envw env, ptrdiff_t, value*) noexcept -> value {
-          // call Emacs functions with ease
-          (env->*"message")(
-            "Hello, %s!"_Estr,
-            (env->*"read-string")("What is your name? "_Estr)
-          );
-
-          return env->*true;
-        }));
-    });
-
-  return 0;
-}
-
-}
-```
+See the [documentation](https://eutro.github.io/cppemacs/) for usage and examples.
 
 # Obtaining
 

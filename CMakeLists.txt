@@ -64,8 +64,6 @@ set(CPPEMACS_INCLUDE_BUILD_DIR "${CMAKE_CURRENT_SOURCE_DIR}/include")
 set(CPPEMACS_INCLUDE_INSTALL_DIR "${CMAKE_INSTALL_INCLUDEDIR}")
 set(CPPEMACS_DOCS_BUILD_DIR "${CMAKE_CURRENT_BINARY_DIR}/docs")
 
-find_package(Emacs REQUIRED)
-
 # cppemacs target
 set(CPPEMACS_HEADERS
   include/cppemacs/all.hpp
@@ -87,6 +85,7 @@ target_include_directories(${CPPEMACS_TARGET_NAME} INTERFACE
   $<INSTALL_INTERFACE:${CPPEMACS_INCLUDE_INSTALL_DIR}>
 )
 
+find_package(Emacs)
 if (Emacs_FOUND)
   target_link_libraries(${CPPEMACS_TARGET_NAME} INTERFACE Emacs::emacs_module)
 else ()

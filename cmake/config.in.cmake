@@ -28,11 +28,15 @@ if (NOT TARGET @PROJECT_NAME@::@CPPEMACS_TARGET_NAME@)
 
   if (NOT TARGET Emacs::emacs_module)
     list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_LIST_DIR}/modules")
-    find_package(Emacs REQUIRED)
+    find_package(Emacs)
   endif()
-  set_target_properties(@PROJECT_NAME@::@CPPEMACS_TARGET_NAME@ PROPERTIES
-    INTERFACE_LINK_LIBRARIES Emacs::emacs_module
-  )
+  if (Emacs_FOUND)
+    set_target_properties(@PROJECT_NAME@::@CPPEMACS_TARGET_NAME@ PROPERTIES
+      INTERFACE_LINK_LIBRARIES Emacs::emacs_module
+    )
+  elseif(NOT @PROJECT_NAME@_FIND_QUIETLY)
+    message(WARN "Emacs not found on this machine")
+  endif()
 
   if (NOT TARGET @CPPEMACS_TARGET_NAME@)
     add_library(@CPPEMACS_TARGET_NAME@ INTERFACE IMPORTED)

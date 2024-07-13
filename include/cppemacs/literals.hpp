@@ -25,49 +25,74 @@
 #define CPPEMACS_LITERALS_HPP_
 
 #include "core.hpp"
-#include <cstring>
 #include <ostream>
 
-namespace cppemacs::literals {
+namespace cppemacs {
 
-/** ""_Estr Emacs string literal representation. */
+/**
+ * @defgroup cppemacs_literals Literals
+ * @brief Custom string literals for Emacs values.
+ *
+ * @addtogroup cppemacs_literals
+ * @{
+ */
+
+namespace literals {
+
+/** @brief A reference to a string, with `""_Estr`. */
 struct estring_literal {
-  const char *data; size_t len;
-  estring_literal(const char *data, size_t len): data(data), len(len) {}
-  estring_literal(const char *str): data(str), len(std::strlen(str)) {}
+  /** @brief The utf8 data of the string. */
+  const char *data;
+  /** @brief The number of characters in the string. */
+  size_t len;
 
+  /** @brief Construct from data and length. */
+  constexpr estring_literal(const char *data, size_t len): data(data), len(len) {}
+  /** @brief Construct from a null-terminated string. */
+  estring_literal(const char *str): data(str), len(std::char_traits<char>::length(str)) {}
+
+  /** @brief Construct from a std::string. */
   estring_literal(const std::string &str): data(str.data()), len(str.length()) {}
+  /** @brief Convert to a std::string. */
   operator std::string() const { return std::string(data, len); }
-#ifdef __cpp_lib_string_view
-  estring_literal(const std::string_view &str): data(str.data()), len(str.length()) {}
-  operator std::string_view() const { return std::string_view(data, len); }
+#ifdef CPPEMACS_HAVE_STRING_VIEW
+  /** @brief Construct from a std::string_view. */
+  constexpr estring_literal(const std::string_view &str): data(str.data()), len(str.length()) {}
+  /** @brief Convert to a std::string_view. */
+  constexpr operator std::string_view() const { return std::string_view(data, len); }
 #endif
 
-  /** Convert a C++ ""_Estr string to an Emacs string. */
+  /** @brief Convert a C++ ""_Estr string to an Emacs string. */
   friend value to_emacs(expected_type_t<estring_literal>, envw nv, const estring_literal &str)
   { return nv.make_string(str.data, str.len); }
 
+  /** @brief Write this value to an output stream. */
   friend std::ostream &operator<<(std::ostream &os, const estring_literal &str)
   { os.write(str.data, str.len); return os; }
 };
-/** ""_Estr Emacs string literal. */
-inline estring_literal operator "" _Estr(const char *data, size_t len)
+
+/** @brief `""_Estr` string literal. */
+inline constexpr estring_literal operator "" _Estr(const char *data, size_t len)
 { return estring_literal(data, len); }
 
-/** A readable literal, with ""_Eread. */
+/** @brief A readable literal, with `""_Eread`. */
 struct eread_literal : estring_literal {
+  /** @brief Constructor which forwards to `estring_literal` */
   template <typename...Args>
-  eread_literal(Args &&...args): estring_literal(std::forward<Args>(args)...) {}
+  constexpr eread_literal(Args &&...args): estring_literal(std::forward<Args>(args)...) {}
 
-  /** Convert a C++ ""_Estr string to an Emacs string. */
-  template <typename Env>
-  friend value to_emacs(expected_type_t<eread_literal>, const Env &nv, const eread_literal &str)
+  /** @brief Read the string. */
+  friend value to_emacs(expected_type_t<eread_literal>, envw nv, const eread_literal &str)
   { return (nv->*"read")(nv.make_string(str.data, str.len)); }
 };
-/** ""_Eread literal, uses `read` for conversion to Emacs. */
+/** @brief `""_Eread` literal, uses `read` for conversion to Emacs. */
 inline eread_literal operator "" _Eread(const char *data) { return eread_literal(data); }
-/** ""_Eread literal, uses `read` for conversion to Emacs. */
-inline eread_literal operator "" _Eread(const char *data, size_t len) { return eread_literal(data, len); }
+/** @brief `""_Eread` literal, uses `read` for conversion to Emacs. */
+inline constexpr eread_literal operator "" _Eread(const char *data, size_t len) { return eread_literal(data, len); }
+
+/** @} */
+
+}
 
 }
 

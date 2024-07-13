@@ -45,16 +45,16 @@ extern "C" {
 int plugin_is_GPL_compatible;
 
 int emacs_module_init(emacs_runtime *rt) noexcept {
-  intern_env nv(rt->get_environment(rt));
+  envw nv(rt->get_environment(rt));
   if (nv->size < sizeof(emacs_env_29)) return 1;
 
   nv.run_catching([&]() {
     (nv->*"defalias")(
       "cppemacs-test",
-      make_spreader_function<1>("Run cppemacs tests", [](envw nv, vec_cell args) {
+      make_spreader_function<1>("Run cppemacs tests", [](envw nv, vecw args) {
         std::vector<std::string> sargs(args.size());
         for (size_t ii = 0; ii < sargs.size(); ++ii) {
-          sargs[ii] = args[ii].get().unwrap<std::string>();
+          sargs[ii] = args[ii].get<std::string>();
         }
         return run_tests(nv, sargs);
       }));

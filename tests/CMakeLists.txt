@@ -29,12 +29,17 @@ FetchContent_Declare(Catch2
   # likely don't have on the system
 )
 
-FetchContent_GetProperties(Catch2)
-if(NOT Catch2_POPULATED)
-  FetchContent_Populate(Catch2)
+if (CMAKE_VERSION VERSION_LESS "3.14")
+  FetchContent_GetProperties(Catch2)
+  if (NOT Catch2_POPULATED)
+    FetchContent_Populate(Catch2)
+  endif()
+else()
+  FetchContent_MakeAvailable(Catch2)
 endif()
-add_subdirectory(${catch2_SOURCE_DIR} ${catch2_BINARY_DIR})
-list(APPEND CMAKE_MODULE_PATH "${catch2_SOURCE_DIR}/extras")
+
+#add_subdirectory(${catch2_SOURCE_DIR} ${catch2_BINARY_DIR})
+#list(APPEND CMAKE_MODULE_PATH "${catch2_SOURCE_DIR}/extras")
 
 include(Catch)
 
@@ -49,6 +54,8 @@ add_library(${CPPEMACS_TEST_TARGET} SHARED
   test_vector.cpp
   test_exceptions.cpp
 )
+set_target_properties(${CPPEMACS_TEST_TARGET} PROPERTIES
+  CXX_STANDARD 20) # attempt to use C++20
 
 if (NOT CMAKE_VERSION VERSION_LESS "3.16")
   target_precompile_headers(${CPPEMACS_TEST_TARGET}
@@ -61,9 +68,10 @@ target_link_libraries(${CPPEMACS_TEST_TARGET} PRIVATE
 # test with strict C++11 compliance
 add_executable(${CPPEMACS_TEST2_TARGET} test_inst_all.cpp)
 target_link_libraries(${CPPEMACS_TEST2_TARGET} PRIVATE cppemacs)
-set_target_properties(${CPPEMACS_TEST2_TARGET} PROPERTIES CXX_STANDARD 11)
-set_target_properties(${CPPEMACS_TEST2_TARGET} PROPERTIES CXX_STANDARD_REQUIRED ON)
-set_target_properties(${CPPEMACS_TEST2_TARGET} PROPERTIES CXX_EXTENSIONS OFF)
+set_target_properties(${CPPEMACS_TEST2_TARGET} PROPERTIES
+  CXX_STANDARD 11
+  CXX_STANDARD_REQUIRED ON
+  CXX_EXTENSIONS OFF)
 
 add_test(NAME ${CPPEMACS_TEST2_TARGET}
   COMMAND ${CPPEMACS_TEST2_TARGET})
