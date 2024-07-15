@@ -1,27 +1,21 @@
+<!DOCTYPE html>
 <!--
 - Copyright (C) 2024 Eutro <https://eutro.dev>
 -
-- This file is part of cppemacs.
+- This file is part of the cppemacs reference documentation.
 -
-- cppemacs is free software: you can redistribute it and/or modify it
-- under the terms of the GNU General Public License as published by
-- the Free Software Foundation, either version 3 of the License, or
-- (at your option) any later version.
--
-- cppemacs is distributed in the hope that it will be useful, but
-- WITHOUT ANY WARRANTY; without even the implied warranty of
-- MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
-- General Public License for more details.
--
-- You should have received a copy of the GNU General Public License
-- along with cppemacs. If not, see <https://www.gnu.org/licenses/>.
+- Permission is granted to copy, distribute and/or modify this document
+- under the terms of the GNU Free Documentation License, Version 1.3 or
+- any later version published by the Free Software Foundation; with no
+- Invariant Sections, no Front-Cover Texts, and no Back-Cover Texts. A
+- copy of the license is included in the section entitled "GNU Free
+- Documentation License".
 -
 - SPDX-FileCopyrightText: 2024 Eutro <https://eutro.dev>
 -
-- SPDX-License-Identifier: GPL-3.0-or-later
+- SPDX-License-Identifier: GFDL-1.3-or-later
 -->
 <!-- HTML header for doxygen 1.11.0-->
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "https://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="$langISO">
 <head>
 <meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
@@ -50,6 +44,7 @@ $darkmode
 <link href="doxygen-awesome.css" rel="stylesheet" type="text/css"/>
 <link href="doxygen-awesome-sidebar-only.css" rel="stylesheet" type="text/css"/>
 <link href="doxygen-awesome-sidebar-only-darkmode-toggle.css" rel="stylesheet" type="text/css"/>
+<link href="cppemacs.css" rel="stylesheet" type="text/css"/>
 </head>
 <script type="text/javascript" src="doxygen-awesome-darkmode-toggle.js"></script>
 <script type="text/javascript">DoxygenAwesomeDarkModeToggle.init()</script>
@@ -142,189 +137,219 @@ $(document).ready(function(){initNavTree('structcppemacs_1_1envw.html',''); init
 <div class="header">
   <div class="summary">
 <a href="#pub-methods">Public Member Functions</a> &#124;
+<a href="#pub-static-methods">Static Public Member Functions</a> &#124;
 <a href="structcppemacs_1_1envw-members.html">List of all members</a>  </div>
   <div class="headertitle">
-<div class="title">cppemacs::envw Struct Reference<div class="ingroups"><a class="el" href="group__Core.html">Core</a></div></div>  </div>
+<div class="title">cppemacs::envw Struct Reference</div>  </div>
 </div><!--header-->
 <div class="contents">
 
-<p>General Emacs environment wrapper.  
- <a href="structcppemacs_1_1envw.html#details">More...</a></p>
-
-<p><code>#include &lt;<a class="el" href="core_8hpp_source.html">core.hpp</a>&gt;</code></p>
-<div class="dynheader">
-Inheritance diagram for cppemacs::envw:</div>
-<div class="dyncontent">
-<div class="center"><iframe scrolling="no" frameborder="0" src="structcppemacs_1_1envw__inherit__graph.svg" width="176" height="112"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe>
-</div>
-<center><span class="legend">[<a target="top" href="graph_legend.html">legend</a>]</span></center></div>
-<table class="memberdecls">
+<p><code>#include &lt;<a class="el" href="core_8hpp_source.html">cppemacs/core.hpp</a>&gt;</code></p>
+<a name="details" id="details"></a><h2 class="groupheader">Description</h2>
+<div class="textblock"><p>General Emacs environment wrapper. </p>
+<p>This type wraps the raw <a class="el" href="group__cppemacs__core.html#gae0592e597dd37c49496e082012c3de92">emacs_env</a>, providing additional funcionality:</p>
+<ul>
+<li>Member functions for invoking all function pointers in <a class="el" href="group__cppemacs__core.html#gae0592e597dd37c49496e082012c3de92">emacs_env</a>. Where C has to do <code>env-&gt;function_name(env, ...)</code>, C++ can do <code>env.function_name(...)</code> instead.</li>
+<li>Conversions <a class="el" href="structcppemacs_1_1envw.html#a1eec660dd9e009d04c7f237750a74324">from C++ to Emacs</a> and <a class="el" href="structcppemacs_1_1envw.html#a25ee0a095d9e15b7da3588ca2dcb88c3">vice-versa</a>. Most Lisp value creation/inspection can be done this way. See <a class="el" href="group__cppemacs__conversions.html">Type Conversions</a>.</li>
+<li>Idiomatic non-local exit handling, via <a class="el" href="structcppemacs_1_1envw.html#aa977b2b678096adf617ec7500359d353" title="Run f() and catch all exceptions, propagating them to Emacs via signal or throw.">run_catching()</a>, <a class="el" href="structcppemacs_1_1envw.html#aa343c86e3e82410365f74c0fb0421cc0" title="Check for non-local exit, and throw an exception if there is one.">maybe_non_local_exit()</a>, and <a class="el" href="structcppemacs_1_1envw.html#abc22b0e8abe9817b095870cf43419e0b" title="Check for non-local exit, and throw it as a C++ exception (signal or thrown) if there is one.">rethrow_non_local_exit()</a>.</li>
+</ul>
+<p>@important An environment and most <a class="el" href="group__cppemacs__core.html#gabd2db90fff7d715e8649f37147f60a3a">values</a> obtained from it are invalidated when the function it was first obtained in returns (either <a class="el" href="group__cppemacs__core.html#ga3a13d40e5da070f30ce46bbcea618f01">emacs_module_init()</a> or a <a class="el" href="structcppemacs_1_1envw.html#abcfe6e0559744499bdc3c3e7abba5db6">module function</a> to which it is a parameter). Emacs environment functions cannot be used outside of the dynamic extent of these functions and <a class="el" href="group__cppemacs__core.html#gabd2db90fff7d715e8649f37147f60a3a">values</a> (except for <a class="el" href="structcppemacs_1_1envw.html#a30f5e112d7e62b8abeccdce17126e51b">make_global_ref()</a>), cannot be shared between invocations either.</p>
+<dl class="section warning"><dt>Warning</dt><dd>If a <code>noexcept</code> method on this class fails, or is called while a <a class="el" href="structcppemacs_1_1envw.html#a80ad1e199f0427ce4620583594a16261">non-local exit is pending</a>, it returns a meaningless result instead of throwing an exception. This is usually harmless, but the program should check and try to return to Emacs as soon as possible.</dd>
+<dd>
+For better integration with C++ exception handling, <a class="el" href="structcppemacs_1_1envw.html#aa977b2b678096adf617ec7500359d353" title="Run f() and catch all exceptions, propagating them to Emacs via signal or throw.">run_catching()</a> and <a class="el" href="structcppemacs_1_1envw.html#aa343c86e3e82410365f74c0fb0421cc0" title="Check for non-local exit, and throw an exception if there is one.">maybe_non_local_exit()</a> can be used. </dd></dl>
+</div><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:a863a777489023c1b462feb3ed2520bf9"><td class="memItemLeft" align="right" valign="top"><a id="a863a777489023c1b462feb3ed2520bf9"></a>
-&#160;</td><td class="memItemRight" valign="bottom"><b>envw</b> (emacs_env *raw) noexcept</td></tr>
-<tr class="separator:a863a777489023c1b462feb3ed2520bf9"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:adbf4861405ba0d86023108481b05876d"><td class="memItemLeft" align="right" valign="top"><a id="adbf4861405ba0d86023108481b05876d"></a>
-&#160;</td><td class="memItemRight" valign="bottom"><b>operator emacs_env *</b> () const noexcept</td></tr>
-<tr class="separator:adbf4861405ba0d86023108481b05876d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ac5a11f0a0015935c2e1587b31804df58"><td class="memItemLeft" align="right" valign="top"><a id="ac5a11f0a0015935c2e1587b31804df58"></a>
-emacs_env *&#160;</td><td class="memItemRight" valign="bottom"><b>operator-&gt;</b> () const noexcept</td></tr>
-<tr class="separator:ac5a11f0a0015935c2e1587b31804df58"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a48d881828da2d033f31b685cbdde7b19"><td class="memItemLeft" align="right" valign="top"><a id="a48d881828da2d033f31b685cbdde7b19"></a>
-emacs_env &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>operator*</b> () const noexcept</td></tr>
-<tr class="separator:a48d881828da2d033f31b685cbdde7b19"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:adc73902c00ccdabfceac59719d36c153"><td class="memItemLeft" align="right" valign="top">unsigned int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structcppemacs_1_1envw.html#adc73902c00ccdabfceac59719d36c153">major_version</a> () const noexcept</td></tr>
-<tr class="memdesc:adc73902c00ccdabfceac59719d36c153"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the major version of the current <code>emacs_env</code>  <a href="structcppemacs_1_1envw.html#adc73902c00ccdabfceac59719d36c153">More...</a><br /></td></tr>
-<tr class="separator:adc73902c00ccdabfceac59719d36c153"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a30f5e112d7e62b8abeccdce17126e51b"><td class="memItemLeft" align="right" valign="top"><a id="a30f5e112d7e62b8abeccdce17126e51b"></a>
-<a class="el" href="group__Core.html#gabd2db90fff7d715e8649f37147f60a3a">value</a>&#160;</td><td class="memItemRight" valign="bottom"><b>make_global_ref</b> (<a class="el" href="group__Core.html#gabd2db90fff7d715e8649f37147f60a3a">value</a> val) const noexcept</td></tr>
+<tr class="memitem:a701cbd00a3b4b602d286258b0d43fc76"><td class="memItemLeft" align="right" valign="top">constexpr&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structcppemacs_1_1envw.html#a701cbd00a3b4b602d286258b0d43fc76">envw</a> (<a class="el" href="group__cppemacs__core.html#gae0592e597dd37c49496e082012c3de92">emacs_env</a> *raw) noexcept</td></tr>
+<tr class="memdesc:a701cbd00a3b4b602d286258b0d43fc76"><td class="mdescLeft">&#160;</td><td class="mdescRight">Construct from a raw <a class="el" href="group__cppemacs__core.html#gae0592e597dd37c49496e082012c3de92">emacs_env</a>.  <a href="structcppemacs_1_1envw.html#a701cbd00a3b4b602d286258b0d43fc76">More...</a><br /></td></tr>
+<tr class="separator:a701cbd00a3b4b602d286258b0d43fc76"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac4c1025b74ffb495be85564589454040"><td class="memItemLeft" align="right" valign="top">constexpr&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structcppemacs_1_1envw.html#ac4c1025b74ffb495be85564589454040">operator emacs_env *</a> () const noexcept</td></tr>
+<tr class="memdesc:ac4c1025b74ffb495be85564589454040"><td class="mdescLeft">&#160;</td><td class="mdescRight">Convert to a raw <a class="el" href="group__cppemacs__core.html#gae0592e597dd37c49496e082012c3de92">emacs_env</a>.  <a href="structcppemacs_1_1envw.html#ac4c1025b74ffb495be85564589454040">More...</a><br /></td></tr>
+<tr class="separator:ac4c1025b74ffb495be85564589454040"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a12c298d9a486eb712004f7af1e65387a"><td class="memItemLeft" align="right" valign="top">constexpr <a class="el" href="group__cppemacs__core.html#gae0592e597dd37c49496e082012c3de92">emacs_env</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structcppemacs_1_1envw.html#a12c298d9a486eb712004f7af1e65387a">operator-&gt;</a> () const noexcept</td></tr>
+<tr class="memdesc:a12c298d9a486eb712004f7af1e65387a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Reference the raw <a class="el" href="group__cppemacs__core.html#gae0592e597dd37c49496e082012c3de92">emacs_env</a>.  <a href="structcppemacs_1_1envw.html#a12c298d9a486eb712004f7af1e65387a">More...</a><br /></td></tr>
+<tr class="separator:a12c298d9a486eb712004f7af1e65387a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:abd17f036bd3f981167c34b46aa669c9f"><td class="memItemLeft" align="right" valign="top">constexpr <a class="el" href="group__cppemacs__core.html#gae0592e597dd37c49496e082012c3de92">emacs_env</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structcppemacs_1_1envw.html#abd17f036bd3f981167c34b46aa669c9f">operator*</a> () const noexcept</td></tr>
+<tr class="memdesc:abd17f036bd3f981167c34b46aa669c9f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Reference the raw <a class="el" href="group__cppemacs__core.html#gae0592e597dd37c49496e082012c3de92">emacs_env</a>.  <a href="structcppemacs_1_1envw.html#abd17f036bd3f981167c34b46aa669c9f">More...</a><br /></td></tr>
+<tr class="separator:abd17f036bd3f981167c34b46aa669c9f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a256132d6b8fbb3a6fd66604c8be4e1fd"><td class="memItemLeft" align="right" valign="top">ptrdiff_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structcppemacs_1_1envw.html#a256132d6b8fbb3a6fd66604c8be4e1fd">size</a> () const noexcept</td></tr>
+<tr class="memdesc:a256132d6b8fbb3a6fd66604c8be4e1fd"><td class="mdescLeft">&#160;</td><td class="mdescRight">The size, in bytes, of the <a class="el" href="group__cppemacs__core.html#gae0592e597dd37c49496e082012c3de92">emacs_env</a> in the running Emacs binary.  <a href="structcppemacs_1_1envw.html#a256132d6b8fbb3a6fd66604c8be4e1fd">More...</a><br /></td></tr>
+<tr class="separator:a256132d6b8fbb3a6fd66604c8be4e1fd"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac40343a3ce5e040369dd433cef0f6b29"><td class="memTemplParams" colspan="2">template&lt;size_t MajorVersion&gt; </td></tr>
+<tr class="memitem:ac40343a3ce5e040369dd433cef0f6b29"><td class="memTemplItemLeft" align="right" valign="top">bool&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="structcppemacs_1_1envw.html#ac40343a3ce5e040369dd433cef0f6b29">is_compatible</a> () const noexcept</td></tr>
+<tr class="memdesc:ac40343a3ce5e040369dd433cef0f6b29"><td class="mdescLeft">&#160;</td><td class="mdescRight">Check if this environment supports the module API of the given Emacs major version. A check occurs at both compile time and runtime.  <a href="structcppemacs_1_1envw.html#ac40343a3ce5e040369dd433cef0f6b29">More...</a><br /></td></tr>
+<tr class="separator:ac40343a3ce5e040369dd433cef0f6b29"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a826907bd575e978486e692f43af036d7"><td class="memTemplParams" colspan="2">template&lt;size_t MajorVersion&gt; </td></tr>
+<tr class="memitem:a826907bd575e978486e692f43af036d7"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="structcppemacs_1_1envw.html#a826907bd575e978486e692f43af036d7">check_compatible</a> () const noexcept(false)</td></tr>
+<tr class="memdesc:a826907bd575e978486e692f43af036d7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Check if this environment supports the given major version's module API, and raises an error otherwise.  <a href="structcppemacs_1_1envw.html#a826907bd575e978486e692f43af036d7">More...</a><br /></td></tr>
+<tr class="separator:a826907bd575e978486e692f43af036d7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1eec660dd9e009d04c7f237750a74324"><td class="memTemplParams" colspan="2">template&lt;TO_EMACS_TYPE T&gt; </td></tr>
+<tr class="memitem:a1eec660dd9e009d04c7f237750a74324"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="structcppemacs_1_1cell.html">cell</a>&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="structcppemacs_1_1envw.html#a1eec660dd9e009d04c7f237750a74324">inject</a> (T &amp;&amp;arg) const</td></tr>
+<tr class="memdesc:a1eec660dd9e009d04c7f237750a74324"><td class="mdescLeft">&#160;</td><td class="mdescRight">Perform an arbitrary conversion to Emacs.  <a href="structcppemacs_1_1envw.html#a1eec660dd9e009d04c7f237750a74324">More...</a><br /></td></tr>
+<tr class="separator:a1eec660dd9e009d04c7f237750a74324"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac02433ef564e008c8ffb94d9f58c8147"><td class="memTemplParams" colspan="2">template&lt;TO_EMACS_TYPE T&gt; </td></tr>
+<tr class="memitem:ac02433ef564e008c8ffb94d9f58c8147"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="structcppemacs_1_1cell.html">cell</a>&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="structcppemacs_1_1envw.html#ac02433ef564e008c8ffb94d9f58c8147">operator-&gt;*</a> (T &amp;&amp;arg) const</td></tr>
+<tr class="memdesc:ac02433ef564e008c8ffb94d9f58c8147"><td class="mdescLeft">&#160;</td><td class="mdescRight">Perform an arbitrary conversion to Emacs. Synonym for <a class="el" href="structcppemacs_1_1envw.html#a1eec660dd9e009d04c7f237750a74324" title="Perform an arbitrary conversion to Emacs.">inject()</a>.  <a href="structcppemacs_1_1envw.html#ac02433ef564e008c8ffb94d9f58c8147">More...</a><br /></td></tr>
+<tr class="separator:ac02433ef564e008c8ffb94d9f58c8147"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a25ee0a095d9e15b7da3588ca2dcb88c3"><td class="memTemplParams" colspan="2">template&lt;FROM_EMACS_TYPE T&gt; </td></tr>
+<tr class="memitem:a25ee0a095d9e15b7da3588ca2dcb88c3"><td class="memTemplItemLeft" align="right" valign="top">T&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="structcppemacs_1_1envw.html#a25ee0a095d9e15b7da3588ca2dcb88c3">extract</a> (<a class="el" href="group__cppemacs__core.html#gabd2db90fff7d715e8649f37147f60a3a">value</a> val) const noexcept(false)</td></tr>
+<tr class="memdesc:a25ee0a095d9e15b7da3588ca2dcb88c3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Perform an arbitrary conversion from Emacs.  <a href="structcppemacs_1_1envw.html#a25ee0a095d9e15b7da3588ca2dcb88c3">More...</a><br /></td></tr>
+<tr class="separator:a25ee0a095d9e15b7da3588ca2dcb88c3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa977b2b678096adf617ec7500359d353"><td class="memTemplParams" colspan="2">template&lt;bool Box = CPPEMACS_ENABLE_EXCEPTION_BOXING, typename F &gt; </td></tr>
+<tr class="memitem:aa977b2b678096adf617ec7500359d353"><td class="memTemplItemLeft" align="right" valign="top">auto&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="structcppemacs_1_1envw.html#aa977b2b678096adf617ec7500359d353">run_catching</a> (F &amp;&amp;f) const noexcept -&gt; <a class="el" href="group__cppemacs__core.html#gac178ba75a935094d28d7b37e083e2804">detail::invoke_result_t</a>&lt; F &gt;</td></tr>
+<tr class="memdesc:aa977b2b678096adf617ec7500359d353"><td class="mdescLeft">&#160;</td><td class="mdescRight">Run <code>f()</code> and catch all exceptions, propagating them to Emacs via <code>signal</code> or <code>throw</code>.  <a href="structcppemacs_1_1envw.html#aa977b2b678096adf617ec7500359d353">More...</a><br /></td></tr>
+<tr class="separator:aa977b2b678096adf617ec7500359d353"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a44db137aded0c08dde845cbc82d9fb51"><td class="memTemplParams" colspan="2">template&lt;typename F &gt; </td></tr>
+<tr class="memitem:a44db137aded0c08dde845cbc82d9fb51"><td class="memTemplItemLeft" align="right" valign="top">requires std::invocable&lt; F, <a class="el" href="structcppemacs_1_1envw.html">envw</a> &gt; void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="structcppemacs_1_1envw.html#a44db137aded0c08dde845cbc82d9fb51">run_scoped</a> (F &amp;&amp;f) const noexcept(noexcept(std::declval&lt; F &gt;()(std::declval&lt; <a class="el" href="structcppemacs_1_1envw.html">envw</a> &gt;())))</td></tr>
+<tr class="memdesc:a44db137aded0c08dde845cbc82d9fb51"><td class="mdescLeft">&#160;</td><td class="mdescRight">Call <code>f</code> with a new <a class="el" href="structcppemacs_1_1envw.html">envw</a>.  <a href="structcppemacs_1_1envw.html#a44db137aded0c08dde845cbc82d9fb51">More...</a><br /></td></tr>
+<tr class="separator:a44db137aded0c08dde845cbc82d9fb51"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr><td colspan="2"><div class="groupHeader">Emacs 25</div></td></tr>
+<tr class="memitem:a30f5e112d7e62b8abeccdce17126e51b"><td class="memItemLeft" align="right" valign="top"><a class="el" href="group__cppemacs__core.html#gabd2db90fff7d715e8649f37147f60a3a">value</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structcppemacs_1_1envw.html#a30f5e112d7e62b8abeccdce17126e51b">make_global_ref</a> (<a class="el" href="group__cppemacs__core.html#gabd2db90fff7d715e8649f37147f60a3a">value</a> val) const noexcept</td></tr>
+<tr class="memdesc:a30f5e112d7e62b8abeccdce17126e51b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Make a global reference to a value. See the \manlink{manual|Module-Values.html::index-make_005fglobal_005fref}.  <a href="structcppemacs_1_1envw.html#a30f5e112d7e62b8abeccdce17126e51b">More...</a><br /></td></tr>
 <tr class="separator:a30f5e112d7e62b8abeccdce17126e51b"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a327ca8d3c078069c68a1301d6c8e7b67"><td class="memItemLeft" align="right" valign="top"><a id="a327ca8d3c078069c68a1301d6c8e7b67"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>free_global_ref</b> (<a class="el" href="group__Core.html#gabd2db90fff7d715e8649f37147f60a3a">value</a> global_value) const noexcept</td></tr>
+<tr class="memitem:a327ca8d3c078069c68a1301d6c8e7b67"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structcppemacs_1_1envw.html#a327ca8d3c078069c68a1301d6c8e7b67">free_global_ref</a> (<a class="el" href="group__cppemacs__core.html#gabd2db90fff7d715e8649f37147f60a3a">value</a> global_value) const noexcept</td></tr>
+<tr class="memdesc:a327ca8d3c078069c68a1301d6c8e7b67"><td class="mdescLeft">&#160;</td><td class="mdescRight">Free a global reference obtained with <a class="el" href="structcppemacs_1_1envw.html#a30f5e112d7e62b8abeccdce17126e51b" title="Make a global reference to a value. See the \manlink{manual|Module-Values.html::index-make_005fglobal...">make_global_ref()</a>. See the \manlink{manual|Module-Values.html::index-free_005fglobal_005fref}.  <a href="structcppemacs_1_1envw.html#a327ca8d3c078069c68a1301d6c8e7b67">More...</a><br /></td></tr>
 <tr class="separator:a327ca8d3c078069c68a1301d6c8e7b67"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a80ad1e199f0427ce4620583594a16261"><td class="memItemLeft" align="right" valign="top"><a id="a80ad1e199f0427ce4620583594a16261"></a>
-<a class="el" href="structcppemacs_1_1funcall__exit.html">funcall_exit</a>&#160;</td><td class="memItemRight" valign="bottom"><b>non_local_exit_check</b> () const noexcept</td></tr>
+<tr class="memitem:a80ad1e199f0427ce4620583594a16261"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structcppemacs_1_1funcall__exit.html">funcall_exit</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structcppemacs_1_1envw.html#a80ad1e199f0427ce4620583594a16261">non_local_exit_check</a> () const noexcept</td></tr>
+<tr class="memdesc:a80ad1e199f0427ce4620583594a16261"><td class="mdescLeft">&#160;</td><td class="mdescRight">Check if there is a non-local exit pending.  <a href="structcppemacs_1_1envw.html#a80ad1e199f0427ce4620583594a16261">More...</a><br /></td></tr>
 <tr class="separator:a80ad1e199f0427ce4620583594a16261"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a9d52fec6b774e57482e94b09fec2e671"><td class="memItemLeft" align="right" valign="top"><a id="a9d52fec6b774e57482e94b09fec2e671"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>non_local_exit_clear</b> () const noexcept</td></tr>
+<tr class="memitem:a9d52fec6b774e57482e94b09fec2e671"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structcppemacs_1_1envw.html#a9d52fec6b774e57482e94b09fec2e671">non_local_exit_clear</a> () const noexcept</td></tr>
+<tr class="memdesc:a9d52fec6b774e57482e94b09fec2e671"><td class="mdescLeft">&#160;</td><td class="mdescRight">Clear a pending non-local exit. See the \manlink{manual|Module-Nonlocal.html::index-non_005flocal_005fexit_005fclear}.  <a href="structcppemacs_1_1envw.html#a9d52fec6b774e57482e94b09fec2e671">More...</a><br /></td></tr>
 <tr class="separator:a9d52fec6b774e57482e94b09fec2e671"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ad37ae1c134789f3bdc9c7c38c234e784"><td class="memItemLeft" align="right" valign="top"><a id="ad37ae1c134789f3bdc9c7c38c234e784"></a>
-<a class="el" href="structcppemacs_1_1funcall__exit.html">funcall_exit</a>&#160;</td><td class="memItemRight" valign="bottom"><b>non_local_exit_get</b> (<a class="el" href="group__Core.html#gabd2db90fff7d715e8649f37147f60a3a">value</a> &amp;symbol, <a class="el" href="group__Core.html#gabd2db90fff7d715e8649f37147f60a3a">value</a> &amp;data) const noexcept</td></tr>
+<tr class="memitem:ad37ae1c134789f3bdc9c7c38c234e784"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structcppemacs_1_1funcall__exit.html">funcall_exit</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structcppemacs_1_1envw.html#ad37ae1c134789f3bdc9c7c38c234e784">non_local_exit_get</a> (<a class="el" href="group__cppemacs__core.html#gabd2db90fff7d715e8649f37147f60a3a">value</a> &amp;symbol, <a class="el" href="group__cppemacs__core.html#gabd2db90fff7d715e8649f37147f60a3a">value</a> &amp;data) const noexcept</td></tr>
+<tr class="memdesc:ad37ae1c134789f3bdc9c7c38c234e784"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the data of a non-local exit (signal/throw). See the \manlink{manual|Module-Nonlocal.html::index-non_005flocal_005fexit_005fget}.  <a href="structcppemacs_1_1envw.html#ad37ae1c134789f3bdc9c7c38c234e784">More...</a><br /></td></tr>
 <tr class="separator:ad37ae1c134789f3bdc9c7c38c234e784"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a5126e7614215b819a8d12b3b2232820f"><td class="memItemLeft" align="right" valign="top"><a id="a5126e7614215b819a8d12b3b2232820f"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>non_local_exit_signal</b> (<a class="el" href="group__Core.html#gabd2db90fff7d715e8649f37147f60a3a">value</a> symbol, <a class="el" href="group__Core.html#gabd2db90fff7d715e8649f37147f60a3a">value</a> data) const noexcept</td></tr>
+<tr class="memitem:a5126e7614215b819a8d12b3b2232820f"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structcppemacs_1_1envw.html#a5126e7614215b819a8d12b3b2232820f">non_local_exit_signal</a> (<a class="el" href="group__cppemacs__core.html#gabd2db90fff7d715e8649f37147f60a3a">value</a> symbol, <a class="el" href="group__cppemacs__core.html#gabd2db90fff7d715e8649f37147f60a3a">value</a> data) const noexcept</td></tr>
+<tr class="memdesc:a5126e7614215b819a8d12b3b2232820f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Raise a signal. See the \manlink{manual|Module-Nonlocal.html::index-non_005flocal_005fexit_005fsignal}.  <a href="structcppemacs_1_1envw.html#a5126e7614215b819a8d12b3b2232820f">More...</a><br /></td></tr>
 <tr class="separator:a5126e7614215b819a8d12b3b2232820f"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a45b3a28471c8f02ffaf28f8501d8e97d"><td class="memItemLeft" align="right" valign="top"><a id="a45b3a28471c8f02ffaf28f8501d8e97d"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>non_local_exit_throw</b> (<a class="el" href="group__Core.html#gabd2db90fff7d715e8649f37147f60a3a">value</a> symbol, <a class="el" href="group__Core.html#gabd2db90fff7d715e8649f37147f60a3a">value</a> data) const noexcept</td></tr>
+<tr class="memitem:a45b3a28471c8f02ffaf28f8501d8e97d"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structcppemacs_1_1envw.html#a45b3a28471c8f02ffaf28f8501d8e97d">non_local_exit_throw</a> (<a class="el" href="group__cppemacs__core.html#gabd2db90fff7d715e8649f37147f60a3a">value</a> symbol, <a class="el" href="group__cppemacs__core.html#gabd2db90fff7d715e8649f37147f60a3a">value</a> data) const noexcept</td></tr>
+<tr class="memdesc:a45b3a28471c8f02ffaf28f8501d8e97d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Throw a value with a tag. See the \manlink{manual|Module-Nonlocal.html::index-non_005flocal_005fexit_005fthrow}.  <a href="structcppemacs_1_1envw.html#a45b3a28471c8f02ffaf28f8501d8e97d">More...</a><br /></td></tr>
 <tr class="separator:a45b3a28471c8f02ffaf28f8501d8e97d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aced6615703e6dd33d0637279f5cb6aa6"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structcppemacs_1_1envw.html#aced6615703e6dd33d0637279f5cb6aa6">maybe_non_local_exit</a> () const noexcept(false)</td></tr>
-<tr class="separator:aced6615703e6dd33d0637279f5cb6aa6"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a2ac8b64fb1909ac3a6e26fdea4deffc5"><td class="memItemLeft" align="right" valign="top"><a id="a2ac8b64fb1909ac3a6e26fdea4deffc5"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>rethrow_non_local_exit</b> () const noexcept(false)</td></tr>
-<tr class="separator:a2ac8b64fb1909ac3a6e26fdea4deffc5"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:abcfe6e0559744499bdc3c3e7abba5db6"><td class="memItemLeft" align="right" valign="top"><a id="abcfe6e0559744499bdc3c3e7abba5db6"></a>
-<a class="el" href="group__Core.html#gabd2db90fff7d715e8649f37147f60a3a">value</a>&#160;</td><td class="memItemRight" valign="bottom"><b>make_function</b> (ptrdiff_t min_arity, ptrdiff_t max_arity, emacs_function func, const char *docstring, void *data) const noexcept</td></tr>
+<tr class="memitem:abc22b0e8abe9817b095870cf43419e0b"><td class="memTemplParams" colspan="2">template&lt;bool Unbox = CPPEMACS_ENABLE_EXCEPTION_BOXING&gt; </td></tr>
+<tr class="memitem:abc22b0e8abe9817b095870cf43419e0b"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="structcppemacs_1_1envw.html#abc22b0e8abe9817b095870cf43419e0b">rethrow_non_local_exit</a> () const noexcept(false)</td></tr>
+<tr class="memdesc:abc22b0e8abe9817b095870cf43419e0b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Check for <a class="el" href="structcppemacs_1_1envw.html#a80ad1e199f0427ce4620583594a16261">non-local exit</a>, and throw it as a C++ exception (<a class="el" href="structcppemacs_1_1signal.html">signal</a> or <a class="el" href="structcppemacs_1_1thrown.html">thrown</a>) if there is one.  <a href="structcppemacs_1_1envw.html#abc22b0e8abe9817b095870cf43419e0b">More...</a><br /></td></tr>
+<tr class="separator:abc22b0e8abe9817b095870cf43419e0b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa343c86e3e82410365f74c0fb0421cc0"><td class="memTemplParams" colspan="2">template&lt;bool Unbox = CPPEMACS_ENABLE_EXCEPTION_BOXING&gt; </td></tr>
+<tr class="memitem:aa343c86e3e82410365f74c0fb0421cc0"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="structcppemacs_1_1envw.html#aa343c86e3e82410365f74c0fb0421cc0">maybe_non_local_exit</a> () const noexcept(false)</td></tr>
+<tr class="memdesc:aa343c86e3e82410365f74c0fb0421cc0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Check for <a class="el" href="structcppemacs_1_1envw.html#a80ad1e199f0427ce4620583594a16261">non-local exit</a>, and throw an exception if there is one.  <a href="structcppemacs_1_1envw.html#aa343c86e3e82410365f74c0fb0421cc0">More...</a><br /></td></tr>
+<tr class="separator:aa343c86e3e82410365f74c0fb0421cc0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:abcfe6e0559744499bdc3c3e7abba5db6"><td class="memItemLeft" align="right" valign="top"><a class="el" href="group__cppemacs__core.html#gabd2db90fff7d715e8649f37147f60a3a">value</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structcppemacs_1_1envw.html#abcfe6e0559744499bdc3c3e7abba5db6">make_function</a> (ptrdiff_t min_arity, ptrdiff_t max_arity, <a class="el" href="group__cppemacs__core.html#ga8b10f701e2c3225ed203909023fcbf28">emacs_function</a> func, const char *docstring, void *data) const noexcept</td></tr>
+<tr class="memdesc:abcfe6e0559744499bdc3c3e7abba5db6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Make an Emacs <em>module function</em> from a function pointer and associated data. See the \manlink{manual|Module-Functions.html::index-make_005ffunction}.  <a href="structcppemacs_1_1envw.html#abcfe6e0559744499bdc3c3e7abba5db6">More...</a><br /></td></tr>
 <tr class="separator:abcfe6e0559744499bdc3c3e7abba5db6"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a19d8333de293a386e738b145859a4814"><td class="memItemLeft" align="right" valign="top"><a id="a19d8333de293a386e738b145859a4814"></a>
-<a class="el" href="group__Core.html#gabd2db90fff7d715e8649f37147f60a3a">value</a>&#160;</td><td class="memItemRight" valign="bottom"><b>funcall</b> (<a class="el" href="group__Core.html#gabd2db90fff7d715e8649f37147f60a3a">value</a> func, ptrdiff_t nargs, <a class="el" href="group__Core.html#gabd2db90fff7d715e8649f37147f60a3a">value</a> *args) const noexcept</td></tr>
+<tr class="memitem:a19d8333de293a386e738b145859a4814"><td class="memItemLeft" align="right" valign="top"><a class="el" href="group__cppemacs__core.html#gabd2db90fff7d715e8649f37147f60a3a">value</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structcppemacs_1_1envw.html#a19d8333de293a386e738b145859a4814">funcall</a> (<a class="el" href="group__cppemacs__core.html#gabd2db90fff7d715e8649f37147f60a3a">value</a> func, ptrdiff_t nargs, <a class="el" href="group__cppemacs__core.html#gabd2db90fff7d715e8649f37147f60a3a">value</a> *args) const noexcept</td></tr>
+<tr class="memdesc:a19d8333de293a386e738b145859a4814"><td class="mdescLeft">&#160;</td><td class="mdescRight">Call func with the provided arguments. See the \manlink{manual|Module-Misc.html::index-funcall-1}.  <a href="structcppemacs_1_1envw.html#a19d8333de293a386e738b145859a4814">More...</a><br /></td></tr>
 <tr class="separator:a19d8333de293a386e738b145859a4814"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a01763a4b1a8727ffc46b778c26eeb4fb"><td class="memItemLeft" align="right" valign="top"><a id="a01763a4b1a8727ffc46b778c26eeb4fb"></a>
-<a class="el" href="group__Core.html#gabd2db90fff7d715e8649f37147f60a3a">value</a>&#160;</td><td class="memItemRight" valign="bottom"><b>funcall</b> (<a class="el" href="group__Core.html#gabd2db90fff7d715e8649f37147f60a3a">value</a> func, std::initializer_list&lt; <a class="el" href="group__Core.html#gabd2db90fff7d715e8649f37147f60a3a">value</a> &gt; args) const noexcept</td></tr>
+<tr class="memitem:a01763a4b1a8727ffc46b778c26eeb4fb"><td class="memItemLeft" align="right" valign="top"><a class="el" href="group__cppemacs__core.html#gabd2db90fff7d715e8649f37147f60a3a">value</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structcppemacs_1_1envw.html#a01763a4b1a8727ffc46b778c26eeb4fb">funcall</a> (<a class="el" href="group__cppemacs__core.html#gabd2db90fff7d715e8649f37147f60a3a">value</a> func, std::initializer_list&lt; <a class="el" href="group__cppemacs__core.html#gabd2db90fff7d715e8649f37147f60a3a">value</a> &gt; args) const noexcept</td></tr>
+<tr class="memdesc:a01763a4b1a8727ffc46b778c26eeb4fb"><td class="mdescLeft">&#160;</td><td class="mdescRight">Call func with the provided arguments. See the \manlink{manual|Module-Misc.html::index-funcall-1}.  <a href="structcppemacs_1_1envw.html#a01763a4b1a8727ffc46b778c26eeb4fb">More...</a><br /></td></tr>
 <tr class="separator:a01763a4b1a8727ffc46b778c26eeb4fb"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aaa610d1bed0752f07707913d1b496693"><td class="memItemLeft" align="right" valign="top"><a id="aaa610d1bed0752f07707913d1b496693"></a>
-<a class="el" href="group__Core.html#gabd2db90fff7d715e8649f37147f60a3a">value</a>&#160;</td><td class="memItemRight" valign="bottom"><b>intern</b> (const char *name) const noexcept</td></tr>
+<tr class="memitem:aaa610d1bed0752f07707913d1b496693"><td class="memItemLeft" align="right" valign="top"><a class="el" href="group__cppemacs__core.html#gabd2db90fff7d715e8649f37147f60a3a">value</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structcppemacs_1_1envw.html#aaa610d1bed0752f07707913d1b496693">intern</a> (const char *name) const noexcept</td></tr>
+<tr class="memdesc:aaa610d1bed0752f07707913d1b496693"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the interned Emacs symbol with the given null-terminated ASCII name. See the \manlink{manual|Module-Misc.html::index-intern-1}..  <a href="structcppemacs_1_1envw.html#aaa610d1bed0752f07707913d1b496693">More...</a><br /></td></tr>
 <tr class="separator:aaa610d1bed0752f07707913d1b496693"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a56ec2ca416a4778f8275ffeac8ea80b8"><td class="memItemLeft" align="right" valign="top"><a id="a56ec2ca416a4778f8275ffeac8ea80b8"></a>
-<a class="el" href="group__Core.html#gabd2db90fff7d715e8649f37147f60a3a">value</a>&#160;</td><td class="memItemRight" valign="bottom"><b>type_of</b> (<a class="el" href="group__Core.html#gabd2db90fff7d715e8649f37147f60a3a">value</a> arg) const noexcept</td></tr>
+<tr class="memitem:a56ec2ca416a4778f8275ffeac8ea80b8"><td class="memItemLeft" align="right" valign="top"><a class="el" href="group__cppemacs__core.html#gabd2db90fff7d715e8649f37147f60a3a">value</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structcppemacs_1_1envw.html#a56ec2ca416a4778f8275ffeac8ea80b8">type_of</a> (<a class="el" href="group__cppemacs__core.html#gabd2db90fff7d715e8649f37147f60a3a">value</a> arg) const noexcept</td></tr>
+<tr class="memdesc:a56ec2ca416a4778f8275ffeac8ea80b8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the type of <em>arg</em> as a symbol like <code>string</code> or <code>integer</code>. See the \manlink{manual|Module-Misc.html::index-type_005fof}.  <a href="structcppemacs_1_1envw.html#a56ec2ca416a4778f8275ffeac8ea80b8">More...</a><br /></td></tr>
 <tr class="separator:a56ec2ca416a4778f8275ffeac8ea80b8"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:af3a483624852313bc3fef4b82098ab8e"><td class="memItemLeft" align="right" valign="top"><a id="af3a483624852313bc3fef4b82098ab8e"></a>
-bool&#160;</td><td class="memItemRight" valign="bottom"><b>is_not_nil</b> (<a class="el" href="group__Core.html#gabd2db90fff7d715e8649f37147f60a3a">value</a> arg) const noexcept</td></tr>
+<tr class="memitem:af3a483624852313bc3fef4b82098ab8e"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structcppemacs_1_1envw.html#af3a483624852313bc3fef4b82098ab8e">is_not_nil</a> (<a class="el" href="group__cppemacs__core.html#gabd2db90fff7d715e8649f37147f60a3a">value</a> arg) const noexcept</td></tr>
+<tr class="memdesc:af3a483624852313bc3fef4b82098ab8e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns whether <em>arg</em> is non-nil. See the \manlink{manual|Module-Misc.html::index-is_005fnot_005fnil}.  <a href="structcppemacs_1_1envw.html#af3a483624852313bc3fef4b82098ab8e">More...</a><br /></td></tr>
 <tr class="separator:af3a483624852313bc3fef4b82098ab8e"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a41d2663b739140720be0ee7e166cc16b"><td class="memItemLeft" align="right" valign="top"><a id="a41d2663b739140720be0ee7e166cc16b"></a>
-bool&#160;</td><td class="memItemRight" valign="bottom"><b>eq</b> (<a class="el" href="group__Core.html#gabd2db90fff7d715e8649f37147f60a3a">value</a> a, <a class="el" href="group__Core.html#gabd2db90fff7d715e8649f37147f60a3a">value</a> b) const noexcept</td></tr>
+<tr class="memitem:a41d2663b739140720be0ee7e166cc16b"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structcppemacs_1_1envw.html#a41d2663b739140720be0ee7e166cc16b">eq</a> (<a class="el" href="group__cppemacs__core.html#gabd2db90fff7d715e8649f37147f60a3a">value</a> a, <a class="el" href="group__cppemacs__core.html#gabd2db90fff7d715e8649f37147f60a3a">value</a> b) const noexcept</td></tr>
+<tr class="memdesc:a41d2663b739140720be0ee7e166cc16b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns whether <em>a</em> is the same object as <em>b</em>. See the \manlink{manual|Module-Misc.html::index-eq-1}.  <a href="structcppemacs_1_1envw.html#a41d2663b739140720be0ee7e166cc16b">More...</a><br /></td></tr>
 <tr class="separator:a41d2663b739140720be0ee7e166cc16b"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a5987ac423772f51ec7d13ae9251df912"><td class="memItemLeft" align="right" valign="top"><a id="a5987ac423772f51ec7d13ae9251df912"></a>
-intmax_t&#160;</td><td class="memItemRight" valign="bottom"><b>extract_integer</b> (<a class="el" href="group__Core.html#gabd2db90fff7d715e8649f37147f60a3a">value</a> arg) const noexcept</td></tr>
+<tr class="memitem:a5987ac423772f51ec7d13ae9251df912"><td class="memItemLeft" align="right" valign="top">intmax_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structcppemacs_1_1envw.html#a5987ac423772f51ec7d13ae9251df912">extract_integer</a> (<a class="el" href="group__cppemacs__core.html#gabd2db90fff7d715e8649f37147f60a3a">value</a> arg) const noexcept</td></tr>
+<tr class="memdesc:a5987ac423772f51ec7d13ae9251df912"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the value of an Emacs integer <em>arg</em>. See the \manlink{manual|Module-Values.html::index-extract_005finteger}.  <a href="structcppemacs_1_1envw.html#a5987ac423772f51ec7d13ae9251df912">More...</a><br /></td></tr>
 <tr class="separator:a5987ac423772f51ec7d13ae9251df912"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a62b4d15501c7a0d3c836b120cd2d28b8"><td class="memItemLeft" align="right" valign="top"><a id="a62b4d15501c7a0d3c836b120cd2d28b8"></a>
-<a class="el" href="group__Core.html#gabd2db90fff7d715e8649f37147f60a3a">value</a>&#160;</td><td class="memItemRight" valign="bottom"><b>make_integer</b> (intmax_t n) const noexcept</td></tr>
+<tr class="memitem:a62b4d15501c7a0d3c836b120cd2d28b8"><td class="memItemLeft" align="right" valign="top"><a class="el" href="group__cppemacs__core.html#gabd2db90fff7d715e8649f37147f60a3a">value</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structcppemacs_1_1envw.html#a62b4d15501c7a0d3c836b120cd2d28b8">make_integer</a> (intmax_t n) const noexcept</td></tr>
+<tr class="memdesc:a62b4d15501c7a0d3c836b120cd2d28b8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Create an Emacs integer with value <em>n</em>. See the \manlink{manual|Module-Values.html::index-make_005finteger}.  <a href="structcppemacs_1_1envw.html#a62b4d15501c7a0d3c836b120cd2d28b8">More...</a><br /></td></tr>
 <tr class="separator:a62b4d15501c7a0d3c836b120cd2d28b8"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa5929efa5fffefda56468013bcff06e8"><td class="memItemLeft" align="right" valign="top"><a id="aa5929efa5fffefda56468013bcff06e8"></a>
-double&#160;</td><td class="memItemRight" valign="bottom"><b>extract_float</b> (<a class="el" href="group__Core.html#gabd2db90fff7d715e8649f37147f60a3a">value</a> arg) const noexcept</td></tr>
+<tr class="memitem:aa5929efa5fffefda56468013bcff06e8"><td class="memItemLeft" align="right" valign="top">double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structcppemacs_1_1envw.html#aa5929efa5fffefda56468013bcff06e8">extract_float</a> (<a class="el" href="group__cppemacs__core.html#gabd2db90fff7d715e8649f37147f60a3a">value</a> arg) const noexcept</td></tr>
+<tr class="memdesc:aa5929efa5fffefda56468013bcff06e8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the value of an Emacs float <em>arg</em>. See the \manlink{manual|Module-Values.html::index-extract_005ffloat}.  <a href="structcppemacs_1_1envw.html#aa5929efa5fffefda56468013bcff06e8">More...</a><br /></td></tr>
 <tr class="separator:aa5929efa5fffefda56468013bcff06e8"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ab9254087dc1050fe7f0eae8a5d1508fa"><td class="memItemLeft" align="right" valign="top"><a id="ab9254087dc1050fe7f0eae8a5d1508fa"></a>
-<a class="el" href="group__Core.html#gabd2db90fff7d715e8649f37147f60a3a">value</a>&#160;</td><td class="memItemRight" valign="bottom"><b>make_float</b> (double d) const noexcept</td></tr>
+<tr class="memitem:ab9254087dc1050fe7f0eae8a5d1508fa"><td class="memItemLeft" align="right" valign="top"><a class="el" href="group__cppemacs__core.html#gabd2db90fff7d715e8649f37147f60a3a">value</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structcppemacs_1_1envw.html#ab9254087dc1050fe7f0eae8a5d1508fa">make_float</a> (double d) const noexcept</td></tr>
+<tr class="memdesc:ab9254087dc1050fe7f0eae8a5d1508fa"><td class="mdescLeft">&#160;</td><td class="mdescRight">Create an Emacs float with value <em>d</em>. See the \manlink{manual|Module-Values.html::index-make_005ffloat}.  <a href="structcppemacs_1_1envw.html#ab9254087dc1050fe7f0eae8a5d1508fa">More...</a><br /></td></tr>
 <tr class="separator:ab9254087dc1050fe7f0eae8a5d1508fa"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a5732d958dd995db1e815bc7265ccff38"><td class="memItemLeft" align="right" valign="top"><a id="a5732d958dd995db1e815bc7265ccff38"></a>
-bool&#160;</td><td class="memItemRight" valign="bottom"><b>copy_string_contents</b> (<a class="el" href="group__Core.html#gabd2db90fff7d715e8649f37147f60a3a">value</a> val, char *buf, ptrdiff_t &amp;len) const noexcept</td></tr>
-<tr class="separator:a5732d958dd995db1e815bc7265ccff38"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ace28d3f7f3686366a040bdd3410ae69e"><td class="memItemLeft" align="right" valign="top"><a id="ace28d3f7f3686366a040bdd3410ae69e"></a>
-<a class="el" href="group__Core.html#gabd2db90fff7d715e8649f37147f60a3a">value</a>&#160;</td><td class="memItemRight" valign="bottom"><b>make_string</b> (const char *str, ptrdiff_t len) const noexcept</td></tr>
+<tr class="memitem:a9434165b5e0bb070e029284bb0ded477"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structcppemacs_1_1envw.html#a9434165b5e0bb070e029284bb0ded477">copy_string_contents</a> (<a class="el" href="group__cppemacs__core.html#gabd2db90fff7d715e8649f37147f60a3a">value</a> <a class="el" href="group__cppemacs__core.html#gabd2db90fff7d715e8649f37147f60a3a">value</a>, char *buffer, ptrdiff_t &amp;<a class="el" href="structcppemacs_1_1envw.html#a256132d6b8fbb3a6fd66604c8be4e1fd">size</a>) const noexcept</td></tr>
+<tr class="memdesc:a9434165b5e0bb070e029284bb0ded477"><td class="mdescLeft">&#160;</td><td class="mdescRight">Copy the content of the Lisp string <em>VALUE</em> to <em>BUFFER</em> as an utf8 null-terminated string.  <a href="structcppemacs_1_1envw.html#a9434165b5e0bb070e029284bb0ded477">More...</a><br /></td></tr>
+<tr class="separator:a9434165b5e0bb070e029284bb0ded477"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ace28d3f7f3686366a040bdd3410ae69e"><td class="memItemLeft" align="right" valign="top"><a class="el" href="group__cppemacs__core.html#gabd2db90fff7d715e8649f37147f60a3a">value</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structcppemacs_1_1envw.html#ace28d3f7f3686366a040bdd3410ae69e">make_string</a> (const char *str, ptrdiff_t len) const noexcept</td></tr>
+<tr class="memdesc:ace28d3f7f3686366a040bdd3410ae69e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Create a Lisp string from a utf8 encoded string. See the \manlink{manual|Module-Values.html::index-make_005fstring}.  <a href="structcppemacs_1_1envw.html#ace28d3f7f3686366a040bdd3410ae69e">More...</a><br /></td></tr>
 <tr class="separator:ace28d3f7f3686366a040bdd3410ae69e"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a55b6eff6e0fd896293b389b263c9e45a"><td class="memItemLeft" align="right" valign="top"><a id="a55b6eff6e0fd896293b389b263c9e45a"></a>
-<a class="el" href="group__Core.html#gabd2db90fff7d715e8649f37147f60a3a">value</a>&#160;</td><td class="memItemRight" valign="bottom"><b>make_string</b> (const std::string &amp;str) const noexcept</td></tr>
+<tr class="memitem:a37c34422087e2eb156f233a20bbffd42"><td class="memItemLeft" align="right" valign="top"><a class="el" href="group__cppemacs__core.html#gabd2db90fff7d715e8649f37147f60a3a">value</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structcppemacs_1_1envw.html#a37c34422087e2eb156f233a20bbffd42">make_string</a> (const char *str) const noexcept</td></tr>
+<tr class="memdesc:a37c34422087e2eb156f233a20bbffd42"><td class="mdescLeft">&#160;</td><td class="mdescRight">Create a Lisp string from a null-terminated utf8 string.  <a href="structcppemacs_1_1envw.html#a37c34422087e2eb156f233a20bbffd42">More...</a><br /></td></tr>
+<tr class="separator:a37c34422087e2eb156f233a20bbffd42"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a55b6eff6e0fd896293b389b263c9e45a"><td class="memItemLeft" align="right" valign="top"><a class="el" href="group__cppemacs__core.html#gabd2db90fff7d715e8649f37147f60a3a">value</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structcppemacs_1_1envw.html#a55b6eff6e0fd896293b389b263c9e45a">make_string</a> (const std::string &amp;str) const noexcept</td></tr>
+<tr class="memdesc:a55b6eff6e0fd896293b389b263c9e45a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Create a Lisp string from a utf8 std::string.  <a href="structcppemacs_1_1envw.html#a55b6eff6e0fd896293b389b263c9e45a">More...</a><br /></td></tr>
 <tr class="separator:a55b6eff6e0fd896293b389b263c9e45a"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ac70f715c427c8090588a19ac643a07e2"><td class="memItemLeft" align="right" valign="top"><a id="ac70f715c427c8090588a19ac643a07e2"></a>
-<a class="el" href="group__Core.html#gabd2db90fff7d715e8649f37147f60a3a">value</a>&#160;</td><td class="memItemRight" valign="bottom"><b>make_user_ptr</b> (emacs_finalizer fin, void *ptr) const noexcept</td></tr>
+<tr class="memitem:ac70f715c427c8090588a19ac643a07e2"><td class="memItemLeft" align="right" valign="top"><a class="el" href="group__cppemacs__core.html#gabd2db90fff7d715e8649f37147f60a3a">value</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structcppemacs_1_1envw.html#ac70f715c427c8090588a19ac643a07e2">make_user_ptr</a> (<a class="el" href="group__cppemacs__core.html#ga9fdd9b4c7e1aaec5c8172ec2dbd14695">emacs_finalizer</a> fin, void *ptr) const noexcept</td></tr>
+<tr class="memdesc:ac70f715c427c8090588a19ac643a07e2"><td class="mdescLeft">&#160;</td><td class="mdescRight">Create a <code>user-ptr</code> object which wraps <em>ptr</em>. See the \manlink{manual|Module-Values.html::index-make_005fuser_005fptr}.  <a href="structcppemacs_1_1envw.html#ac70f715c427c8090588a19ac643a07e2">More...</a><br /></td></tr>
 <tr class="separator:ac70f715c427c8090588a19ac643a07e2"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a05d10dd64b2f45d1e8b40348b8062347"><td class="memItemLeft" align="right" valign="top"><a id="a05d10dd64b2f45d1e8b40348b8062347"></a>
-void *&#160;</td><td class="memItemRight" valign="bottom"><b>get_user_ptr</b> (<a class="el" href="group__Core.html#gabd2db90fff7d715e8649f37147f60a3a">value</a> arg) const noexcept</td></tr>
+<tr class="memitem:a05d10dd64b2f45d1e8b40348b8062347"><td class="memItemLeft" align="right" valign="top">void *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structcppemacs_1_1envw.html#a05d10dd64b2f45d1e8b40348b8062347">get_user_ptr</a> (<a class="el" href="group__cppemacs__core.html#gabd2db90fff7d715e8649f37147f60a3a">value</a> arg) const noexcept</td></tr>
+<tr class="memdesc:a05d10dd64b2f45d1e8b40348b8062347"><td class="mdescLeft">&#160;</td><td class="mdescRight">Extract the C pointer from a <code>user-ptr</code> object. See the \manlink{manual|Module-Values.html::index-get_005fuser_005fptr}.  <a href="structcppemacs_1_1envw.html#a05d10dd64b2f45d1e8b40348b8062347">More...</a><br /></td></tr>
 <tr class="separator:a05d10dd64b2f45d1e8b40348b8062347"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a87d8690a2ed4a92612bcda25f1ad2c9b"><td class="memItemLeft" align="right" valign="top"><a id="a87d8690a2ed4a92612bcda25f1ad2c9b"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>set_user_ptr</b> (<a class="el" href="group__Core.html#gabd2db90fff7d715e8649f37147f60a3a">value</a> arg, void *ptr) const noexcept</td></tr>
+<tr class="memitem:a87d8690a2ed4a92612bcda25f1ad2c9b"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structcppemacs_1_1envw.html#a87d8690a2ed4a92612bcda25f1ad2c9b">set_user_ptr</a> (<a class="el" href="group__cppemacs__core.html#gabd2db90fff7d715e8649f37147f60a3a">value</a> arg, void *ptr) const noexcept</td></tr>
+<tr class="memdesc:a87d8690a2ed4a92612bcda25f1ad2c9b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set the C pointer of a <code>user-ptr</code> object. See the \manlink{manual|Module-Values.html::index-set_005fuser_005fptr}.  <a href="structcppemacs_1_1envw.html#a87d8690a2ed4a92612bcda25f1ad2c9b">More...</a><br /></td></tr>
 <tr class="separator:a87d8690a2ed4a92612bcda25f1ad2c9b"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:abdb376f86e2ab78be1633417f7255dbe"><td class="memItemLeft" align="right" valign="top"><a id="abdb376f86e2ab78be1633417f7255dbe"></a>
-emacs_finalizer&#160;</td><td class="memItemRight" valign="bottom"><b>get_user_finalizer</b> (<a class="el" href="group__Core.html#gabd2db90fff7d715e8649f37147f60a3a">value</a> uptr) const noexcept</td></tr>
+<tr class="memitem:abdb376f86e2ab78be1633417f7255dbe"><td class="memItemLeft" align="right" valign="top"><a class="el" href="group__cppemacs__core.html#ga9fdd9b4c7e1aaec5c8172ec2dbd14695">emacs_finalizer</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structcppemacs_1_1envw.html#abdb376f86e2ab78be1633417f7255dbe">get_user_finalizer</a> (<a class="el" href="group__cppemacs__core.html#gabd2db90fff7d715e8649f37147f60a3a">value</a> uptr) const noexcept</td></tr>
+<tr class="memdesc:abdb376f86e2ab78be1633417f7255dbe"><td class="mdescLeft">&#160;</td><td class="mdescRight">Extract the finalizer from a <code>user-ptr</code> object. See the \manlink{manual|Module-Values.html::index-get_005fuser_005ffinalizer}.  <a href="structcppemacs_1_1envw.html#abdb376f86e2ab78be1633417f7255dbe">More...</a><br /></td></tr>
 <tr class="separator:abdb376f86e2ab78be1633417f7255dbe"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a51563c9b13946b97e46791fd4534358e"><td class="memItemLeft" align="right" valign="top"><a id="a51563c9b13946b97e46791fd4534358e"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>set_user_finalizer</b> (<a class="el" href="group__Core.html#gabd2db90fff7d715e8649f37147f60a3a">value</a> uptr, emacs_finalizer fin) const noexcept</td></tr>
+<tr class="memitem:a51563c9b13946b97e46791fd4534358e"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structcppemacs_1_1envw.html#a51563c9b13946b97e46791fd4534358e">set_user_finalizer</a> (<a class="el" href="group__cppemacs__core.html#gabd2db90fff7d715e8649f37147f60a3a">value</a> uptr, <a class="el" href="group__cppemacs__core.html#ga9fdd9b4c7e1aaec5c8172ec2dbd14695">emacs_finalizer</a> fin) const noexcept</td></tr>
+<tr class="memdesc:a51563c9b13946b97e46791fd4534358e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set the finalizer of a <code>user-ptr</code> object. See the \manlink{manual|Module-Values.html::index-set_005fuser_005ffinalizer}.  <a href="structcppemacs_1_1envw.html#a51563c9b13946b97e46791fd4534358e">More...</a><br /></td></tr>
 <tr class="separator:a51563c9b13946b97e46791fd4534358e"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa2dc5ed3a42f7343d03df2ef2051e3a4"><td class="memItemLeft" align="right" valign="top"><a id="aa2dc5ed3a42f7343d03df2ef2051e3a4"></a>
-<a class="el" href="group__Core.html#gabd2db90fff7d715e8649f37147f60a3a">value</a>&#160;</td><td class="memItemRight" valign="bottom"><b>vec_get</b> (<a class="el" href="group__Core.html#gabd2db90fff7d715e8649f37147f60a3a">value</a> vector, ptrdiff_t index) const noexcept</td></tr>
+<tr class="memitem:aa2dc5ed3a42f7343d03df2ef2051e3a4"><td class="memItemLeft" align="right" valign="top"><a class="el" href="group__cppemacs__core.html#gabd2db90fff7d715e8649f37147f60a3a">value</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structcppemacs_1_1envw.html#aa2dc5ed3a42f7343d03df2ef2051e3a4">vec_get</a> (<a class="el" href="group__cppemacs__core.html#gabd2db90fff7d715e8649f37147f60a3a">value</a> vector, ptrdiff_t index) const noexcept</td></tr>
+<tr class="memdesc:aa2dc5ed3a42f7343d03df2ef2051e3a4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the <em>index-th</em> element of <em>vector</em>. See the \manlink{manual|Module-Values.html::index-vec_005fget}.  <a href="structcppemacs_1_1envw.html#aa2dc5ed3a42f7343d03df2ef2051e3a4">More...</a><br /></td></tr>
 <tr class="separator:aa2dc5ed3a42f7343d03df2ef2051e3a4"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:adb57dae31fb8d7d6dcef728898b63d1a"><td class="memItemLeft" align="right" valign="top"><a id="adb57dae31fb8d7d6dcef728898b63d1a"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>vec_set</b> (<a class="el" href="group__Core.html#gabd2db90fff7d715e8649f37147f60a3a">value</a> vector, ptrdiff_t index, <a class="el" href="group__Core.html#gabd2db90fff7d715e8649f37147f60a3a">value</a> <a class="el" href="group__Core.html#gabd2db90fff7d715e8649f37147f60a3a">value</a>) const noexcept</td></tr>
+<tr class="memitem:adb57dae31fb8d7d6dcef728898b63d1a"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structcppemacs_1_1envw.html#adb57dae31fb8d7d6dcef728898b63d1a">vec_set</a> (<a class="el" href="group__cppemacs__core.html#gabd2db90fff7d715e8649f37147f60a3a">value</a> vector, ptrdiff_t index, <a class="el" href="group__cppemacs__core.html#gabd2db90fff7d715e8649f37147f60a3a">value</a> <a class="el" href="group__cppemacs__core.html#gabd2db90fff7d715e8649f37147f60a3a">value</a>) const noexcept</td></tr>
+<tr class="memdesc:adb57dae31fb8d7d6dcef728898b63d1a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set the <em>index-th</em> element of <em>vector</em> to <em>value</em>. See the \manlink{manual|Module-Values.html::index-vec_005fset}.  <a href="structcppemacs_1_1envw.html#adb57dae31fb8d7d6dcef728898b63d1a">More...</a><br /></td></tr>
 <tr class="separator:adb57dae31fb8d7d6dcef728898b63d1a"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a5996e4c55a9fe5b9f92051c97a273622"><td class="memItemLeft" align="right" valign="top"><a id="a5996e4c55a9fe5b9f92051c97a273622"></a>
-ptrdiff_t&#160;</td><td class="memItemRight" valign="bottom"><b>vec_size</b> (<a class="el" href="group__Core.html#gabd2db90fff7d715e8649f37147f60a3a">value</a> vector) const noexcept</td></tr>
+<tr class="memitem:a5996e4c55a9fe5b9f92051c97a273622"><td class="memItemLeft" align="right" valign="top">ptrdiff_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structcppemacs_1_1envw.html#a5996e4c55a9fe5b9f92051c97a273622">vec_size</a> (<a class="el" href="group__cppemacs__core.html#gabd2db90fff7d715e8649f37147f60a3a">value</a> vector) const noexcept</td></tr>
+<tr class="memdesc:a5996e4c55a9fe5b9f92051c97a273622"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the size of <em>vector</em>. See the \manlink{manual|Module-Values.html::index-vec_005fsize}.  <a href="structcppemacs_1_1envw.html#a5996e4c55a9fe5b9f92051c97a273622">More...</a><br /></td></tr>
 <tr class="separator:a5996e4c55a9fe5b9f92051c97a273622"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a6af555d726477b08fd4eb7756472eefc"><td class="memItemLeft" align="right" valign="top"><a id="a6af555d726477b08fd4eb7756472eefc"></a>
-bool&#160;</td><td class="memItemRight" valign="bottom"><b>should_quit</b> () const noexcept</td></tr>
+<tr><td colspan="2"><div class="groupHeader">Emacs 26</div></td></tr>
+<tr class="memitem:a6af555d726477b08fd4eb7756472eefc"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structcppemacs_1_1envw.html#a6af555d726477b08fd4eb7756472eefc">should_quit</a> () const noexcept</td></tr>
+<tr class="memdesc:a6af555d726477b08fd4eb7756472eefc"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns whether a quit is pending. See the \manlink{manual|Module-Misc.html::index-should_005fquit}.  <a href="structcppemacs_1_1envw.html#a6af555d726477b08fd4eb7756472eefc">More...</a><br /></td></tr>
 <tr class="separator:a6af555d726477b08fd4eb7756472eefc"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a79630ec34fa30fbabba94e2cb08248ba"><td class="memItemLeft" align="right" valign="top"><a id="a79630ec34fa30fbabba94e2cb08248ba"></a>
-<a class="el" href="structcppemacs_1_1process__input__result.html">process_input_result</a>&#160;</td><td class="memItemRight" valign="bottom"><b>process_input</b> () const noexcept</td></tr>
+<tr><td colspan="2"><div class="groupHeader">Emacs 27</div></td></tr>
+<tr class="memitem:a79630ec34fa30fbabba94e2cb08248ba"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structcppemacs_1_1process__input__result.html">process_input_result</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structcppemacs_1_1envw.html#a79630ec34fa30fbabba94e2cb08248ba">process_input</a> () const noexcept</td></tr>
+<tr class="memdesc:a79630ec34fa30fbabba94e2cb08248ba"><td class="mdescLeft">&#160;</td><td class="mdescRight">Processes pending input events and returns whether the module function should quit. See the \manlink{manual|Module-Misc.html::index-process_005finput}.  <a href="structcppemacs_1_1envw.html#a79630ec34fa30fbabba94e2cb08248ba">More...</a><br /></td></tr>
 <tr class="separator:a79630ec34fa30fbabba94e2cb08248ba"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a70443006a54985601c3edfe0cbcab431"><td class="memItemLeft" align="right" valign="top"><a id="a70443006a54985601c3edfe0cbcab431"></a>
-struct timespec&#160;</td><td class="memItemRight" valign="bottom"><b>extract_time</b> (<a class="el" href="group__Core.html#gabd2db90fff7d715e8649f37147f60a3a">value</a> arg) const noexcept</td></tr>
+<tr class="memitem:a70443006a54985601c3edfe0cbcab431"><td class="memItemLeft" align="right" valign="top">struct timespec&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structcppemacs_1_1envw.html#a70443006a54985601c3edfe0cbcab431">extract_time</a> (<a class="el" href="group__cppemacs__core.html#gabd2db90fff7d715e8649f37147f60a3a">value</a> arg) const noexcept</td></tr>
+<tr class="memdesc:a70443006a54985601c3edfe0cbcab431"><td class="mdescLeft">&#160;</td><td class="mdescRight">Interpret <em>arg</em> as a Lisp time value and convert it to a timespec. See the \manlink{manual|Module-Values.html::index-extract_005ftime}.  <a href="structcppemacs_1_1envw.html#a70443006a54985601c3edfe0cbcab431">More...</a><br /></td></tr>
 <tr class="separator:a70443006a54985601c3edfe0cbcab431"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:af5e2d31164c89def3521dc3a41090eda"><td class="memItemLeft" align="right" valign="top"><a id="af5e2d31164c89def3521dc3a41090eda"></a>
-<a class="el" href="group__Core.html#gabd2db90fff7d715e8649f37147f60a3a">value</a>&#160;</td><td class="memItemRight" valign="bottom"><b>make_time</b> (struct timespec time) const noexcept</td></tr>
+<tr class="memitem:af5e2d31164c89def3521dc3a41090eda"><td class="memItemLeft" align="right" valign="top"><a class="el" href="group__cppemacs__core.html#gabd2db90fff7d715e8649f37147f60a3a">value</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structcppemacs_1_1envw.html#af5e2d31164c89def3521dc3a41090eda">make_time</a> (struct timespec time) const noexcept</td></tr>
+<tr class="memdesc:af5e2d31164c89def3521dc3a41090eda"><td class="mdescLeft">&#160;</td><td class="mdescRight">Convert <em>time</em> to a Lisp time value. See the \manlink{manual|Module-Values.html::index-make_005ftime}.  <a href="structcppemacs_1_1envw.html#af5e2d31164c89def3521dc3a41090eda">More...</a><br /></td></tr>
 <tr class="separator:af5e2d31164c89def3521dc3a41090eda"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ae227dd9eea0f7b7905792dd094830604"><td class="memItemLeft" align="right" valign="top"><a id="ae227dd9eea0f7b7905792dd094830604"></a>
-bool&#160;</td><td class="memItemRight" valign="bottom"><b>extract_big_integer</b> (<a class="el" href="group__Core.html#gabd2db90fff7d715e8649f37147f60a3a">value</a> arg, int *sign, ptrdiff_t *count, emacs_limb_t *magnitude) const noexcept</td></tr>
+<tr class="memitem:ae227dd9eea0f7b7905792dd094830604"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structcppemacs_1_1envw.html#ae227dd9eea0f7b7905792dd094830604">extract_big_integer</a> (<a class="el" href="group__cppemacs__core.html#gabd2db90fff7d715e8649f37147f60a3a">value</a> arg, int *sign, ptrdiff_t *count, <a class="el" href="group__cppemacs__core.html#ga48d8eae87b0f97a58731b9fd86afee00">emacs_limb_t</a> *magnitude) const noexcept</td></tr>
+<tr class="memdesc:ae227dd9eea0f7b7905792dd094830604"><td class="mdescLeft">&#160;</td><td class="mdescRight">Extract the arbitrary-precision integer value of <em>arg</em>, which must be an integer (fixnum or bignum). See the \manlink{manual|Module-Values.html::index-extract_005fbig_005finteger}.  <a href="structcppemacs_1_1envw.html#ae227dd9eea0f7b7905792dd094830604">More...</a><br /></td></tr>
 <tr class="separator:ae227dd9eea0f7b7905792dd094830604"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a33b672e9fa41af3d9c18a6ce0390356e"><td class="memItemLeft" align="right" valign="top"><a id="a33b672e9fa41af3d9c18a6ce0390356e"></a>
-<a class="el" href="group__Core.html#gabd2db90fff7d715e8649f37147f60a3a">value</a>&#160;</td><td class="memItemRight" valign="bottom"><b>make_big_integer</b> (int sign, ptrdiff_t count, const emacs_limb_t *magnitude) const noexcept</td></tr>
+<tr class="memitem:a33b672e9fa41af3d9c18a6ce0390356e"><td class="memItemLeft" align="right" valign="top"><a class="el" href="group__cppemacs__core.html#gabd2db90fff7d715e8649f37147f60a3a">value</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structcppemacs_1_1envw.html#a33b672e9fa41af3d9c18a6ce0390356e">make_big_integer</a> (int sign, ptrdiff_t count, const <a class="el" href="group__cppemacs__core.html#ga48d8eae87b0f97a58731b9fd86afee00">emacs_limb_t</a> *magnitude) const noexcept</td></tr>
+<tr class="memdesc:a33b672e9fa41af3d9c18a6ce0390356e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Make an arbitrary-precision Lisp integer with the provided <em>sign</em> and <em>magnitude</em>. See the \manlink{manual|Module-Values.html::index-extract_005fbig_005finteger}.  <a href="structcppemacs_1_1envw.html#a33b672e9fa41af3d9c18a6ce0390356e">More...</a><br /></td></tr>
 <tr class="separator:a33b672e9fa41af3d9c18a6ce0390356e"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a360928dfaf35d6d3a8aa40cdd0fdea0a"><td class="memItemLeft" align="right" valign="top"><a id="a360928dfaf35d6d3a8aa40cdd0fdea0a"></a>
-emacs_finalizer&#160;</td><td class="memItemRight" valign="bottom"><b>get_function_finalizer</b> (<a class="el" href="group__Core.html#gabd2db90fff7d715e8649f37147f60a3a">value</a> arg) const noexcept</td></tr>
+<tr><td colspan="2"><div class="groupHeader">Emacs 28</div></td></tr>
+<tr class="memitem:a360928dfaf35d6d3a8aa40cdd0fdea0a"><td class="memItemLeft" align="right" valign="top"><a class="el" href="group__cppemacs__core.html#ga9fdd9b4c7e1aaec5c8172ec2dbd14695">emacs_finalizer</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structcppemacs_1_1envw.html#a360928dfaf35d6d3a8aa40cdd0fdea0a">get_function_finalizer</a> (<a class="el" href="group__cppemacs__core.html#gabd2db90fff7d715e8649f37147f60a3a">value</a> arg) const noexcept</td></tr>
+<tr class="memdesc:a360928dfaf35d6d3a8aa40cdd0fdea0a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the finalizer of a module function. See the \manlink{manual|Module-Functions.html::index-get_005ffunction_005ffinalizer}.  <a href="structcppemacs_1_1envw.html#a360928dfaf35d6d3a8aa40cdd0fdea0a">More...</a><br /></td></tr>
 <tr class="separator:a360928dfaf35d6d3a8aa40cdd0fdea0a"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a0fa8cbab17e1f0f3304f00d65763b6d1"><td class="memItemLeft" align="right" valign="top"><a id="a0fa8cbab17e1f0f3304f00d65763b6d1"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>set_function_finalizer</b> (<a class="el" href="group__Core.html#gabd2db90fff7d715e8649f37147f60a3a">value</a> arg, emacs_finalizer fin) const noexcept</td></tr>
+<tr class="memitem:a0fa8cbab17e1f0f3304f00d65763b6d1"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structcppemacs_1_1envw.html#a0fa8cbab17e1f0f3304f00d65763b6d1">set_function_finalizer</a> (<a class="el" href="group__cppemacs__core.html#gabd2db90fff7d715e8649f37147f60a3a">value</a> arg, <a class="el" href="group__cppemacs__core.html#ga9fdd9b4c7e1aaec5c8172ec2dbd14695">emacs_finalizer</a> fin) const noexcept</td></tr>
+<tr class="memdesc:a0fa8cbab17e1f0f3304f00d65763b6d1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set the finalizer of a module function. See the \manlink{manual|Module-Functions.html::index-set_005ffunction_005ffinalizer}.  <a href="structcppemacs_1_1envw.html#a0fa8cbab17e1f0f3304f00d65763b6d1">More...</a><br /></td></tr>
 <tr class="separator:a0fa8cbab17e1f0f3304f00d65763b6d1"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa4e738ce103b57b01903517a76810ce3"><td class="memItemLeft" align="right" valign="top"><a id="aa4e738ce103b57b01903517a76810ce3"></a>
-int&#160;</td><td class="memItemRight" valign="bottom"><b>open_channel</b> (<a class="el" href="group__Core.html#gabd2db90fff7d715e8649f37147f60a3a">value</a> pipe_process) const noexcept</td></tr>
+<tr class="memitem:aa4e738ce103b57b01903517a76810ce3"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structcppemacs_1_1envw.html#aa4e738ce103b57b01903517a76810ce3">open_channel</a> (<a class="el" href="group__cppemacs__core.html#gabd2db90fff7d715e8649f37147f60a3a">value</a> pipe_process) const noexcept</td></tr>
+<tr class="memdesc:aa4e738ce103b57b01903517a76810ce3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Open a file descriptor to a pipe process from <code>make-pipe-process</code>. See the \manlink{manual|Module-Misc.html::index-open_005fchannel}..  <a href="structcppemacs_1_1envw.html#aa4e738ce103b57b01903517a76810ce3">More...</a><br /></td></tr>
 <tr class="separator:aa4e738ce103b57b01903517a76810ce3"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa7ca7c010e1f584dcd9a91232559047c"><td class="memItemLeft" align="right" valign="top"><a id="aa7ca7c010e1f584dcd9a91232559047c"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>make_interactive</b> (<a class="el" href="group__Core.html#gabd2db90fff7d715e8649f37147f60a3a">value</a> function, <a class="el" href="group__Core.html#gabd2db90fff7d715e8649f37147f60a3a">value</a> spec) const noexcept</td></tr>
+<tr class="memitem:aa7ca7c010e1f584dcd9a91232559047c"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structcppemacs_1_1envw.html#aa7ca7c010e1f584dcd9a91232559047c">make_interactive</a> (<a class="el" href="group__cppemacs__core.html#gabd2db90fff7d715e8649f37147f60a3a">value</a> function, <a class="el" href="group__cppemacs__core.html#gabd2db90fff7d715e8649f37147f60a3a">value</a> spec) const noexcept</td></tr>
+<tr class="memdesc:aa7ca7c010e1f584dcd9a91232559047c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Make a module function interactive with <code>interactive</code> specification <em>spec</em>. See the \manlink{manual|Module-Functions.html::index-make_005finteractive}.  <a href="structcppemacs_1_1envw.html#aa7ca7c010e1f584dcd9a91232559047c">More...</a><br /></td></tr>
 <tr class="separator:aa7ca7c010e1f584dcd9a91232559047c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a43d9d5dcf0eebe53c25d78a2cc3a210e"><td class="memItemLeft" align="right" valign="top"><a id="a43d9d5dcf0eebe53c25d78a2cc3a210e"></a>
-<a class="el" href="group__Core.html#gabd2db90fff7d715e8649f37147f60a3a">value</a>&#160;</td><td class="memItemRight" valign="bottom"><b>make_unibyte_string</b> (const char *str, ptrdiff_t len) const noexcept</td></tr>
+<tr class="memitem:a43d9d5dcf0eebe53c25d78a2cc3a210e"><td class="memItemLeft" align="right" valign="top"><a class="el" href="group__cppemacs__core.html#gabd2db90fff7d715e8649f37147f60a3a">value</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structcppemacs_1_1envw.html#a43d9d5dcf0eebe53c25d78a2cc3a210e">make_unibyte_string</a> (const char *str, ptrdiff_t len) const noexcept</td></tr>
+<tr class="memdesc:a43d9d5dcf0eebe53c25d78a2cc3a210e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Make a unibyte Lisp string from binary data. See the \manlink{manual|Module-Values.html::index-make_005funibyte_005fstring}..  <a href="structcppemacs_1_1envw.html#a43d9d5dcf0eebe53c25d78a2cc3a210e">More...</a><br /></td></tr>
 <tr class="separator:a43d9d5dcf0eebe53c25d78a2cc3a210e"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga1a575dd4ae123099c2e56391e1301dd8"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structcppemacs_1_1cell.html">cell</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__Core.html#ga1a575dd4ae123099c2e56391e1301dd8">operator-&gt;*</a> (<a class="el" href="group__Core.html#gabd2db90fff7d715e8649f37147f60a3a">value</a> val) const noexcept</td></tr>
-<tr class="separator:ga1a575dd4ae123099c2e56391e1301dd8"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:gac02433ef564e008c8ffb94d9f58c8147"><td class="memTemplParams" colspan="2">template&lt;typename T &gt; </td></tr>
-<tr class="memitem:gac02433ef564e008c8ffb94d9f58c8147"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="structcppemacs_1_1cell.html">cell</a>&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="group__Core.html#gac02433ef564e008c8ffb94d9f58c8147">operator-&gt;*</a> (T &amp;&amp;arg) const</td></tr>
-<tr class="memdesc:gac02433ef564e008c8ffb94d9f58c8147"><td class="mdescLeft">&#160;</td><td class="mdescRight">Perform an arbitrary conversion to Emacs.  <a href="group__Core.html#gac02433ef564e008c8ffb94d9f58c8147">More...</a><br /></td></tr>
-<tr class="separator:gac02433ef564e008c8ffb94d9f58c8147"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aed2d0b202535bc61abf87b58c1112540"><td class="memTemplParams" colspan="2">template&lt;typename T &gt; </td></tr>
-<tr class="memitem:aed2d0b202535bc61abf87b58c1112540"><td class="memTemplItemLeft" align="right" valign="top">T&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="structcppemacs_1_1envw.html#aed2d0b202535bc61abf87b58c1112540">unwrap</a> (<a class="el" href="structcppemacs_1_1expected__type__t.html">expected_type_t</a>&lt; T &gt; tag, <a class="el" href="group__Core.html#gabd2db90fff7d715e8649f37147f60a3a">value</a> val) const noexcept(false)</td></tr>
-<tr class="memdesc:aed2d0b202535bc61abf87b58c1112540"><td class="mdescLeft">&#160;</td><td class="mdescRight">Perform an arbitrary conversion from Emacs.  <a href="structcppemacs_1_1envw.html#aed2d0b202535bc61abf87b58c1112540">More...</a><br /></td></tr>
-<tr class="separator:aed2d0b202535bc61abf87b58c1112540"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a8e98cc7b38f3fb51810eb4ad99bc53d3"><td class="memTemplParams" colspan="2"><a id="a8e98cc7b38f3fb51810eb4ad99bc53d3"></a>
-template&lt;typename T &gt; </td></tr>
-<tr class="memitem:a8e98cc7b38f3fb51810eb4ad99bc53d3"><td class="memTemplItemLeft" align="right" valign="top">T&#160;</td><td class="memTemplItemRight" valign="bottom"><b>unwrap</b> (<a class="el" href="group__Core.html#gabd2db90fff7d715e8649f37147f60a3a">value</a> val) const noexcept(false)</td></tr>
-<tr class="separator:a8e98cc7b38f3fb51810eb4ad99bc53d3"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ab5563f53d408620ca48d9f611bb7d8e2"><td class="memTemplParams" colspan="2"><a id="ab5563f53d408620ca48d9f611bb7d8e2"></a>
-template&lt;typename F &gt; </td></tr>
-<tr class="memitem:ab5563f53d408620ca48d9f611bb7d8e2"><td class="memTemplItemLeft" align="right" valign="top">auto&#160;</td><td class="memTemplItemRight" valign="bottom"><b>run_catching</b> (F f) const noexcept -&gt; detail::invoke_result_t&lt; F &gt;</td></tr>
-<tr class="separator:ab5563f53d408620ca48d9f611bb7d8e2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-static-methods"></a>
+Static Public Member Functions</h2></td></tr>
+<tr class="memitem:ac2eb49d1993455328a8ec71908578d54"><td class="memTemplParams" colspan="2">template&lt;size_t MajorVersion&gt; </td></tr>
+<tr class="memitem:ac2eb49d1993455328a8ec71908578d54"><td class="memTemplItemLeft" align="right" valign="top">static void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="structcppemacs_1_1envw.html#ac2eb49d1993455328a8ec71908578d54">version_check_error</a> () noexcept(false)</td></tr>
+<tr class="memdesc:ac2eb49d1993455328a8ec71908578d54"><td class="mdescLeft">&#160;</td><td class="mdescRight">Throw an exception with the error message <code>"Emacs major version
+&lt;MajorVersion&gt; required"</code>.  <a href="structcppemacs_1_1envw.html#ac2eb49d1993455328a8ec71908578d54">More...</a><br /></td></tr>
+<tr class="separator:ac2eb49d1993455328a8ec71908578d54"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
-<a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
-<div class="textblock"><p>General Emacs environment wrapper. </p>
-</div><h2 class="groupheader">Member Function Documentation</h2>
-<a id="adc73902c00ccdabfceac59719d36c153"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#adc73902c00ccdabfceac59719d36c153">&#9670;&nbsp;</a></span>major_version()</h2>
+<h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
+<a id="a701cbd00a3b4b602d286258b0d43fc76"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a701cbd00a3b4b602d286258b0d43fc76">&#9670;&nbsp;</a></span>envw()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -333,7 +358,38 @@ template&lt;typename F &gt; </td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">unsigned int cppemacs::envw::major_version </td>
+          <td class="memname">constexpr cppemacs::envw::envw </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="group__cppemacs__core.html#gae0592e597dd37c49496e082012c3de92">emacs_env</a> *&#160;</td>
+          <td class="paramname"><em>raw</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">constexpr</span><span class="mlabel">noexcept</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Construct from a raw <a class="el" href="group__cppemacs__core.html#gae0592e597dd37c49496e082012c3de92">emacs_env</a>. </p>
+
+</div>
+</div>
+<h2 class="groupheader">Member Function Documentation</h2>
+<a id="a826907bd575e978486e692f43af036d7"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a826907bd575e978486e692f43af036d7">&#9670;&nbsp;</a></span>check_compatible()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;size_t MajorVersion&gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void cppemacs::envw::check_compatible </td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
           <td> const</td>
@@ -346,16 +402,1054 @@ template&lt;typename F &gt; </td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Get the major version of the current <code>emacs_env</code> </p>
-<dl class="section return"><dt>Returns</dt><dd>The minimum known major version, or UINT_MAX if unknown. </dd></dl>
+<p>Check if this environment supports the given major version's module API, and raises an error otherwise. </p>
+<div class="fragment"><div class="line"><span class="keywordtype">int</span> <a class="code" href="group__cppemacs__core.html#ga3a13d40e5da070f30ce46bbcea618f01">emacs_module_init</a>(<a class="code" href="group__cppemacs__core.html#ga033e1c05132033352240fe379b14cf9d">emacs_runtime</a> *rt) {</div>
+<div class="line">  <a class="code" href="structcppemacs_1_1envw.html#a701cbd00a3b4b602d286258b0d43fc76">envw</a> env = rt-&gt;get_environment(rt);</div>
+<div class="line">  env.run_catching([&amp;]() {</div>
+<div class="line">    env.check_compatible&lt;27&gt;();</div>
+<div class="line">  });</div>
+<div class="line">}</div>
+<div class="ttc" id="agroup__cppemacs__core_html_ga033e1c05132033352240fe379b14cf9d"><div class="ttname"><a href="group__cppemacs__core.html#ga033e1c05132033352240fe379b14cf9d">cppemacs::emacs_runtime</a></div><div class="ttdeci">::emacs_runtime emacs_runtime</div><div class="ttdoc">Struct passed to emacs_module_init().</div><div class="ttdef"><b>Definition:</b> core.hpp:336</div></div>
+<div class="ttc" id="agroup__cppemacs__core_html_ga3a13d40e5da070f30ce46bbcea618f01"><div class="ttname"><a href="group__cppemacs__core.html#ga3a13d40e5da070f30ce46bbcea618f01">emacs_module_init</a></div><div class="ttdeci">int emacs_module_init(cppemacs::emacs_runtime *runtime) noexcept</div><div class="ttdoc">The main entrypoint of the dynamic module. See the \manlink{manual|Module-Initialization....</div><div class="ttdef"><b>Definition:</b> brief_example.cpp:34</div></div>
+<div class="ttc" id="astructcppemacs_1_1envw_html_a701cbd00a3b4b602d286258b0d43fc76"><div class="ttname"><a href="structcppemacs_1_1envw.html#a701cbd00a3b4b602d286258b0d43fc76">cppemacs::envw::envw</a></div><div class="ttdeci">constexpr envw(emacs_env *raw) noexcept</div><div class="ttdoc">Construct from a raw emacs_env.</div><div class="ttdef"><b>Definition:</b> core.hpp:764</div></div>
+</div><!-- fragment --><dl class="section see"><dt>See also</dt><dd><a class="el" href="structcppemacs_1_1envw.html#ac40343a3ce5e040369dd433cef0f6b29" title="Check if this environment supports the module API of the given Emacs major version....">is_compatible()</a> and <a class="el" href="structcppemacs_1_1envw.html#ac2eb49d1993455328a8ec71908578d54" title="Throw an exception with the error message &quot;Emacs major version &lt;MajorVersion&gt; required&quot;.">version_check_error()</a> </dd></dl>
 
 </div>
 </div>
-<a id="aced6615703e6dd33d0637279f5cb6aa6"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aced6615703e6dd33d0637279f5cb6aa6">&#9670;&nbsp;</a></span>maybe_non_local_exit()</h2>
+<a id="a9434165b5e0bb070e029284bb0ded477"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a9434165b5e0bb070e029284bb0ded477">&#9670;&nbsp;</a></span>copy_string_contents()</h2>
 
 <div class="memitem">
 <div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool cppemacs::envw::copy_string_contents </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="group__cppemacs__core.html#gabd2db90fff7d715e8649f37147f60a3a">value</a>&#160;</td>
+          <td class="paramname"><em>value</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">char *&#160;</td>
+          <td class="paramname"><em>buffer</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">ptrdiff_t &amp;&#160;</td>
+          <td class="paramname"><em>size</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">noexcept</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Copy the content of the Lisp string <em>VALUE</em> to <em>BUFFER</em> as an utf8 null-terminated string. </p>
+<p><em>SIZE</em> must point to the total size of the buffer. If <em>BUFFER</em> is NULL or if <em>SIZE</em> is not big enough, write the required buffer size to SIZE and return true.</p>
+<p>Note that <em>SIZE</em> must include the last null byte (e.g. "abc" needs a buffer of size 4).</p>
+<p>Return true if the string was successfully copied.</p>
+<p>See the \manlink{manual|Module-Values.html::index-copy_005fstring_005fcontents}. </p>
+
+</div>
+</div>
+<a id="a41d2663b739140720be0ee7e166cc16b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a41d2663b739140720be0ee7e166cc16b">&#9670;&nbsp;</a></span>eq()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool cppemacs::envw::eq </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="group__cppemacs__core.html#gabd2db90fff7d715e8649f37147f60a3a">value</a>&#160;</td>
+          <td class="paramname"><em>a</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="group__cppemacs__core.html#gabd2db90fff7d715e8649f37147f60a3a">value</a>&#160;</td>
+          <td class="paramname"><em>b</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">noexcept</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Returns whether <em>a</em> is the same object as <em>b</em>. See the \manlink{manual|Module-Misc.html::index-eq-1}. </p>
+
+</div>
+</div>
+<a id="a25ee0a095d9e15b7da3588ca2dcb88c3"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a25ee0a095d9e15b7da3588ca2dcb88c3">&#9670;&nbsp;</a></span>extract()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;FROM_EMACS_TYPE T&gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">T cppemacs::envw::extract </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="group__cppemacs__core.html#gabd2db90fff7d715e8649f37147f60a3a">value</a>&#160;</td>
+          <td class="paramname"><em>val</em></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">noexcept</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Perform an arbitrary conversion from Emacs. </p>
+<dl class="section warning"><dt>Warning</dt><dd>This throws an exception (via <a class="el" href="structcppemacs_1_1envw.html#aa343c86e3e82410365f74c0fb0421cc0" title="Check for non-local exit, and throw an exception if there is one.">maybe_non_local_exit()</a>) if Emacs is in a non-local exit state, since the return value is typically meaningless. Conversions themselves are also encouraged to throw exceptions for this reason.</dd></dl>
+<dl class="section see"><dt>See also</dt><dd><a class="el" href="group__cppemacs__conversions.html#gabe42dcbe07c7256b1779031e510c3f6d" title="Specifies that Emacs values can be converted to values of type T.">from_emacs_convertible</a> for what values can be converted.</dd></dl>
+<p><a class="el" href="structcppemacs_1_1cell.html#accd34273cde7212352b07c7f3b736767" title="Convert this cell to the given C++ type. See Type Conversions.">cell::extract()</a> which is often more convenient. </p>
+
+</div>
+</div>
+<a id="ae227dd9eea0f7b7905792dd094830604"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae227dd9eea0f7b7905792dd094830604">&#9670;&nbsp;</a></span>extract_big_integer()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool cppemacs::envw::extract_big_integer </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="group__cppemacs__core.html#gabd2db90fff7d715e8649f37147f60a3a">value</a>&#160;</td>
+          <td class="paramname"><em>arg</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int *&#160;</td>
+          <td class="paramname"><em>sign</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">ptrdiff_t *&#160;</td>
+          <td class="paramname"><em>count</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="group__cppemacs__core.html#ga48d8eae87b0f97a58731b9fd86afee00">emacs_limb_t</a> *&#160;</td>
+          <td class="paramname"><em>magnitude</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">noexcept</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Extract the arbitrary-precision integer value of <em>arg</em>, which must be an integer (fixnum or bignum). See the \manlink{manual|Module-Values.html::index-extract_005fbig_005finteger}. </p>
+
+</div>
+</div>
+<a id="aa5929efa5fffefda56468013bcff06e8"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa5929efa5fffefda56468013bcff06e8">&#9670;&nbsp;</a></span>extract_float()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">double cppemacs::envw::extract_float </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="group__cppemacs__core.html#gabd2db90fff7d715e8649f37147f60a3a">value</a>&#160;</td>
+          <td class="paramname"><em>arg</em></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">noexcept</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Get the value of an Emacs float <em>arg</em>. See the \manlink{manual|Module-Values.html::index-extract_005ffloat}. </p>
+
+</div>
+</div>
+<a id="a5987ac423772f51ec7d13ae9251df912"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a5987ac423772f51ec7d13ae9251df912">&#9670;&nbsp;</a></span>extract_integer()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">intmax_t cppemacs::envw::extract_integer </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="group__cppemacs__core.html#gabd2db90fff7d715e8649f37147f60a3a">value</a>&#160;</td>
+          <td class="paramname"><em>arg</em></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">noexcept</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Get the value of an Emacs integer <em>arg</em>. See the \manlink{manual|Module-Values.html::index-extract_005finteger}. </p>
+
+</div>
+</div>
+<a id="a70443006a54985601c3edfe0cbcab431"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a70443006a54985601c3edfe0cbcab431">&#9670;&nbsp;</a></span>extract_time()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">struct timespec cppemacs::envw::extract_time </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="group__cppemacs__core.html#gabd2db90fff7d715e8649f37147f60a3a">value</a>&#160;</td>
+          <td class="paramname"><em>arg</em></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">noexcept</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Interpret <em>arg</em> as a Lisp time value and convert it to a timespec. See the \manlink{manual|Module-Values.html::index-extract_005ftime}. </p>
+
+</div>
+</div>
+<a id="a327ca8d3c078069c68a1301d6c8e7b67"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a327ca8d3c078069c68a1301d6c8e7b67">&#9670;&nbsp;</a></span>free_global_ref()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void cppemacs::envw::free_global_ref </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="group__cppemacs__core.html#gabd2db90fff7d715e8649f37147f60a3a">value</a>&#160;</td>
+          <td class="paramname"><em>global_value</em></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">noexcept</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Free a global reference obtained with <a class="el" href="structcppemacs_1_1envw.html#a30f5e112d7e62b8abeccdce17126e51b" title="Make a global reference to a value. See the \manlink{manual|Module-Values.html::index-make_005fglobal...">make_global_ref()</a>. See the \manlink{manual|Module-Values.html::index-free_005fglobal_005fref}. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">global_value</td><td>A global reference obtained with <a class="el" href="structcppemacs_1_1envw.html#a30f5e112d7e62b8abeccdce17126e51b" title="Make a global reference to a value. See the \manlink{manual|Module-Values.html::index-make_005fglobal...">make_global_ref()</a>. </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="a19d8333de293a386e738b145859a4814"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a19d8333de293a386e738b145859a4814">&#9670;&nbsp;</a></span>funcall() <span class="overload">[1/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="group__cppemacs__core.html#gabd2db90fff7d715e8649f37147f60a3a">value</a> cppemacs::envw::funcall </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="group__cppemacs__core.html#gabd2db90fff7d715e8649f37147f60a3a">value</a>&#160;</td>
+          <td class="paramname"><em>func</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">ptrdiff_t&#160;</td>
+          <td class="paramname"><em>nargs</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="group__cppemacs__core.html#gabd2db90fff7d715e8649f37147f60a3a">value</a> *&#160;</td>
+          <td class="paramname"><em>args</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">noexcept</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Call func with the provided arguments. See the \manlink{manual|Module-Misc.html::index-funcall-1}. </p>
+
+</div>
+</div>
+<a id="a01763a4b1a8727ffc46b778c26eeb4fb"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a01763a4b1a8727ffc46b778c26eeb4fb">&#9670;&nbsp;</a></span>funcall() <span class="overload">[2/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="group__cppemacs__core.html#gabd2db90fff7d715e8649f37147f60a3a">value</a> cppemacs::envw::funcall </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="group__cppemacs__core.html#gabd2db90fff7d715e8649f37147f60a3a">value</a>&#160;</td>
+          <td class="paramname"><em>func</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">std::initializer_list&lt; <a class="el" href="group__cppemacs__core.html#gabd2db90fff7d715e8649f37147f60a3a">value</a> &gt;&#160;</td>
+          <td class="paramname"><em>args</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">noexcept</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Call func with the provided arguments. See the \manlink{manual|Module-Misc.html::index-funcall-1}. </p>
+
+</div>
+</div>
+<a id="a360928dfaf35d6d3a8aa40cdd0fdea0a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a360928dfaf35d6d3a8aa40cdd0fdea0a">&#9670;&nbsp;</a></span>get_function_finalizer()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="group__cppemacs__core.html#ga9fdd9b4c7e1aaec5c8172ec2dbd14695">emacs_finalizer</a> cppemacs::envw::get_function_finalizer </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="group__cppemacs__core.html#gabd2db90fff7d715e8649f37147f60a3a">value</a>&#160;</td>
+          <td class="paramname"><em>arg</em></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">noexcept</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Get the finalizer of a module function. See the \manlink{manual|Module-Functions.html::index-get_005ffunction_005ffinalizer}. </p>
+
+</div>
+</div>
+<a id="abdb376f86e2ab78be1633417f7255dbe"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#abdb376f86e2ab78be1633417f7255dbe">&#9670;&nbsp;</a></span>get_user_finalizer()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="group__cppemacs__core.html#ga9fdd9b4c7e1aaec5c8172ec2dbd14695">emacs_finalizer</a> cppemacs::envw::get_user_finalizer </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="group__cppemacs__core.html#gabd2db90fff7d715e8649f37147f60a3a">value</a>&#160;</td>
+          <td class="paramname"><em>uptr</em></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">noexcept</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Extract the finalizer from a <code>user-ptr</code> object. See the \manlink{manual|Module-Values.html::index-get_005fuser_005ffinalizer}. </p>
+
+</div>
+</div>
+<a id="a05d10dd64b2f45d1e8b40348b8062347"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a05d10dd64b2f45d1e8b40348b8062347">&#9670;&nbsp;</a></span>get_user_ptr()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void* cppemacs::envw::get_user_ptr </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="group__cppemacs__core.html#gabd2db90fff7d715e8649f37147f60a3a">value</a>&#160;</td>
+          <td class="paramname"><em>arg</em></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">noexcept</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Extract the C pointer from a <code>user-ptr</code> object. See the \manlink{manual|Module-Values.html::index-get_005fuser_005fptr}. </p>
+
+</div>
+</div>
+<a id="a1eec660dd9e009d04c7f237750a74324"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a1eec660dd9e009d04c7f237750a74324">&#9670;&nbsp;</a></span>inject()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;TO_EMACS_TYPE T&gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="structcppemacs_1_1cell.html">cell</a> cppemacs::envw::inject </td>
+          <td>(</td>
+          <td class="paramtype">T &amp;&amp;&#160;</td>
+          <td class="paramname"><em>arg</em></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Perform an arbitrary conversion to Emacs. </p>
+<dl class="section warning"><dt>Warning</dt><dd>This may thrown an exception, depending on the type, which is not allowed in the top-level <a class="el" href="group__cppemacs__core.html#ga3a13d40e5da070f30ce46bbcea618f01" title="The main entrypoint of the dynamic module. See the \manlink{manual|Module-Initialization....">emacs_module_init()</a> function. If you want to be safe, use <a class="el" href="structcppemacs_1_1envw.html#aa977b2b678096adf617ec7500359d353">run_catching()</a>.</dd></dl>
+<dl class="section see"><dt>See also</dt><dd><a class="el" href="group__cppemacs__conversions.html#gacfb11b6b7ae8c89d9aeb1330bc1a5ec8" title="Specifies that values of type T can be converted to Emacs values.">to_emacs_convertible</a> for what values can be converted.</dd></dl>
+<p><a class="el" href="structcppemacs_1_1envw.html#ac02433ef564e008c8ffb94d9f58c8147" title="Perform an arbitrary conversion to Emacs. Synonym for inject().">operator-&gt;*()</a> for a terser alias. </p>
+
+</div>
+</div>
+<a id="aaa610d1bed0752f07707913d1b496693"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aaa610d1bed0752f07707913d1b496693">&#9670;&nbsp;</a></span>intern()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="group__cppemacs__core.html#gabd2db90fff7d715e8649f37147f60a3a">value</a> cppemacs::envw::intern </td>
+          <td>(</td>
+          <td class="paramtype">const char *&#160;</td>
+          <td class="paramname"><em>name</em></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">noexcept</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Get the interned Emacs symbol with the given null-terminated ASCII name. See the \manlink{manual|Module-Misc.html::index-intern-1}.. </p>
+
+</div>
+</div>
+<a id="ac40343a3ce5e040369dd433cef0f6b29"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac40343a3ce5e040369dd433cef0f6b29">&#9670;&nbsp;</a></span>is_compatible()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;size_t MajorVersion&gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool cppemacs::envw::is_compatible </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">noexcept</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Check if this environment supports the module API of the given Emacs major version. A check occurs at both compile time and runtime. </p>
+<ul>
+<li>At compile time, this fails if <code>MajorVersion</code> is greater than <a class="el" href="group__cppemacs__core.html#gaa1a1d76b9ec039ff2895ea58395c21f2">EMACS_MAJOR_VERSION</a> or the maximum supported by cppemacs.</li>
+<li>At runtime, returns <code><a class="el" href="structcppemacs_1_1envw.html#a256132d6b8fbb3a6fd66604c8be4e1fd" title="The size, in bytes, of the emacs_env in the running Emacs binary.">size()</a> &gt;= sizeof(emacs_env_NN)</code>. This cannot distinguish between major versions with no new functions (e.g. <a class="el" href="structcppemacs_1_1envw.html#ac40343a3ce5e040369dd433cef0f6b29" title="Check if this environment supports the module API of the given Emacs major version....">is_compatible&lt;29&gt;()</a> will return true even when running Emacs 28).</li>
+</ul>
+<div class="fragment"><div class="line"><span class="keywordtype">int</span> <a class="code" href="group__cppemacs__core.html#ga3a13d40e5da070f30ce46bbcea618f01">emacs_module_init</a>(<a class="code" href="group__cppemacs__core.html#ga033e1c05132033352240fe379b14cf9d">emacs_runtime</a> *rt) {</div>
+<div class="line">  <a class="code" href="structcppemacs_1_1envw.html#a701cbd00a3b4b602d286258b0d43fc76">envw</a> env = rt-&gt;get_environment(rt);</div>
+<div class="line">  <span class="keywordflow">if</span> (!env.is_compatible&lt;27&gt;()) <span class="keywordflow">return</span> 1;</div>
+<div class="line">}</div>
+</div><!-- fragment --><dl class="section see"><dt>See also</dt><dd><a class="el" href="structcppemacs_1_1envw.html#a826907bd575e978486e692f43af036d7" title="Check if this environment supports the given major version&#39;s module API, and raises an error otherwis...">check_compatible()</a> which throws an exception if the runtime check fails. </dd></dl>
+
+</div>
+</div>
+<a id="af3a483624852313bc3fef4b82098ab8e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af3a483624852313bc3fef4b82098ab8e">&#9670;&nbsp;</a></span>is_not_nil()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool cppemacs::envw::is_not_nil </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="group__cppemacs__core.html#gabd2db90fff7d715e8649f37147f60a3a">value</a>&#160;</td>
+          <td class="paramname"><em>arg</em></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">noexcept</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Returns whether <em>arg</em> is non-nil. See the \manlink{manual|Module-Misc.html::index-is_005fnot_005fnil}. </p>
+
+</div>
+</div>
+<a id="a33b672e9fa41af3d9c18a6ce0390356e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a33b672e9fa41af3d9c18a6ce0390356e">&#9670;&nbsp;</a></span>make_big_integer()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="group__cppemacs__core.html#gabd2db90fff7d715e8649f37147f60a3a">value</a> cppemacs::envw::make_big_integer </td>
+          <td>(</td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>sign</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">ptrdiff_t&#160;</td>
+          <td class="paramname"><em>count</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const <a class="el" href="group__cppemacs__core.html#ga48d8eae87b0f97a58731b9fd86afee00">emacs_limb_t</a> *&#160;</td>
+          <td class="paramname"><em>magnitude</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">noexcept</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Make an arbitrary-precision Lisp integer with the provided <em>sign</em> and <em>magnitude</em>. See the \manlink{manual|Module-Values.html::index-extract_005fbig_005finteger}. </p>
+
+</div>
+</div>
+<a id="ab9254087dc1050fe7f0eae8a5d1508fa"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab9254087dc1050fe7f0eae8a5d1508fa">&#9670;&nbsp;</a></span>make_float()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="group__cppemacs__core.html#gabd2db90fff7d715e8649f37147f60a3a">value</a> cppemacs::envw::make_float </td>
+          <td>(</td>
+          <td class="paramtype">double&#160;</td>
+          <td class="paramname"><em>d</em></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">noexcept</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Create an Emacs float with value <em>d</em>. See the \manlink{manual|Module-Values.html::index-make_005ffloat}. </p>
+
+</div>
+</div>
+<a id="abcfe6e0559744499bdc3c3e7abba5db6"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#abcfe6e0559744499bdc3c3e7abba5db6">&#9670;&nbsp;</a></span>make_function()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="group__cppemacs__core.html#gabd2db90fff7d715e8649f37147f60a3a">value</a> cppemacs::envw::make_function </td>
+          <td>(</td>
+          <td class="paramtype">ptrdiff_t&#160;</td>
+          <td class="paramname"><em>min_arity</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">ptrdiff_t&#160;</td>
+          <td class="paramname"><em>max_arity</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="group__cppemacs__core.html#ga8b10f701e2c3225ed203909023fcbf28">emacs_function</a>&#160;</td>
+          <td class="paramname"><em>func</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const char *&#160;</td>
+          <td class="paramname"><em>docstring</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">void *&#160;</td>
+          <td class="paramname"><em>data</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">noexcept</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Make an Emacs <em>module function</em> from a function pointer and associated data. See the \manlink{manual|Module-Functions.html::index-make_005ffunction}. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">min_arity</td><td>The minimum number of arguments the function can be invoked with.</td></tr>
+    <tr><td class="paramname">max_arity</td><td>The maximum number of arguments the function can be invoked with.</td></tr>
+    <tr><td class="paramname">func</td><td>The implementation of the function, which will be called with a new environment, the arguments, and the associated <code>data</code>.</td></tr>
+    <tr><td class="paramname">docstring</td><td>The documentation string of the function. See the \manlink{manual|Function-Documentation.html}. In particular, a <code>(fn arglist)</code> line at the end is helpful to provide argument names, since they cannot be inferred from the source code.</td></tr>
+    <tr><td class="paramname">data</td><td>The data to associate with the function, which will be passed to <code>func</code>.</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section see"><dt>See also</dt><dd><a class="el" href="group__cppemacs__utilities.html#ga67e111365e428a5fc759b439a10b5ef2" title="Make a module_function with the given minimum and maximum arity.">make_module_function()</a> and <a class="el" href="group__cppemacs__utilities.html#ga18fe9586cb561bd3a4609527052e502e" title="Make a spreader module function with the given minimum and maximum arity.">make_spreader_function()</a> for convenience functions that produce <a class="el" href="group__cppemacs__core.html#ga8b10f701e2c3225ed203909023fcbf28">emacs_functions</a> from C++ closures.</dd></dl>
+<p><b>Example</b> </p><div class="fragment"><div class="line"><span class="keyword">static</span> <a class="code" href="group__cppemacs__core.html#gabd2db90fff7d715e8649f37147f60a3a">value</a> some_module_function(<a class="code" href="group__cppemacs__core.html#gae0592e597dd37c49496e082012c3de92">emacs_env</a> *raw_env, ptrdiff_t nargs, <a class="code" href="group__cppemacs__core.html#gabd2db90fff7d715e8649f37147f60a3a">value</a> *args, <span class="keywordtype">void</span> *data) noexcept {</div>
+<div class="line">  <a class="code" href="structcppemacs_1_1envw.html#a701cbd00a3b4b602d286258b0d43fc76">envw</a> env = raw_env;</div>
+<div class="line">  <a class="code" href="group__cppemacs__core.html#gabd2db90fff7d715e8649f37147f60a3a">value</a> arg1 = args[0];</div>
+<div class="line">  <a class="code" href="group__cppemacs__core.html#gabd2db90fff7d715e8649f37147f60a3a">value</a> arg2 = nargs &gt;= 2 ? args[1] : env.intern(<span class="stringliteral">&quot;10&quot;</span>);</div>
+<div class="line">  <span class="keywordflow">return</span> (env-&gt;*<span class="stringliteral">&quot;+&quot;</span>)(arg1, arg2);</div>
+<div class="line">}</div>
+<div class="line"> </div>
+<div class="line"><span class="keyword">extern</span> <span class="stringliteral">&quot;C&quot;</span> <span class="keywordtype">int</span> <a class="code" href="group__cppemacs__core.html#ga3a13d40e5da070f30ce46bbcea618f01">emacs_module_init</a>(<a class="code" href="group__cppemacs__core.html#ga033e1c05132033352240fe379b14cf9d">emacs_runtime</a> *rt) noexcept {</div>
+<div class="line">  <a class="code" href="structcppemacs_1_1envw.html#a701cbd00a3b4b602d286258b0d43fc76">envw</a> env = rt-&gt;get_environment(rt);</div>
+<div class="line"> </div>
+<div class="line">  <a class="code" href="group__cppemacs__core.html#gabd2db90fff7d715e8649f37147f60a3a">value</a> fun = env-&gt;make_function(</div>
+<div class="line">    1, 2, some_module_function,</div>
+<div class="line">    <span class="stringliteral">&quot;R(Add X to Y, or 10 if unspecified.</span></div>
+<div class="line"><span class="stringliteral"></span> </div>
+<div class="line"><span class="stringliteral">(fn X &amp;optional Y))&quot;</span>, <span class="keyword">nullptr</span>);</div>
+<div class="line"> </div>
+<div class="line">  (env-&gt;*<span class="stringliteral">&quot;defalias&quot;</span>)(<span class="stringliteral">&quot;some-module-function&quot;</span>, fun);</div>
+<div class="line"> </div>
+<div class="line">  <span class="keywordflow">return</span> 0;</div>
+<div class="line">}</div>
+<div class="ttc" id="agroup__cppemacs__core_html_gabd2db90fff7d715e8649f37147f60a3a"><div class="ttname"><a href="group__cppemacs__core.html#gabd2db90fff7d715e8649f37147f60a3a">cppemacs::value</a></div><div class="ttdeci">emacs_value value</div><div class="ttdoc">Raw opaque pointer representing an Emacs value. See cell for the wrapper, and envw for functions that...</div><div class="ttdef"><b>Definition:</b> core.hpp:314</div></div>
+<div class="ttc" id="agroup__cppemacs__core_html_gae0592e597dd37c49496e082012c3de92"><div class="ttname"><a href="group__cppemacs__core.html#gae0592e597dd37c49496e082012c3de92">cppemacs::emacs_env</a></div><div class="ttdeci">::emacs_env emacs_env</div><div class="ttdoc">Raw Emacs environment. You should use envw in most cases.</div><div class="ttdef"><b>Definition:</b> core.hpp:299</div></div>
+</div><!-- fragment --> 
+</div>
+</div>
+<a id="a30f5e112d7e62b8abeccdce17126e51b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a30f5e112d7e62b8abeccdce17126e51b">&#9670;&nbsp;</a></span>make_global_ref()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="group__cppemacs__core.html#gabd2db90fff7d715e8649f37147f60a3a">value</a> cppemacs::envw::make_global_ref </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="group__cppemacs__core.html#gabd2db90fff7d715e8649f37147f60a3a">value</a>&#160;</td>
+          <td class="paramname"><em>val</em></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">noexcept</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Make a global reference to a value. See the \manlink{manual|Module-Values.html::index-make_005fglobal_005fref}. </p>
+<dl class="section note"><dt>Note</dt><dd>This value must be freed exactly once with <a class="el" href="structcppemacs_1_1envw.html#a327ca8d3c078069c68a1301d6c8e7b67">free_global_ref()</a>.</dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>A <a class="el" href="group__cppemacs__core.html#gabd2db90fff7d715e8649f37147f60a3a">value</a> that can be used beyond the lifetime of this environment. </dd></dl>
+
+</div>
+</div>
+<a id="a62b4d15501c7a0d3c836b120cd2d28b8"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a62b4d15501c7a0d3c836b120cd2d28b8">&#9670;&nbsp;</a></span>make_integer()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="group__cppemacs__core.html#gabd2db90fff7d715e8649f37147f60a3a">value</a> cppemacs::envw::make_integer </td>
+          <td>(</td>
+          <td class="paramtype">intmax_t&#160;</td>
+          <td class="paramname"><em>n</em></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">noexcept</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Create an Emacs integer with value <em>n</em>. See the \manlink{manual|Module-Values.html::index-make_005finteger}. </p>
+
+</div>
+</div>
+<a id="aa7ca7c010e1f584dcd9a91232559047c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa7ca7c010e1f584dcd9a91232559047c">&#9670;&nbsp;</a></span>make_interactive()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void cppemacs::envw::make_interactive </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="group__cppemacs__core.html#gabd2db90fff7d715e8649f37147f60a3a">value</a>&#160;</td>
+          <td class="paramname"><em>function</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="group__cppemacs__core.html#gabd2db90fff7d715e8649f37147f60a3a">value</a>&#160;</td>
+          <td class="paramname"><em>spec</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">noexcept</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Make a module function interactive with <code>interactive</code> specification <em>spec</em>. See the \manlink{manual|Module-Functions.html::index-make_005finteractive}. </p>
+
+</div>
+</div>
+<a id="a37c34422087e2eb156f233a20bbffd42"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a37c34422087e2eb156f233a20bbffd42">&#9670;&nbsp;</a></span>make_string() <span class="overload">[1/3]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="group__cppemacs__core.html#gabd2db90fff7d715e8649f37147f60a3a">value</a> cppemacs::envw::make_string </td>
+          <td>(</td>
+          <td class="paramtype">const char *&#160;</td>
+          <td class="paramname"><em>str</em></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">noexcept</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Create a Lisp string from a null-terminated utf8 string. </p>
+
+</div>
+</div>
+<a id="ace28d3f7f3686366a040bdd3410ae69e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ace28d3f7f3686366a040bdd3410ae69e">&#9670;&nbsp;</a></span>make_string() <span class="overload">[2/3]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="group__cppemacs__core.html#gabd2db90fff7d715e8649f37147f60a3a">value</a> cppemacs::envw::make_string </td>
+          <td>(</td>
+          <td class="paramtype">const char *&#160;</td>
+          <td class="paramname"><em>str</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">ptrdiff_t&#160;</td>
+          <td class="paramname"><em>len</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">noexcept</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Create a Lisp string from a utf8 encoded string. See the \manlink{manual|Module-Values.html::index-make_005fstring}. </p>
+
+</div>
+</div>
+<a id="a55b6eff6e0fd896293b389b263c9e45a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a55b6eff6e0fd896293b389b263c9e45a">&#9670;&nbsp;</a></span>make_string() <span class="overload">[3/3]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="group__cppemacs__core.html#gabd2db90fff7d715e8649f37147f60a3a">value</a> cppemacs::envw::make_string </td>
+          <td>(</td>
+          <td class="paramtype">const std::string &amp;&#160;</td>
+          <td class="paramname"><em>str</em></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">noexcept</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Create a Lisp string from a utf8 std::string. </p>
+
+</div>
+</div>
+<a id="af5e2d31164c89def3521dc3a41090eda"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af5e2d31164c89def3521dc3a41090eda">&#9670;&nbsp;</a></span>make_time()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="group__cppemacs__core.html#gabd2db90fff7d715e8649f37147f60a3a">value</a> cppemacs::envw::make_time </td>
+          <td>(</td>
+          <td class="paramtype">struct timespec&#160;</td>
+          <td class="paramname"><em>time</em></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">noexcept</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Convert <em>time</em> to a Lisp time value. See the \manlink{manual|Module-Values.html::index-make_005ftime}. </p>
+
+</div>
+</div>
+<a id="a43d9d5dcf0eebe53c25d78a2cc3a210e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a43d9d5dcf0eebe53c25d78a2cc3a210e">&#9670;&nbsp;</a></span>make_unibyte_string()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="group__cppemacs__core.html#gabd2db90fff7d715e8649f37147f60a3a">value</a> cppemacs::envw::make_unibyte_string </td>
+          <td>(</td>
+          <td class="paramtype">const char *&#160;</td>
+          <td class="paramname"><em>str</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">ptrdiff_t&#160;</td>
+          <td class="paramname"><em>len</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">noexcept</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Make a unibyte Lisp string from binary data. See the \manlink{manual|Module-Values.html::index-make_005funibyte_005fstring}.. </p>
+
+</div>
+</div>
+<a id="ac70f715c427c8090588a19ac643a07e2"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac70f715c427c8090588a19ac643a07e2">&#9670;&nbsp;</a></span>make_user_ptr()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="group__cppemacs__core.html#gabd2db90fff7d715e8649f37147f60a3a">value</a> cppemacs::envw::make_user_ptr </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="group__cppemacs__core.html#ga9fdd9b4c7e1aaec5c8172ec2dbd14695">emacs_finalizer</a>&#160;</td>
+          <td class="paramname"><em>fin</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">void *&#160;</td>
+          <td class="paramname"><em>ptr</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">noexcept</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Create a <code>user-ptr</code> object which wraps <em>ptr</em>. See the \manlink{manual|Module-Values.html::index-make_005fuser_005fptr}. </p>
+
+</div>
+</div>
+<a id="aa343c86e3e82410365f74c0fb0421cc0"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa343c86e3e82410365f74c0fb0421cc0">&#9670;&nbsp;</a></span>maybe_non_local_exit()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;bool Unbox = CPPEMACS_ENABLE_EXCEPTION_BOXING&gt; </div>
 <table class="mlabels">
   <tr>
   <td class="mlabels-left">
@@ -373,32 +1467,110 @@ template&lt;typename F &gt; </td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
-<p>Check for non-local exit, and throw if there is one. </p>
+
+<p>Check for <a class="el" href="structcppemacs_1_1envw.html#a80ad1e199f0427ce4620583594a16261">non-local exit</a>, and throw an exception if there is one. </p>
+<p>This allows using C++ stack unwinding to return control to Emacs naturally.</p>
+<dl class="tparams"><dt>Template Parameters</dt><dd>
+  <table class="tparams">
+    <tr><td class="paramname">Unbox</td><td>Determines how the non-local exit should be performed: <ul>
+<li>If false, this method does <b>not</b> clear the pending non-local exit, and does not capture the type (signal/throw) or its data, it merely throws <a class="el" href="structcppemacs_1_1non__local__exit.html">non_local_exit</a>.</li>
+<li>If true, this method uses <a class="el" href="structcppemacs_1_1envw.html#abc22b0e8abe9817b095870cf43419e0b" title="Check for non-local exit, and throw it as a C++ exception (signal or thrown) if there is one.">rethrow_non_local_exit()</a> (which see) to re-raise the exception. </li>
+</ul>
+</td></tr>
+  </table>
+  </dd>
+</dl>
 
 </div>
 </div>
-<a id="aed2d0b202535bc61abf87b58c1112540"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aed2d0b202535bc61abf87b58c1112540">&#9670;&nbsp;</a></span>unwrap()</h2>
+<a id="a80ad1e199f0427ce4620583594a16261"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a80ad1e199f0427ce4620583594a16261">&#9670;&nbsp;</a></span>non_local_exit_check()</h2>
 
 <div class="memitem">
 <div class="memproto">
-<div class="memtemplate">
-template&lt;typename T &gt; </div>
 <table class="mlabels">
   <tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">T cppemacs::envw::unwrap </td>
+          <td class="memname"><a class="el" href="structcppemacs_1_1funcall__exit.html">funcall_exit</a> cppemacs::envw::non_local_exit_check </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="structcppemacs_1_1expected__type__t.html">expected_type_t</a>&lt; T &gt;&#160;</td>
-          <td class="paramname"><em>tag</em>, </td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">noexcept</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Check if there is a non-local exit pending. </p>
+<p>Emacs lisp has two types of non-local exit: <code>signal</code> and <code>throw</code>. The semantics of both of these are that they unwind to the nearest enclosing handler that matches (<code>condition-case</code> or <code>throw</code>). A function can also simply return normally. These different statuses are described by the <a class="el" href="structcppemacs_1_1funcall__exit.html">funcall_exit</a> type.</p>
+<p>When a non-local exit (<code>signal</code> or <code>throw</code>) is pending, to ensure correct semantics, module code is expected to yield back to Emacs without performing other work. This method is used to check whether control should return to Emacs quickly. See also the @manlink{manual|Module-Nonlocal.html::index-non_005flocal_005fexit_005fcheck|.}</p>
+<p>Most code may be better served by <a class="el" href="structcppemacs_1_1envw.html#aa343c86e3e82410365f74c0fb0421cc0" title="Check for non-local exit, and throw an exception if there is one.">maybe_non_local_exit()</a>, which throws C++ exceptions to handle non-local exits. <em>This</em> method is best used by code that has intricate error handling, or must be <code>noexcept</code>.</p>
+<div class="fragment"><div class="line"><span class="keywordtype">void</span> critical_noexcept_function(<a class="code" href="structcppemacs_1_1envw.html#a701cbd00a3b4b602d286258b0d43fc76">envw</a> env) noexcept {</div>
+<div class="line">  do_something_that_might_fail(env);</div>
+<div class="line">  <span class="keywordflow">if</span> (env.non_local_exit_check()) {</div>
+<div class="line">    <span class="comment">// maybe perform cleanup that wouldn&#39;t be better served by a destructor</span></div>
+<div class="line">    <span class="keywordflow">return</span>;</div>
+<div class="line">  }</div>
+<div class="line">  <span class="comment">// ...</span></div>
+<div class="line">}</div>
+</div><!-- fragment --><dl class="section warning"><dt>Warning</dt><dd>If this returns anything other than <a class="el" href="structcppemacs_1_1funcall__exit.html#a4eb4b7d90ac22a4b9586a0d0ca6490f1">funcall_exit::return_</a>, then most other methods return meaningless values, unless specified otherwise. Functions that require meaningful values should either return as soon as possible, or use <a class="el" href="structcppemacs_1_1envw.html#aa343c86e3e82410365f74c0fb0421cc0" title="Check for non-local exit, and throw an exception if there is one.">maybe_non_local_exit()</a> to throw an exception.</dd></dl>
+<dl class="section return"><dt>Returns</dt><dd>The current <a class="el" href="structcppemacs_1_1funcall__exit.html">function exit status</a>. </dd></dl>
+
+</div>
+</div>
+<a id="a9d52fec6b774e57482e94b09fec2e671"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a9d52fec6b774e57482e94b09fec2e671">&#9670;&nbsp;</a></span>non_local_exit_clear()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void cppemacs::envw::non_local_exit_clear </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">noexcept</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Clear a pending non-local exit. See the \manlink{manual|Module-Nonlocal.html::index-non_005flocal_005fexit_005fclear}. </p>
+<p>This can be invoked even with a <a class="el" href="structcppemacs_1_1envw.html#a80ad1e199f0427ce4620583594a16261">non-local exit pending</a>. </p>
+
+</div>
+</div>
+<a id="ad37ae1c134789f3bdc9c7c38c234e784"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad37ae1c134789f3bdc9c7c38c234e784">&#9670;&nbsp;</a></span>non_local_exit_get()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="structcppemacs_1_1funcall__exit.html">funcall_exit</a> cppemacs::envw::non_local_exit_get </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="group__cppemacs__core.html#gabd2db90fff7d715e8649f37147f60a3a">value</a> &amp;&#160;</td>
+          <td class="paramname"><em>symbol</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype"><a class="el" href="group__Core.html#gabd2db90fff7d715e8649f37147f60a3a">value</a>&#160;</td>
-          <td class="paramname"><em>val</em>&#160;</td>
+          <td class="paramtype"><a class="el" href="group__cppemacs__core.html#gabd2db90fff7d715e8649f37147f60a3a">value</a> &amp;&#160;</td>
+          <td class="paramname"><em>data</em>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -413,8 +1585,717 @@ template&lt;typename T &gt; </div>
 </table>
 </div><div class="memdoc">
 
-<p>Perform an arbitrary conversion from Emacs. </p>
-<p>Arbitrary conversions are performed using ADL for <a class="el" href="group__Conversions.html#gae2e149d0e0243b271ea38abc936ffe20">from_emacs()</a>, called with <code><a class="el" href="structcppemacs_1_1expected__type__t.html">expected_type_t</a>&lt;T&gt;</code>, <code>*this</code> and the <code>value</code>. </p>
+<p>Get the data of a non-local exit (signal/throw). See the \manlink{manual|Module-Nonlocal.html::index-non_005flocal_005fexit_005fget}. </p>
+<p>This can be invoked even with a <a class="el" href="structcppemacs_1_1envw.html#a80ad1e199f0427ce4620583594a16261">non-local exit pending</a>. </p>
+
+</div>
+</div>
+<a id="a5126e7614215b819a8d12b3b2232820f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a5126e7614215b819a8d12b3b2232820f">&#9670;&nbsp;</a></span>non_local_exit_signal()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void cppemacs::envw::non_local_exit_signal </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="group__cppemacs__core.html#gabd2db90fff7d715e8649f37147f60a3a">value</a>&#160;</td>
+          <td class="paramname"><em>symbol</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="group__cppemacs__core.html#gabd2db90fff7d715e8649f37147f60a3a">value</a>&#160;</td>
+          <td class="paramname"><em>data</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">noexcept</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Raise a signal. See the \manlink{manual|Module-Nonlocal.html::index-non_005flocal_005fexit_005fsignal}. </p>
+
+</div>
+</div>
+<a id="a45b3a28471c8f02ffaf28f8501d8e97d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a45b3a28471c8f02ffaf28f8501d8e97d">&#9670;&nbsp;</a></span>non_local_exit_throw()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void cppemacs::envw::non_local_exit_throw </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="group__cppemacs__core.html#gabd2db90fff7d715e8649f37147f60a3a">value</a>&#160;</td>
+          <td class="paramname"><em>symbol</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="group__cppemacs__core.html#gabd2db90fff7d715e8649f37147f60a3a">value</a>&#160;</td>
+          <td class="paramname"><em>data</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">noexcept</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Throw a value with a tag. See the \manlink{manual|Module-Nonlocal.html::index-non_005flocal_005fexit_005fthrow}. </p>
+
+</div>
+</div>
+<a id="aa4e738ce103b57b01903517a76810ce3"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa4e738ce103b57b01903517a76810ce3">&#9670;&nbsp;</a></span>open_channel()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">int cppemacs::envw::open_channel </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="group__cppemacs__core.html#gabd2db90fff7d715e8649f37147f60a3a">value</a>&#160;</td>
+          <td class="paramname"><em>pipe_process</em></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">noexcept</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Open a file descriptor to a pipe process from <code>make-pipe-process</code>. See the \manlink{manual|Module-Misc.html::index-open_005fchannel}.. </p>
+
+</div>
+</div>
+<a id="ac4c1025b74ffb495be85564589454040"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac4c1025b74ffb495be85564589454040">&#9670;&nbsp;</a></span>operator emacs_env *()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">constexpr cppemacs::envw::operator <a class="el" href="group__cppemacs__core.html#gae0592e597dd37c49496e082012c3de92">emacs_env</a> * </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">constexpr</span><span class="mlabel">noexcept</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Convert to a raw <a class="el" href="group__cppemacs__core.html#gae0592e597dd37c49496e082012c3de92">emacs_env</a>. </p>
+
+</div>
+</div>
+<a id="abd17f036bd3f981167c34b46aa669c9f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#abd17f036bd3f981167c34b46aa669c9f">&#9670;&nbsp;</a></span>operator*()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">constexpr <a class="el" href="group__cppemacs__core.html#gae0592e597dd37c49496e082012c3de92">emacs_env</a>&amp; cppemacs::envw::operator* </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">constexpr</span><span class="mlabel">noexcept</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Reference the raw <a class="el" href="group__cppemacs__core.html#gae0592e597dd37c49496e082012c3de92">emacs_env</a>. </p>
+
+</div>
+</div>
+<a id="a12c298d9a486eb712004f7af1e65387a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a12c298d9a486eb712004f7af1e65387a">&#9670;&nbsp;</a></span>operator-&gt;()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">constexpr <a class="el" href="group__cppemacs__core.html#gae0592e597dd37c49496e082012c3de92">emacs_env</a>* cppemacs::envw::operator-&gt; </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">constexpr</span><span class="mlabel">noexcept</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Reference the raw <a class="el" href="group__cppemacs__core.html#gae0592e597dd37c49496e082012c3de92">emacs_env</a>. </p>
+
+</div>
+</div>
+<a id="ac02433ef564e008c8ffb94d9f58c8147"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac02433ef564e008c8ffb94d9f58c8147">&#9670;&nbsp;</a></span>operator-&gt;*()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;TO_EMACS_TYPE T&gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="structcppemacs_1_1cell.html">cell</a> cppemacs::envw::operator-&gt;* </td>
+          <td>(</td>
+          <td class="paramtype">T &amp;&amp;&#160;</td>
+          <td class="paramname"><em>arg</em></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Perform an arbitrary conversion to Emacs. Synonym for <a class="el" href="structcppemacs_1_1envw.html#a1eec660dd9e009d04c7f237750a74324" title="Perform an arbitrary conversion to Emacs.">inject()</a>. </p>
+
+</div>
+</div>
+<a id="a79630ec34fa30fbabba94e2cb08248ba"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a79630ec34fa30fbabba94e2cb08248ba">&#9670;&nbsp;</a></span>process_input()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="structcppemacs_1_1process__input__result.html">process_input_result</a> cppemacs::envw::process_input </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">noexcept</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Processes pending input events and returns whether the module function should quit. See the \manlink{manual|Module-Misc.html::index-process_005finput}. </p>
+
+</div>
+</div>
+<a id="abc22b0e8abe9817b095870cf43419e0b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#abc22b0e8abe9817b095870cf43419e0b">&#9670;&nbsp;</a></span>rethrow_non_local_exit()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;bool Unbox = CPPEMACS_ENABLE_EXCEPTION_BOXING&gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void cppemacs::envw::rethrow_non_local_exit </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">noexcept</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Check for <a class="el" href="structcppemacs_1_1envw.html#a80ad1e199f0427ce4620583594a16261">non-local exit</a>, and throw it as a C++ exception (<a class="el" href="structcppemacs_1_1signal.html">signal</a> or <a class="el" href="structcppemacs_1_1thrown.html">thrown</a>) if there is one. </p>
+<p>Unlike <a class="el" href="structcppemacs_1_1envw.html#aa343c86e3e82410365f74c0fb0421cc0">maybe_non_local_exit()</a>, this method <b>always</b> clears the pending non-local exit, and does capture the type and its data.</p>
+<dl class="tparams"><dt>Template Parameters</dt><dd>
+  <table class="tparams">
+    <tr><td class="paramname">Unbox</td><td>Whether <code>cppemacs--exception</code> signals should be re-raised as their captured C++ exceptions.</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="exception"><dt>Exceptions</dt><dd>
+  <table class="exception">
+    <tr><td class="paramname">signal</td><td>If a signal is pending. </td></tr>
+    <tr><td class="paramname">thrown</td><td>If a throw is pending. </td></tr>
+    <tr><td class="paramname">...</td><td>Any C++ exception, if <code>Unbox</code> is true and a boxed one is pending </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="aa977b2b678096adf617ec7500359d353"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa977b2b678096adf617ec7500359d353">&#9670;&nbsp;</a></span>run_catching()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;bool Box = CPPEMACS_ENABLE_EXCEPTION_BOXING, typename F &gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">auto cppemacs::envw::run_catching </td>
+          <td>(</td>
+          <td class="paramtype">F &amp;&amp;&#160;</td>
+          <td class="paramname"><em>f</em></td><td>)</td>
+          <td> const -&gt; <a class="el" href="group__cppemacs__core.html#gac178ba75a935094d28d7b37e083e2804">detail::invoke_result_t</a>&lt;F&gt; </td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">noexcept</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Run <code>f()</code> and catch all exceptions, propagating them to Emacs via <code>signal</code> or <code>throw</code>. </p>
+<dl class="section note"><dt>Note</dt><dd>This should be used in procedures which have to be <code>noexcept</code>, like <a class="el" href="group__cppemacs__core.html#ga3a13d40e5da070f30ce46bbcea618f01" title="The main entrypoint of the dynamic module. See the \manlink{manual|Module-Initialization....">emacs_module_init()</a> which is directly called from <code>module-load</code>. Some forms, like <a class="el" href="group__cppemacs__utilities.html#ga67e111365e428a5fc759b439a10b5ef2" title="Make a module_function with the given minimum and maximum arity.">make_module_function()</a> and <a class="el" href="group__cppemacs__utilities.html#ga18fe9586cb561bd3a4609527052e502e" title="Make a spreader module function with the given minimum and maximum arity.">make_spreader_function()</a> implicitly wrap their function argument with this, so you might not need to worry about this.</dd></dl>
+<p>If <code>noexcept(f())</code> is true, then this simply calls the function directly, and no exception handling is done. Otherwise the return type must be void, or default-constructible, so that something can be returned when an exception is thrown.</p>
+<p>Caught exceptions are converted as follows:</p>
+<ul>
+<li>If a non-local exit is pending when the exception is caught, do nothing.</li>
+<li>If it is <a class="el" href="structcppemacs_1_1signal.html">signal</a> or <a class="el" href="structcppemacs_1_1thrown.html">thrown</a>, raise it with <a class="el" href="structcppemacs_1_1envw.html#a5126e7614215b819a8d12b3b2232820f">non_local_exit_signal()</a> or <a class="el" href="structcppemacs_1_1envw.html#a45b3a28471c8f02ffaf28f8501d8e97d">non_local_exit_throw()</a>, respectively.</li>
+<li>If it is <a class="el" href="structcppemacs_1_1non__local__exit.html">non_local_exit</a>, and <code>Box</code> is false, signal an unspecified <code>error</code>.</li>
+<li>If it is a <code>std::exception</code> and <code>Box</code> is false, or if <code>Box</code> is true and it is exactly <code>std::runtime_error</code>, signal an <code>error</code> with the exception's <code>what()</code> as its message.</li>
+<li>If it is anything else:<ul>
+<li>If <code>Box</code> is true, signal a <code>cppemacs--exception</code> with the exception boxed as a <code>user-ptr</code> of the <code>std::exception_ptr</code>.</li>
+<li>If <code>Box</code> is false, signal an unspecified <code>error</code>.</li>
+</ul>
+</li>
+</ul>
+<p>In all cases, the <a class="el" href="structcppemacs_1_1envw.html#a80ad1e199f0427ce4620583594a16261">non-local exit status </a> will be <code>signal</code> or <code>throw</code> if an exception was caught.</p>
+<div class="fragment"><div class="line"><a class="code" href="structcppemacs_1_1envw.html#a701cbd00a3b4b602d286258b0d43fc76">envw</a> env = ..;</div>
+<div class="line">env.run_catching([]() {</div>
+<div class="line">  <span class="keywordflow">throw</span> std::runtime_error(<span class="stringliteral">&quot;This will be an Emacs error&quot;</span>);</div>
+<div class="line">});</div>
+</div><!-- fragment --><dl class="tparams"><dt>Template Parameters</dt><dd>
+  <table class="tparams">
+    <tr><td class="paramname">Box</td><td>Controls the behavior when catching general exceptions. </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="a44db137aded0c08dde845cbc82d9fb51"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a44db137aded0c08dde845cbc82d9fb51">&#9670;&nbsp;</a></span>run_scoped()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename F &gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">requires std::invocable&lt;F, <a class="el" href="structcppemacs_1_1envw.html">envw</a>&gt; void cppemacs::envw::run_scoped </td>
+          <td>(</td>
+          <td class="paramtype">F &amp;&amp;&#160;</td>
+          <td class="paramname"><em>f</em></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">noexcept</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Call <code>f</code> with a new <a class="el" href="structcppemacs_1_1envw.html">envw</a>. </p>
+<p>This can be used to permit the garbage collector to collect values used in <code>f</code>, even before the caller has to return. <code>f</code> may capture <a class="el" href="group__cppemacs__core.html#gabd2db90fff7d715e8649f37147f60a3a">values</a> (or indeed, any variables) and use them, but may not propagate any of its own env's <a class="el" href="group__cppemacs__core.html#gabd2db90fff7d715e8649f37147f60a3a">values</a> to the caller, since its env will go out of scope once it returns: it can use the enclosing env for values that must be retained.</p>
+<p>If <code>f</code> throws an exception, it is not propagated to Emacs, but caught and passed back to C++ (via <code>std::exception_ptr</code>).</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">f</td><td>The function to call. The return value is ignored. </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="a0fa8cbab17e1f0f3304f00d65763b6d1"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a0fa8cbab17e1f0f3304f00d65763b6d1">&#9670;&nbsp;</a></span>set_function_finalizer()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void cppemacs::envw::set_function_finalizer </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="group__cppemacs__core.html#gabd2db90fff7d715e8649f37147f60a3a">value</a>&#160;</td>
+          <td class="paramname"><em>arg</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="group__cppemacs__core.html#ga9fdd9b4c7e1aaec5c8172ec2dbd14695">emacs_finalizer</a>&#160;</td>
+          <td class="paramname"><em>fin</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">noexcept</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Set the finalizer of a module function. See the \manlink{manual|Module-Functions.html::index-set_005ffunction_005ffinalizer}. </p>
+
+</div>
+</div>
+<a id="a51563c9b13946b97e46791fd4534358e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a51563c9b13946b97e46791fd4534358e">&#9670;&nbsp;</a></span>set_user_finalizer()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void cppemacs::envw::set_user_finalizer </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="group__cppemacs__core.html#gabd2db90fff7d715e8649f37147f60a3a">value</a>&#160;</td>
+          <td class="paramname"><em>uptr</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="group__cppemacs__core.html#ga9fdd9b4c7e1aaec5c8172ec2dbd14695">emacs_finalizer</a>&#160;</td>
+          <td class="paramname"><em>fin</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">noexcept</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Set the finalizer of a <code>user-ptr</code> object. See the \manlink{manual|Module-Values.html::index-set_005fuser_005ffinalizer}. </p>
+
+</div>
+</div>
+<a id="a87d8690a2ed4a92612bcda25f1ad2c9b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a87d8690a2ed4a92612bcda25f1ad2c9b">&#9670;&nbsp;</a></span>set_user_ptr()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void cppemacs::envw::set_user_ptr </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="group__cppemacs__core.html#gabd2db90fff7d715e8649f37147f60a3a">value</a>&#160;</td>
+          <td class="paramname"><em>arg</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">void *&#160;</td>
+          <td class="paramname"><em>ptr</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">noexcept</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Set the C pointer of a <code>user-ptr</code> object. See the \manlink{manual|Module-Values.html::index-set_005fuser_005fptr}. </p>
+
+</div>
+</div>
+<a id="a6af555d726477b08fd4eb7756472eefc"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a6af555d726477b08fd4eb7756472eefc">&#9670;&nbsp;</a></span>should_quit()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool cppemacs::envw::should_quit </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">noexcept</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Returns whether a quit is pending. See the \manlink{manual|Module-Misc.html::index-should_005fquit}. </p>
+
+</div>
+</div>
+<a id="a256132d6b8fbb3a6fd66604c8be4e1fd"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a256132d6b8fbb3a6fd66604c8be4e1fd">&#9670;&nbsp;</a></span>size()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">ptrdiff_t cppemacs::envw::size </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">noexcept</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>The size, in bytes, of the <a class="el" href="group__cppemacs__core.html#gae0592e597dd37c49496e082012c3de92">emacs_env</a> in the running Emacs binary. </p>
+<p>This can be used to check if the running Emacs version is compatible with the module, since newer Emacs versions have more fields and thus a larger size. </p>
+
+</div>
+</div>
+<a id="a56ec2ca416a4778f8275ffeac8ea80b8"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a56ec2ca416a4778f8275ffeac8ea80b8">&#9670;&nbsp;</a></span>type_of()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="group__cppemacs__core.html#gabd2db90fff7d715e8649f37147f60a3a">value</a> cppemacs::envw::type_of </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="group__cppemacs__core.html#gabd2db90fff7d715e8649f37147f60a3a">value</a>&#160;</td>
+          <td class="paramname"><em>arg</em></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">noexcept</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Get the type of <em>arg</em> as a symbol like <code>string</code> or <code>integer</code>. See the \manlink{manual|Module-Misc.html::index-type_005fof}. </p>
+
+</div>
+</div>
+<a id="aa2dc5ed3a42f7343d03df2ef2051e3a4"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa2dc5ed3a42f7343d03df2ef2051e3a4">&#9670;&nbsp;</a></span>vec_get()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="group__cppemacs__core.html#gabd2db90fff7d715e8649f37147f60a3a">value</a> cppemacs::envw::vec_get </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="group__cppemacs__core.html#gabd2db90fff7d715e8649f37147f60a3a">value</a>&#160;</td>
+          <td class="paramname"><em>vector</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">ptrdiff_t&#160;</td>
+          <td class="paramname"><em>index</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">noexcept</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Get the <em>index-th</em> element of <em>vector</em>. See the \manlink{manual|Module-Values.html::index-vec_005fget}. </p>
+
+</div>
+</div>
+<a id="adb57dae31fb8d7d6dcef728898b63d1a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#adb57dae31fb8d7d6dcef728898b63d1a">&#9670;&nbsp;</a></span>vec_set()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void cppemacs::envw::vec_set </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="group__cppemacs__core.html#gabd2db90fff7d715e8649f37147f60a3a">value</a>&#160;</td>
+          <td class="paramname"><em>vector</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">ptrdiff_t&#160;</td>
+          <td class="paramname"><em>index</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="group__cppemacs__core.html#gabd2db90fff7d715e8649f37147f60a3a">value</a>&#160;</td>
+          <td class="paramname"><em>value</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">noexcept</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Set the <em>index-th</em> element of <em>vector</em> to <em>value</em>. See the \manlink{manual|Module-Values.html::index-vec_005fset}. </p>
+
+</div>
+</div>
+<a id="a5996e4c55a9fe5b9f92051c97a273622"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a5996e4c55a9fe5b9f92051c97a273622">&#9670;&nbsp;</a></span>vec_size()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">ptrdiff_t cppemacs::envw::vec_size </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="group__cppemacs__core.html#gabd2db90fff7d715e8649f37147f60a3a">value</a>&#160;</td>
+          <td class="paramname"><em>vector</em></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">noexcept</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Get the size of <em>vector</em>. See the \manlink{manual|Module-Values.html::index-vec_005fsize}. </p>
+
+</div>
+</div>
+<a id="ac2eb49d1993455328a8ec71908578d54"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac2eb49d1993455328a8ec71908578d54">&#9670;&nbsp;</a></span>version_check_error()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;size_t MajorVersion&gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">static void cppemacs::envw::version_check_error </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">static</span><span class="mlabel">noexcept</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Throw an exception with the error message <code>"Emacs major version
+&lt;MajorVersion&gt; required"</code>. </p>
+<dl class="section see"><dt>See also</dt><dd><a class="el" href="structcppemacs_1_1envw.html#ac40343a3ce5e040369dd433cef0f6b29" title="Check if this environment supports the module API of the given Emacs major version....">is_compatible()</a> and <a class="el" href="structcppemacs_1_1envw.html#a826907bd575e978486e692f43af036d7" title="Check if this environment supports the given major version&#39;s module API, and raises an error otherwis...">check_compatible()</a> </dd></dl>
 
 </div>
 </div>

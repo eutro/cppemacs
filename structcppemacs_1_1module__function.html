@@ -1,27 +1,21 @@
+<!DOCTYPE html>
 <!--
 - Copyright (C) 2024 Eutro <https://eutro.dev>
 -
-- This file is part of cppemacs.
+- This file is part of the cppemacs reference documentation.
 -
-- cppemacs is free software: you can redistribute it and/or modify it
-- under the terms of the GNU General Public License as published by
-- the Free Software Foundation, either version 3 of the License, or
-- (at your option) any later version.
--
-- cppemacs is distributed in the hope that it will be useful, but
-- WITHOUT ANY WARRANTY; without even the implied warranty of
-- MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
-- General Public License for more details.
--
-- You should have received a copy of the GNU General Public License
-- along with cppemacs. If not, see <https://www.gnu.org/licenses/>.
+- Permission is granted to copy, distribute and/or modify this document
+- under the terms of the GNU Free Documentation License, Version 1.3 or
+- any later version published by the Free Software Foundation; with no
+- Invariant Sections, no Front-Cover Texts, and no Back-Cover Texts. A
+- copy of the license is included in the section entitled "GNU Free
+- Documentation License".
 -
 - SPDX-FileCopyrightText: 2024 Eutro <https://eutro.dev>
 -
-- SPDX-License-Identifier: GPL-3.0-or-later
+- SPDX-License-Identifier: GFDL-1.3-or-later
 -->
 <!-- HTML header for doxygen 1.11.0-->
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "https://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="$langISO">
 <head>
 <meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
@@ -50,6 +44,7 @@ $darkmode
 <link href="doxygen-awesome.css" rel="stylesheet" type="text/css"/>
 <link href="doxygen-awesome-sidebar-only.css" rel="stylesheet" type="text/css"/>
 <link href="doxygen-awesome-sidebar-only-darkmode-toggle.css" rel="stylesheet" type="text/css"/>
+<link href="cppemacs.css" rel="stylesheet" type="text/css"/>
 </head>
 <script type="text/javascript" src="doxygen-awesome-darkmode-toggle.js"></script>
 <script type="text/javascript">DoxygenAwesomeDarkModeToggle.init()</script>
@@ -148,50 +143,314 @@ $(document).ready(function(){initNavTree('structcppemacs_1_1module__function.htm
 <a href="#friends">Friends</a> &#124;
 <a href="structcppemacs_1_1module__function-members.html">List of all members</a>  </div>
   <div class="headertitle">
-<div class="title">cppemacs::module_function&lt; F &gt; Struct Template Reference<div class="ingroups"><a class="el" href="group__Utilities.html">Utilities</a></div></div>  </div>
+<div class="title">cppemacs::module_function&lt; F &gt; Struct Template Reference</div>  </div>
 </div><!--header-->
 <div class="contents">
-<table class="memberdecls">
+
+<p><code>#include &lt;<a class="el" href="utils_8hpp_source.html">cppemacs/utils.hpp</a>&gt;</code></p>
+<a name="details" id="details"></a><h2 class="groupheader">Description</h2>
+<div class="textblock"><h3>template&lt;typename F&gt;<br />
+struct cppemacs::module_function&lt; F &gt;</h3>
+
+<p>A wrapper over <code>F</code> that allows it to be <a class="el" href="structcppemacs_1_1envw.html#ac02433ef564e008c8ffb94d9f58c8147">converted</a> to an Emacs function. </p>
+<p>A reference to <code>F</code> must be invocable with <code>(<a class="el" href="group__cppemacs__core.html#gae0592e597dd37c49496e082012c3de92" title="Raw Emacs environment. You should use envw in most cases.">emacs_env</a> *env, ptrdiff_t nargs, <a class="el" href="group__cppemacs__core.html#gabd2db90fff7d715e8649f37147f60a3a" title="Raw opaque pointer representing an Emacs value. See cell for the wrapper, and envw for functions that...">value</a> *args)</code>, returning a <code><a class="el" href="group__cppemacs__core.html#gabd2db90fff7d715e8649f37147f60a3a" title="Raw opaque pointer representing an Emacs value. See cell for the wrapper, and envw for functions that...">value</a></code>. This differs from a simple <a class="el" href="group__cppemacs__core.html#ga8b10f701e2c3225ed203909023fcbf28">emacs_function</a>, in that the <code>data</code> parameter is converted to <code>F</code> according to the <a class="el" href="structcppemacs_1_1module__function.html#a5d27b0bc08b84a9bd9aa144a9aa430dc">data_repr</a>, instead of being passed to <code>F</code>.</p>
+<p><code>F</code> will be wrapped in <a class="el" href="structcppemacs_1_1envw.html#aa977b2b678096adf617ec7500359d353">envw::run_catching()</a>, and so is free to throw exceptions.</p>
+<dl class="section see"><dt>See also</dt><dd><a class="el" href="group__cppemacs__utilities.html#ga67e111365e428a5fc759b439a10b5ef2" title="Make a module_function with the given minimum and maximum arity.">make_module_function()</a> and <a class="el" href="group__cppemacs__utilities.html#ga18fe9586cb561bd3a4609527052e502e" title="Make a spreader module function with the given minimum and maximum arity.">make_spreader_function()</a> for creating instances. </dd></dl>
+</div><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-types"></a>
 Public Types</h2></td></tr>
-<tr class="memitem:a5d27b0bc08b84a9bd9aa144a9aa430dc"><td class="memItemLeft" align="right" valign="top"><a id="a5d27b0bc08b84a9bd9aa144a9aa430dc"></a>
-using&#160;</td><td class="memItemRight" valign="bottom"><b>data_repr</b> = <a class="el" href="structcppemacs_1_1module__function__repr.html">module_function_repr</a>&lt; F &gt;</td></tr>
+<tr class="memitem:a5d27b0bc08b84a9bd9aa144a9aa430dc"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structcppemacs_1_1module__function.html#a5d27b0bc08b84a9bd9aa144a9aa430dc">data_repr</a> = <a class="el" href="structcppemacs_1_1module__function__repr.html">module_function_repr</a>&lt; F &gt;</td></tr>
+<tr class="memdesc:a5d27b0bc08b84a9bd9aa144a9aa430dc"><td class="mdescLeft">&#160;</td><td class="mdescRight">The representation used to convert between the <code>data</code> pointer and the stored instance of <code>F</code>.  <a href="structcppemacs_1_1module__function.html#a5d27b0bc08b84a9bd9aa144a9aa430dc">More...</a><br /></td></tr>
 <tr class="separator:a5d27b0bc08b84a9bd9aa144a9aa430dc"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:aa3402205201f41f644bf7fe05c33b5b9"><td class="memTemplParams" colspan="2"><a id="aa3402205201f41f644bf7fe05c33b5b9"></a>
-template&lt;typename... Args&gt; </td></tr>
-<tr class="memitem:aa3402205201f41f644bf7fe05c33b5b9"><td class="memTemplItemLeft" align="right" valign="top">&#160;</td><td class="memTemplItemRight" valign="bottom"><b>module_function</b> (ptrdiff_t min_arity, ptrdiff_t max_arity, const char *doc, Args &amp;&amp;...args)</td></tr>
+<tr class="memitem:aa3402205201f41f644bf7fe05c33b5b9"><td class="memTemplParams" colspan="2">template&lt;typename... Args&gt; </td></tr>
+<tr class="memitem:aa3402205201f41f644bf7fe05c33b5b9"><td class="memTemplItemLeft" align="right" valign="top">&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="structcppemacs_1_1module__function.html#aa3402205201f41f644bf7fe05c33b5b9">module_function</a> (ptrdiff_t <a class="el" href="structcppemacs_1_1module__function.html#ade1a36f47ed322268363d1f1d7ddc201">min_arity</a>, ptrdiff_t <a class="el" href="structcppemacs_1_1module__function.html#ae42106a3c659a87d8d8550614df8e7c8">max_arity</a>, const char *<a class="el" href="structcppemacs_1_1module__function.html#aa5152bb828d870cfdb6125c614c84a08">doc</a>, Args &amp;&amp;...args)</td></tr>
+<tr class="memdesc:aa3402205201f41f644bf7fe05c33b5b9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Construct with the provided arities, doc-string and in-place arguments for <code>F</code>.  <a href="structcppemacs_1_1module__function.html#aa3402205201f41f644bf7fe05c33b5b9">More...</a><br /></td></tr>
 <tr class="separator:aa3402205201f41f644bf7fe05c33b5b9"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-static-methods"></a>
 Static Public Member Functions</h2></td></tr>
-<tr class="memitem:a40f3a23e479ab296e6299e971d7d7e40"><td class="memItemLeft" align="right" valign="top"><a id="a40f3a23e479ab296e6299e971d7d7e40"></a>
-static <a class="el" href="group__Core.html#gabd2db90fff7d715e8649f37147f60a3a">value</a>&#160;</td><td class="memItemRight" valign="bottom"><b>invoke</b> (emacs_env *nv, ptrdiff_t nargs, <a class="el" href="group__Core.html#gabd2db90fff7d715e8649f37147f60a3a">value</a> *args, void *data) noexcept</td></tr>
+<tr class="memitem:a40f3a23e479ab296e6299e971d7d7e40"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="group__cppemacs__core.html#gabd2db90fff7d715e8649f37147f60a3a">value</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structcppemacs_1_1module__function.html#a40f3a23e479ab296e6299e971d7d7e40">invoke</a> (<a class="el" href="group__cppemacs__core.html#gae0592e597dd37c49496e082012c3de92">emacs_env</a> *nv, ptrdiff_t nargs, <a class="el" href="group__cppemacs__core.html#gabd2db90fff7d715e8649f37147f60a3a">value</a> *args, void *data) noexcept</td></tr>
+<tr class="memdesc:a40f3a23e479ab296e6299e971d7d7e40"><td class="mdescLeft">&#160;</td><td class="mdescRight">An <a class="el" href="group__cppemacs__core.html#ga8b10f701e2c3225ed203909023fcbf28">emacs_function</a> which converts <em>data</em> to <code>F</code> and invokes it.  <a href="structcppemacs_1_1module__function.html#a40f3a23e479ab296e6299e971d7d7e40">More...</a><br /></td></tr>
 <tr class="separator:a40f3a23e479ab296e6299e971d7d7e40"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-attribs"></a>
 Public Attributes</h2></td></tr>
-<tr class="memitem:ade1a36f47ed322268363d1f1d7ddc201"><td class="memItemLeft" align="right" valign="top"><a id="ade1a36f47ed322268363d1f1d7ddc201"></a>
-ptrdiff_t&#160;</td><td class="memItemRight" valign="bottom"><b>min_arity</b></td></tr>
+<tr class="memitem:ade1a36f47ed322268363d1f1d7ddc201"><td class="memItemLeft" align="right" valign="top">ptrdiff_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structcppemacs_1_1module__function.html#ade1a36f47ed322268363d1f1d7ddc201">min_arity</a></td></tr>
+<tr class="memdesc:ade1a36f47ed322268363d1f1d7ddc201"><td class="mdescLeft">&#160;</td><td class="mdescRight">The minimum number of arguments that <code>F</code> is to be called with.  <a href="structcppemacs_1_1module__function.html#ade1a36f47ed322268363d1f1d7ddc201">More...</a><br /></td></tr>
 <tr class="separator:ade1a36f47ed322268363d1f1d7ddc201"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ae42106a3c659a87d8d8550614df8e7c8"><td class="memItemLeft" align="right" valign="top"><a id="ae42106a3c659a87d8d8550614df8e7c8"></a>
-ptrdiff_t&#160;</td><td class="memItemRight" valign="bottom"><b>max_arity</b></td></tr>
+<tr class="memitem:ae42106a3c659a87d8d8550614df8e7c8"><td class="memItemLeft" align="right" valign="top">ptrdiff_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structcppemacs_1_1module__function.html#ae42106a3c659a87d8d8550614df8e7c8">max_arity</a></td></tr>
+<tr class="memdesc:ae42106a3c659a87d8d8550614df8e7c8"><td class="mdescLeft">&#160;</td><td class="mdescRight">The maximum number of arguments that <code>F</code> is to be called with.  <a href="structcppemacs_1_1module__function.html#ae42106a3c659a87d8d8550614df8e7c8">More...</a><br /></td></tr>
 <tr class="separator:ae42106a3c659a87d8d8550614df8e7c8"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa5152bb828d870cfdb6125c614c84a08"><td class="memItemLeft" align="right" valign="top"><a id="aa5152bb828d870cfdb6125c614c84a08"></a>
-const char *&#160;</td><td class="memItemRight" valign="bottom"><b>doc</b></td></tr>
+<tr class="memitem:aa5152bb828d870cfdb6125c614c84a08"><td class="memItemLeft" align="right" valign="top">const char *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structcppemacs_1_1module__function.html#aa5152bb828d870cfdb6125c614c84a08">doc</a></td></tr>
+<tr class="memdesc:aa5152bb828d870cfdb6125c614c84a08"><td class="mdescLeft">&#160;</td><td class="mdescRight">The documentation string for the Emacs function that will be created.  <a href="structcppemacs_1_1module__function.html#aa5152bb828d870cfdb6125c614c84a08">More...</a><br /></td></tr>
 <tr class="separator:aa5152bb828d870cfdb6125c614c84a08"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:af919b159ad944b15a8c7a542ccf8890e"><td class="memItemLeft" align="right" valign="top"><a id="af919b159ad944b15a8c7a542ccf8890e"></a>
-F&#160;</td><td class="memItemRight" valign="bottom"><b>f</b></td></tr>
+<tr class="memitem:af919b159ad944b15a8c7a542ccf8890e"><td class="memItemLeft" align="right" valign="top">F&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structcppemacs_1_1module__function.html#af919b159ad944b15a8c7a542ccf8890e">f</a></td></tr>
+<tr class="memdesc:af919b159ad944b15a8c7a542ccf8890e"><td class="mdescLeft">&#160;</td><td class="mdescRight">The invokable function.  <a href="structcppemacs_1_1module__function.html#af919b159ad944b15a8c7a542ccf8890e">More...</a><br /></td></tr>
 <tr class="separator:af919b159ad944b15a8c7a542ccf8890e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="friends"></a>
 Friends</h2></td></tr>
-<tr class="memitem:ab3bbeac0622592c67a3873ceff198745"><td class="memItemLeft" align="right" valign="top"><a id="ab3bbeac0622592c67a3873ceff198745"></a>
-<a class="el" href="group__Core.html#gabd2db90fff7d715e8649f37147f60a3a">value</a>&#160;</td><td class="memItemRight" valign="bottom"><b>to_emacs</b> (<a class="el" href="structcppemacs_1_1expected__type__t.html">expected_type_t</a>&lt; <a class="el" href="structcppemacs_1_1module__function.html">module_function</a> &gt;, <a class="el" href="structcppemacs_1_1envw.html">envw</a> nv, <a class="el" href="structcppemacs_1_1module__function.html">module_function</a> &amp;&amp;func)</td></tr>
+<tr class="memitem:ab3bbeac0622592c67a3873ceff198745"><td class="memItemLeft" align="right" valign="top"><a class="el" href="group__cppemacs__core.html#gabd2db90fff7d715e8649f37147f60a3a">value</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structcppemacs_1_1module__function.html#ab3bbeac0622592c67a3873ceff198745">to_emacs</a> (<a class="el" href="structcppemacs_1_1expected__type__t.html">expected_type_t</a>&lt; <a class="el" href="structcppemacs_1_1module__function.html">module_function</a> &gt;, <a class="el" href="structcppemacs_1_1envw.html">envw</a> nv, <a class="el" href="structcppemacs_1_1module__function.html">module_function</a> &amp;&amp;func)</td></tr>
+<tr class="memdesc:ab3bbeac0622592c67a3873ceff198745"><td class="mdescLeft">&#160;</td><td class="mdescRight">Converts this to an Emacs module function.  <a href="structcppemacs_1_1module__function.html#ab3bbeac0622592c67a3873ceff198745">More...</a><br /></td></tr>
 <tr class="separator:ab3bbeac0622592c67a3873ceff198745"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
+<h2 class="groupheader">Member Typedef Documentation</h2>
+<a id="a5d27b0bc08b84a9bd9aa144a9aa430dc"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a5d27b0bc08b84a9bd9aa144a9aa430dc">&#9670;&nbsp;</a></span>data_repr</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename F &gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname">using <a class="el" href="structcppemacs_1_1module__function.html">cppemacs::module_function</a>&lt; F &gt;::<a class="el" href="structcppemacs_1_1module__function.html#a5d27b0bc08b84a9bd9aa144a9aa430dc">data_repr</a> =  <a class="el" href="structcppemacs_1_1module__function__repr.html">module_function_repr</a>&lt;F&gt;</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>The representation used to convert between the <code>data</code> pointer and the stored instance of <code>F</code>. </p>
+<p>Unless <a class="el" href="structcppemacs_1_1module__function__repr.html">module_function_repr</a> is (further) specialized by the user, the behaviour is as follows:</p>
+<ul>
+<li>If <code>F</code> is trivially copyable and destructible, and it is smaller than <code>void*</code>, it is directly stored in <code>data</code>.</li>
+<li>Otherwise, <code>F</code> is move-constructed into a heap-allocated pointer, and a finalizer is registered for the Emacs function which default-deletes it, silently ignoring any exceptions in the finalizer. </li>
+</ul>
+
+</div>
+</div>
+<h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
+<a id="aa3402205201f41f644bf7fe05c33b5b9"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa3402205201f41f644bf7fe05c33b5b9">&#9670;&nbsp;</a></span>module_function()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename F &gt; </div>
+<div class="memtemplate">
+template&lt;typename... Args&gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="structcppemacs_1_1module__function.html">cppemacs::module_function</a>&lt; F &gt;::<a class="el" href="structcppemacs_1_1module__function.html">module_function</a> </td>
+          <td>(</td>
+          <td class="paramtype">ptrdiff_t&#160;</td>
+          <td class="paramname"><em>min_arity</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">ptrdiff_t&#160;</td>
+          <td class="paramname"><em>max_arity</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const char *&#160;</td>
+          <td class="paramname"><em>doc</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">Args &amp;&amp;...&#160;</td>
+          <td class="paramname"><em>args</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Construct with the provided arities, doc-string and in-place arguments for <code>F</code>. </p>
+<dl class="section see"><dt>See also</dt><dd><a class="el" href="group__cppemacs__utilities.html#ga67e111365e428a5fc759b439a10b5ef2" title="Make a module_function with the given minimum and maximum arity.">make_module_function()</a> which infers <code>F</code>. </dd></dl>
+
+</div>
+</div>
+<h2 class="groupheader">Member Function Documentation</h2>
+<a id="a40f3a23e479ab296e6299e971d7d7e40"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a40f3a23e479ab296e6299e971d7d7e40">&#9670;&nbsp;</a></span>invoke()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename F &gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">static <a class="el" href="group__cppemacs__core.html#gabd2db90fff7d715e8649f37147f60a3a">value</a> <a class="el" href="structcppemacs_1_1module__function.html">cppemacs::module_function</a>&lt; F &gt;::invoke </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="group__cppemacs__core.html#gae0592e597dd37c49496e082012c3de92">emacs_env</a> *&#160;</td>
+          <td class="paramname"><em>nv</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">ptrdiff_t&#160;</td>
+          <td class="paramname"><em>nargs</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="group__cppemacs__core.html#gabd2db90fff7d715e8649f37147f60a3a">value</a> *&#160;</td>
+          <td class="paramname"><em>args</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">void *&#160;</td>
+          <td class="paramname"><em>data</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">static</span><span class="mlabel">noexcept</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>An <a class="el" href="group__cppemacs__core.html#ga8b10f701e2c3225ed203909023fcbf28">emacs_function</a> which converts <em>data</em> to <code>F</code> and invokes it. </p>
+
+</div>
+</div>
+<h2 class="groupheader">Friends And Related Function Documentation</h2>
+<a id="ab3bbeac0622592c67a3873ceff198745"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab3bbeac0622592c67a3873ceff198745">&#9670;&nbsp;</a></span>to_emacs</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename F &gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="group__cppemacs__core.html#gabd2db90fff7d715e8649f37147f60a3a">value</a> to_emacs </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="structcppemacs_1_1expected__type__t.html">expected_type_t</a>&lt; <a class="el" href="structcppemacs_1_1module__function.html">module_function</a>&lt; F &gt; &gt;&#160;</td>
+          <td class="paramname">, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="structcppemacs_1_1envw.html">envw</a>&#160;</td>
+          <td class="paramname"><em>nv</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="structcppemacs_1_1module__function.html">module_function</a>&lt; F &gt; &amp;&amp;&#160;</td>
+          <td class="paramname"><em>func</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">friend</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Converts this to an Emacs module function. </p>
+<dl class="section see"><dt>See also</dt><dd><a class="el" href="structcppemacs_1_1envw.html#abcfe6e0559744499bdc3c3e7abba5db6" title="Make an Emacs module function from a function pointer and associated data. See the \manlink{manual|Mo...">envw::make_function()</a> for the underlying conversion. </dd></dl>
+
+</div>
+</div>
+<h2 class="groupheader">Member Data Documentation</h2>
+<a id="aa5152bb828d870cfdb6125c614c84a08"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa5152bb828d870cfdb6125c614c84a08">&#9670;&nbsp;</a></span>doc</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename F &gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname">const char* <a class="el" href="structcppemacs_1_1module__function.html">cppemacs::module_function</a>&lt; F &gt;::doc</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>The documentation string for the Emacs function that will be created. </p>
+
+</div>
+</div>
+<a id="af919b159ad944b15a8c7a542ccf8890e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af919b159ad944b15a8c7a542ccf8890e">&#9670;&nbsp;</a></span>f</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename F &gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname">F <a class="el" href="structcppemacs_1_1module__function.html">cppemacs::module_function</a>&lt; F &gt;::f</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>The invokable function. </p>
+
+</div>
+</div>
+<a id="ae42106a3c659a87d8d8550614df8e7c8"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae42106a3c659a87d8d8550614df8e7c8">&#9670;&nbsp;</a></span>max_arity</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename F &gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname">ptrdiff_t <a class="el" href="structcppemacs_1_1module__function.html">cppemacs::module_function</a>&lt; F &gt;::max_arity</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>The maximum number of arguments that <code>F</code> is to be called with. </p>
+
+</div>
+</div>
+<a id="ade1a36f47ed322268363d1f1d7ddc201"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ade1a36f47ed322268363d1f1d7ddc201">&#9670;&nbsp;</a></span>min_arity</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename F &gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname">ptrdiff_t <a class="el" href="structcppemacs_1_1module__function.html">cppemacs::module_function</a>&lt; F &gt;::min_arity</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>The minimum number of arguments that <code>F</code> is to be called with. </p>
+
+</div>
+</div>
 <hr/>The documentation for this struct was generated from the following file:<ul>
 <li>include/cppemacs/<a class="el" href="utils_8hpp_source.html">utils.hpp</a></li>
 </ul>

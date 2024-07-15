@@ -1,6 +1,9 @@
 var searchData=
 [
-  ['set_33',['set',['../structcppemacs_1_1cell.html#a06db5d369e737a8c0d7b02cc68b50862',1,'cppemacs::cell']]],
-  ['signal_34',['signal',['../structcppemacs_1_1signal.html',1,'cppemacs']]],
-  ['spread_5finvoker_35',['spread_invoker',['../structcppemacs_1_1detail_1_1spread__invoker.html',1,'cppemacs::detail']]]
+  ['non_5flocal_5fexit_86',['non_local_exit',['../structcppemacs_1_1non__local__exit.html',1,'cppemacs']]],
+  ['non_5flocal_5fexit_5fcheck_87',['non_local_exit_check',['../structcppemacs_1_1envw.html#a80ad1e199f0427ce4620583594a16261',1,'cppemacs::envw']]],
+  ['non_5flocal_5fexit_5fclear_88',['non_local_exit_clear',['../structcppemacs_1_1envw.html#a9d52fec6b774e57482e94b09fec2e671',1,'cppemacs::envw']]],
+  ['non_5flocal_5fexit_5fget_89',['non_local_exit_get',['../structcppemacs_1_1envw.html#ad37ae1c134789f3bdc9c7c38c234e784',1,'cppemacs::envw']]],
+  ['non_5flocal_5fexit_5fsignal_90',['non_local_exit_signal',['../structcppemacs_1_1envw.html#a5126e7614215b819a8d12b3b2232820f',1,'cppemacs::envw']]],
+  ['non_5flocal_5fexit_5fthrow_91',['non_local_exit_throw',['../structcppemacs_1_1envw.html#a45b3a28471c8f02ffaf28f8501d8e97d',1,'cppemacs::envw']]]
 ];

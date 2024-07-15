@@ -1,5 +1,7 @@
 var searchData=
 [
-  ['to_5femacs_84',['to_emacs',['../group__Conversions.html#ga9c87d39fe376e04969c252cfca756e53',1,'cppemacs::to_emacs(expected_type_t&lt; const char * &gt;, envw nv, const char *name)'],['../group__Conversions.html#ga3e187f6dbfce772cccc820a57b227984',1,'cppemacs::to_emacs(expected_type_t&lt; std::string &gt;, envw nv, const std::string &amp;str)'],['../group__Conversions.html#gabdb33ac88c6b9e923554d98a98781090',1,'cppemacs::to_emacs(expected_type_t&lt; Int &gt;, envw nv, Int n)'],['../group__Conversions.html#gaa53b59bf971b05ca7719a8f5dd61b568',1,'cppemacs::to_emacs(expected_type_t&lt; Float &gt;, envw nv, Float d)'],['../group__Conversions.html#ga4ab9ae321141e793e1ae83a2fbcbc1cc',1,'cppemacs::to_emacs(expected_type_t&lt; struct timespec &gt;, envw nv, struct timespec time)']]],
-  ['type_85',['type',['../structcppemacs_1_1cell.html#a8cd3a488bb28b5042b5ed90361c38b1e',1,'cppemacs::cell']]]
+  ['get_206',['get',['../structcppemacs_1_1funcall__exit.html#ae4839a27ff556207e02db5ab7d140331',1,'cppemacs::funcall_exit::get()'],['../structcppemacs_1_1process__input__result.html#a36b18201ab947554dd8c014bd5e2bcfd',1,'cppemacs::process_input_result::get()'],['../structcppemacs_1_1user__ptr.html#a7d7f558d5056e60db53b793e3a4d5a43',1,'cppemacs::user_ptr::get()'],['../structcppemacs_1_1cell__extracted.html#a3a0f7af53216fc2c4ec357d6a7d17fe6',1,'cppemacs::cell_extracted::get()']]],
+  ['get_5ffunction_5ffinalizer_207',['get_function_finalizer',['../structcppemacs_1_1envw.html#a360928dfaf35d6d3a8aa40cdd0fdea0a',1,'cppemacs::envw']]],
+  ['get_5fuser_5ffinalizer_208',['get_user_finalizer',['../structcppemacs_1_1envw.html#abdb376f86e2ab78be1633417f7255dbe',1,'cppemacs::envw']]],
+  ['get_5fuser_5fptr_209',['get_user_ptr',['../structcppemacs_1_1envw.html#a05d10dd64b2f45d1e8b40348b8062347',1,'cppemacs::envw']]]
 ];

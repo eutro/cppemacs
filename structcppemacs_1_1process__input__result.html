@@ -1,27 +1,21 @@
+<!DOCTYPE html>
 <!--
 - Copyright (C) 2024 Eutro <https://eutro.dev>
 -
-- This file is part of cppemacs.
+- This file is part of the cppemacs reference documentation.
 -
-- cppemacs is free software: you can redistribute it and/or modify it
-- under the terms of the GNU General Public License as published by
-- the Free Software Foundation, either version 3 of the License, or
-- (at your option) any later version.
--
-- cppemacs is distributed in the hope that it will be useful, but
-- WITHOUT ANY WARRANTY; without even the implied warranty of
-- MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
-- General Public License for more details.
--
-- You should have received a copy of the GNU General Public License
-- along with cppemacs. If not, see <https://www.gnu.org/licenses/>.
+- Permission is granted to copy, distribute and/or modify this document
+- under the terms of the GNU Free Documentation License, Version 1.3 or
+- any later version published by the Free Software Foundation; with no
+- Invariant Sections, no Front-Cover Texts, and no Back-Cover Texts. A
+- copy of the license is included in the section entitled "GNU Free
+- Documentation License".
 -
 - SPDX-FileCopyrightText: 2024 Eutro <https://eutro.dev>
 -
-- SPDX-License-Identifier: GPL-3.0-or-later
+- SPDX-License-Identifier: GFDL-1.3-or-later
 -->
 <!-- HTML header for doxygen 1.11.0-->
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "https://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="$langISO">
 <head>
 <meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
@@ -50,6 +44,7 @@ $darkmode
 <link href="doxygen-awesome.css" rel="stylesheet" type="text/css"/>
 <link href="doxygen-awesome-sidebar-only.css" rel="stylesheet" type="text/css"/>
 <link href="doxygen-awesome-sidebar-only-darkmode-toggle.css" rel="stylesheet" type="text/css"/>
+<link href="cppemacs.css" rel="stylesheet" type="text/css"/>
 </head>
 <script type="text/javascript" src="doxygen-awesome-darkmode-toggle.js"></script>
 <script type="text/javascript">DoxygenAwesomeDarkModeToggle.init()</script>
@@ -146,42 +141,226 @@ $(document).ready(function(){initNavTree('structcppemacs_1_1process__input__resu
 <a href="#pub-static-attribs">Static Public Attributes</a> &#124;
 <a href="structcppemacs_1_1process__input__result-members.html">List of all members</a>  </div>
   <div class="headertitle">
-<div class="title">cppemacs::process_input_result Struct Reference<div class="ingroups"><a class="el" href="group__Core.html">Core</a></div></div>  </div>
+<div class="title">cppemacs::process_input_result Struct Reference</div>  </div>
 </div><!--header-->
 <div class="contents">
 
-<p><code>#include &lt;<a class="el" href="core_8hpp_source.html">core.hpp</a>&gt;</code></p>
-<table class="memberdecls">
+<p><code>#include &lt;<a class="el" href="core_8hpp_source.html">cppemacs/core.hpp</a>&gt;</code></p>
+<a name="details" id="details"></a><h2 class="groupheader">Description</h2>
+<div class="textblock"><p>Enum wrapper for <a class="el" href="group__cppemacs__core.html#ga308d7d99197a9196c83dad15126a23cc">emacs_process_input_result</a>. </p>
+<p>See the \manlink{manual|Module-Misc.html::index-process_005finput}. </p>
+</div><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:a6cfab76261a5f1ec8bc76d669e309781"><td class="memItemLeft" align="right" valign="top"><a id="a6cfab76261a5f1ec8bc76d669e309781"></a>
-constexpr&#160;</td><td class="memItemRight" valign="bottom"><b>process_input_result</b> (emacs_process_input_result raw) noexcept</td></tr>
+<tr class="memitem:a6cfab76261a5f1ec8bc76d669e309781"><td class="memItemLeft" align="right" valign="top">constexpr&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structcppemacs_1_1process__input__result.html#a6cfab76261a5f1ec8bc76d669e309781">process_input_result</a> (<a class="el" href="group__cppemacs__core.html#ga308d7d99197a9196c83dad15126a23cc">emacs_process_input_result</a> <a class="el" href="structcppemacs_1_1process__input__result.html#a97a1344e7467be73d301b67aeb77ee03">raw</a>) noexcept</td></tr>
+<tr class="memdesc:a6cfab76261a5f1ec8bc76d669e309781"><td class="mdescLeft">&#160;</td><td class="mdescRight">Construct the wrapper.  <a href="structcppemacs_1_1process__input__result.html#a6cfab76261a5f1ec8bc76d669e309781">More...</a><br /></td></tr>
 <tr class="separator:a6cfab76261a5f1ec8bc76d669e309781"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:adb5a3cb0f7105b16a18077341b1d89ad"><td class="memItemLeft" align="right" valign="top"><a id="adb5a3cb0f7105b16a18077341b1d89ad"></a>
-constexpr&#160;</td><td class="memItemRight" valign="bottom"><b>operator emacs_process_input_result</b> () const noexcept</td></tr>
+<tr class="memitem:adb5a3cb0f7105b16a18077341b1d89ad"><td class="memItemLeft" align="right" valign="top">constexpr&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structcppemacs_1_1process__input__result.html#adb5a3cb0f7105b16a18077341b1d89ad">operator emacs_process_input_result</a> () const noexcept</td></tr>
+<tr class="memdesc:adb5a3cb0f7105b16a18077341b1d89ad"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the underlying <a class="el" href="group__cppemacs__core.html#ga308d7d99197a9196c83dad15126a23cc">emacs_process_input_result</a>.  <a href="structcppemacs_1_1process__input__result.html#adb5a3cb0f7105b16a18077341b1d89ad">More...</a><br /></td></tr>
 <tr class="separator:adb5a3cb0f7105b16a18077341b1d89ad"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ae2b67fc7a33878d1050b3649d2cc57eb"><td class="memItemLeft" align="right" valign="top"><a id="ae2b67fc7a33878d1050b3649d2cc57eb"></a>
-&#160;</td><td class="memItemRight" valign="bottom"><b>operator bool</b> () const</td></tr>
-<tr class="separator:ae2b67fc7a33878d1050b3649d2cc57eb"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a36b18201ab947554dd8c014bd5e2bcfd"><td class="memItemLeft" align="right" valign="top">constexpr <a class="el" href="group__cppemacs__core.html#ga308d7d99197a9196c83dad15126a23cc">emacs_process_input_result</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structcppemacs_1_1process__input__result.html#a36b18201ab947554dd8c014bd5e2bcfd">get</a> () const noexcept</td></tr>
+<tr class="memdesc:a36b18201ab947554dd8c014bd5e2bcfd"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the underlying <a class="el" href="group__cppemacs__core.html#ga308d7d99197a9196c83dad15126a23cc">emacs_process_input_result</a>.  <a href="structcppemacs_1_1process__input__result.html#a36b18201ab947554dd8c014bd5e2bcfd">More...</a><br /></td></tr>
+<tr class="separator:a36b18201ab947554dd8c014bd5e2bcfd"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac0298ad7d5cb873b5fe8cdf90068a6ec"><td class="memItemLeft" align="right" valign="top">constexpr&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structcppemacs_1_1process__input__result.html#ac0298ad7d5cb873b5fe8cdf90068a6ec">operator bool</a> () const</td></tr>
+<tr class="memdesc:ac0298ad7d5cb873b5fe8cdf90068a6ec"><td class="mdescLeft">&#160;</td><td class="mdescRight">True if this is not equal to <a class="el" href="structcppemacs_1_1process__input__result.html#a9770d5cd0de88a8113e6390e950bd136">continue_</a>.  <a href="structcppemacs_1_1process__input__result.html#ac0298ad7d5cb873b5fe8cdf90068a6ec">More...</a><br /></td></tr>
+<tr class="separator:ac0298ad7d5cb873b5fe8cdf90068a6ec"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-attribs"></a>
 Public Attributes</h2></td></tr>
-<tr class="memitem:a97a1344e7467be73d301b67aeb77ee03"><td class="memItemLeft" align="right" valign="top"><a id="a97a1344e7467be73d301b67aeb77ee03"></a>
-emacs_process_input_result&#160;</td><td class="memItemRight" valign="bottom"><b>raw</b></td></tr>
+<tr class="memitem:a97a1344e7467be73d301b67aeb77ee03"><td class="memItemLeft" align="right" valign="top"><a class="el" href="group__cppemacs__core.html#ga308d7d99197a9196c83dad15126a23cc">emacs_process_input_result</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structcppemacs_1_1process__input__result.html#a97a1344e7467be73d301b67aeb77ee03">raw</a></td></tr>
+<tr class="memdesc:a97a1344e7467be73d301b67aeb77ee03"><td class="mdescLeft">&#160;</td><td class="mdescRight">The underlying <a class="el" href="group__cppemacs__core.html#ga308d7d99197a9196c83dad15126a23cc">emacs_process_input_result</a>.  <a href="structcppemacs_1_1process__input__result.html#a97a1344e7467be73d301b67aeb77ee03">More...</a><br /></td></tr>
 <tr class="separator:a97a1344e7467be73d301b67aeb77ee03"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-static-attribs"></a>
 Static Public Attributes</h2></td></tr>
-<tr class="memitem:a9770d5cd0de88a8113e6390e950bd136"><td class="memItemLeft" align="right" valign="top"><a id="a9770d5cd0de88a8113e6390e950bd136"></a>
-static constexpr emacs_process_input_result&#160;</td><td class="memItemRight" valign="bottom"><b>continue_</b> = emacs_process_input_continue</td></tr>
+<tr class="memitem:a9770d5cd0de88a8113e6390e950bd136"><td class="memItemLeft" align="right" valign="top">static constexpr <a class="el" href="group__cppemacs__core.html#ga308d7d99197a9196c83dad15126a23cc">emacs_process_input_result</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structcppemacs_1_1process__input__result.html#a9770d5cd0de88a8113e6390e950bd136">continue_</a> = emacs_process_input_continue</td></tr>
+<tr class="memdesc:a9770d5cd0de88a8113e6390e950bd136"><td class="mdescLeft">&#160;</td><td class="mdescRight">Module code may continue <br  />
+  <a href="structcppemacs_1_1process__input__result.html#a9770d5cd0de88a8113e6390e950bd136">More...</a><br /></td></tr>
 <tr class="separator:a9770d5cd0de88a8113e6390e950bd136"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa2e31bb07533a1d687ccf6f3d37a5c58"><td class="memItemLeft" align="right" valign="top"><a id="aa2e31bb07533a1d687ccf6f3d37a5c58"></a>
-static constexpr emacs_process_input_result&#160;</td><td class="memItemRight" valign="bottom"><b>quit_</b> = emacs_process_input_quit</td></tr>
+<tr class="memitem:aa2e31bb07533a1d687ccf6f3d37a5c58"><td class="memItemLeft" align="right" valign="top">static constexpr <a class="el" href="group__cppemacs__core.html#ga308d7d99197a9196c83dad15126a23cc">emacs_process_input_result</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structcppemacs_1_1process__input__result.html#aa2e31bb07533a1d687ccf6f3d37a5c58">quit_</a> = emacs_process_input_quit</td></tr>
+<tr class="memdesc:aa2e31bb07533a1d687ccf6f3d37a5c58"><td class="mdescLeft">&#160;</td><td class="mdescRight">Module code should return control to Emacs as soon as possible. <br  />
+  <a href="structcppemacs_1_1process__input__result.html#aa2e31bb07533a1d687ccf6f3d37a5c58">More...</a><br /></td></tr>
 <tr class="separator:aa2e31bb07533a1d687ccf6f3d37a5c58"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
-<a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
-<div class="textblock"><p>Enum wrapper for <code>emacs_process_input_result</code> </p>
-</div><hr/>The documentation for this struct was generated from the following file:<ul>
+<h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
+<a id="a6cfab76261a5f1ec8bc76d669e309781"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a6cfab76261a5f1ec8bc76d669e309781">&#9670;&nbsp;</a></span>process_input_result()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">constexpr cppemacs::process_input_result::process_input_result </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="group__cppemacs__core.html#ga308d7d99197a9196c83dad15126a23cc">emacs_process_input_result</a>&#160;</td>
+          <td class="paramname"><em>raw</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">constexpr</span><span class="mlabel">noexcept</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Construct the wrapper. </p>
+
+</div>
+</div>
+<h2 class="groupheader">Member Function Documentation</h2>
+<a id="a36b18201ab947554dd8c014bd5e2bcfd"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a36b18201ab947554dd8c014bd5e2bcfd">&#9670;&nbsp;</a></span>get()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">constexpr <a class="el" href="group__cppemacs__core.html#ga308d7d99197a9196c83dad15126a23cc">emacs_process_input_result</a> cppemacs::process_input_result::get </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">constexpr</span><span class="mlabel">noexcept</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Get the underlying <a class="el" href="group__cppemacs__core.html#ga308d7d99197a9196c83dad15126a23cc">emacs_process_input_result</a>. </p>
+
+</div>
+</div>
+<a id="ac0298ad7d5cb873b5fe8cdf90068a6ec"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac0298ad7d5cb873b5fe8cdf90068a6ec">&#9670;&nbsp;</a></span>operator bool()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">constexpr cppemacs::process_input_result::operator bool </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">constexpr</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>True if this is not equal to <a class="el" href="structcppemacs_1_1process__input__result.html#a9770d5cd0de88a8113e6390e950bd136">continue_</a>. </p>
+
+</div>
+</div>
+<a id="adb5a3cb0f7105b16a18077341b1d89ad"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#adb5a3cb0f7105b16a18077341b1d89ad">&#9670;&nbsp;</a></span>operator emacs_process_input_result()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">constexpr cppemacs::process_input_result::operator <a class="el" href="group__cppemacs__core.html#ga308d7d99197a9196c83dad15126a23cc">emacs_process_input_result</a> </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">constexpr</span><span class="mlabel">noexcept</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Get the underlying <a class="el" href="group__cppemacs__core.html#ga308d7d99197a9196c83dad15126a23cc">emacs_process_input_result</a>. </p>
+
+</div>
+</div>
+<h2 class="groupheader">Member Data Documentation</h2>
+<a id="a9770d5cd0de88a8113e6390e950bd136"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a9770d5cd0de88a8113e6390e950bd136">&#9670;&nbsp;</a></span>continue_</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">constexpr <a class="el" href="group__cppemacs__core.html#ga308d7d99197a9196c83dad15126a23cc">emacs_process_input_result</a> cppemacs::process_input_result::continue_ = emacs_process_input_continue</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span><span class="mlabel">constexpr</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Module code may continue <br  />
+ </p>
+
+</div>
+</div>
+<a id="aa2e31bb07533a1d687ccf6f3d37a5c58"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa2e31bb07533a1d687ccf6f3d37a5c58">&#9670;&nbsp;</a></span>quit_</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">constexpr <a class="el" href="group__cppemacs__core.html#ga308d7d99197a9196c83dad15126a23cc">emacs_process_input_result</a> cppemacs::process_input_result::quit_ = emacs_process_input_quit</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span><span class="mlabel">constexpr</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Module code should return control to Emacs as soon as possible. <br  />
+ </p>
+
+</div>
+</div>
+<a id="a97a1344e7467be73d301b67aeb77ee03"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a97a1344e7467be73d301b67aeb77ee03">&#9670;&nbsp;</a></span>raw</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="group__cppemacs__core.html#ga308d7d99197a9196c83dad15126a23cc">emacs_process_input_result</a> cppemacs::process_input_result::raw</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>The underlying <a class="el" href="group__cppemacs__core.html#ga308d7d99197a9196c83dad15126a23cc">emacs_process_input_result</a>. </p>
+
+</div>
+</div>
+<hr/>The documentation for this struct was generated from the following file:<ul>
 <li>include/cppemacs/<a class="el" href="core_8hpp_source.html">core.hpp</a></li>
 </ul>
 </div><!-- contents -->

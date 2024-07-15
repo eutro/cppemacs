@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['cell_73',['cell',['../structcppemacs_1_1cell.html#a1c76c96513a7637f508993595fbbba03',1,'cppemacs::cell']]]
+  ['begin_182',['begin',['../structcppemacs_1_1spreader__restargs.html#ab9a551f7928c685c169cf09f3d8595cc',1,'cppemacs::spreader_restargs']]]
 ];

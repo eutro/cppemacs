@@ -1,5 +1,4 @@
 var searchData=
 [
-  ['value_43',['value',['../group__Core.html#gabd2db90fff7d715e8649f37147f60a3a',1,'cppemacs']]],
-  ['vec_5fcell_44',['vec_cell',['../structcppemacs_1_1vec__cell.html',1,'cppemacs']]]
+  ['quit_5f_116',['quit_',['../structcppemacs_1_1process__input__result.html#aa2e31bb07533a1d687ccf6f3d37a5c58',1,'cppemacs::process_input_result']]]
 ];

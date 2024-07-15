@@ -1,27 +1,21 @@
+<!DOCTYPE html>
 <!--
 - Copyright (C) 2024 Eutro <https://eutro.dev>
 -
-- This file is part of cppemacs.
+- This file is part of the cppemacs reference documentation.
 -
-- cppemacs is free software: you can redistribute it and/or modify it
-- under the terms of the GNU General Public License as published by
-- the Free Software Foundation, either version 3 of the License, or
-- (at your option) any later version.
--
-- cppemacs is distributed in the hope that it will be useful, but
-- WITHOUT ANY WARRANTY; without even the implied warranty of
-- MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
-- General Public License for more details.
--
-- You should have received a copy of the GNU General Public License
-- along with cppemacs. If not, see <https://www.gnu.org/licenses/>.
+- Permission is granted to copy, distribute and/or modify this document
+- under the terms of the GNU Free Documentation License, Version 1.3 or
+- any later version published by the Free Software Foundation; with no
+- Invariant Sections, no Front-Cover Texts, and no Back-Cover Texts. A
+- copy of the license is included in the section entitled "GNU Free
+- Documentation License".
 -
 - SPDX-FileCopyrightText: 2024 Eutro <https://eutro.dev>
 -
-- SPDX-License-Identifier: GPL-3.0-or-later
+- SPDX-License-Identifier: GFDL-1.3-or-later
 -->
 <!-- HTML header for doxygen 1.11.0-->
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "https://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="$langISO">
 <head>
 <meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
@@ -50,6 +44,7 @@ $darkmode
 <link href="doxygen-awesome.css" rel="stylesheet" type="text/css"/>
 <link href="doxygen-awesome-sidebar-only.css" rel="stylesheet" type="text/css"/>
 <link href="doxygen-awesome-sidebar-only-darkmode-toggle.css" rel="stylesheet" type="text/css"/>
+<link href="cppemacs.css" rel="stylesheet" type="text/css"/>
 </head>
 <script type="text/javascript" src="doxygen-awesome-darkmode-toggle.js"></script>
 <script type="text/javascript">DoxygenAwesomeDarkModeToggle.init()</script>
@@ -141,13 +136,16 @@ $(document).ready(function(){initNavTree('structcppemacs_1_1non__local__exit.htm
 
 <div class="header">
   <div class="headertitle">
-<div class="title">cppemacs::non_local_exit Struct Reference<div class="ingroups"><a class="el" href="group__Core.html">Core</a></div></div>  </div>
+<div class="title">cppemacs::non_local_exit Struct Reference<div class="ingroups"><a class="el" href="group__cppemacs__core.html">Core Types</a></div></div>  </div>
 </div><!--header-->
 <div class="contents">
 
-<p><code>#include &lt;<a class="el" href="core_8hpp_source.html">core.hpp</a>&gt;</code></p>
-<a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
+<p><code>#include &lt;<a class="el" href="core_8hpp_source.html">cppemacs/core.hpp</a>&gt;</code></p>
+<a name="details" id="details"></a><h2 class="groupheader">Description</h2>
 <div class="textblock"><p>A valueless exception indicating a pending non-local exit. </p>
+<dl class="section warning"><dt>Warning</dt><dd>The specific non-local exit should <b>not</b> be cleared if this is thrown.</dd></dl>
+<dl class="section see"><dt>See also</dt><dd><a class="el" href="structcppemacs_1_1envw.html#aa343c86e3e82410365f74c0fb0421cc0" title="Check for non-local exit, and throw an exception if there is one.">envw::maybe_non_local_exit()</a>, which raises this exception.</dd></dl>
+<p><a class="el" href="structcppemacs_1_1envw.html#a80ad1e199f0427ce4620583594a16261" title="Check if there is a non-local exit pending.">envw::non_local_exit_check()</a>, which indicates if there is a pending non-local exit. </p>
 </div><hr/>The documentation for this struct was generated from the following file:<ul>
 <li>include/cppemacs/<a class="el" href="core_8hpp_source.html">core.hpp</a></li>
 </ul>

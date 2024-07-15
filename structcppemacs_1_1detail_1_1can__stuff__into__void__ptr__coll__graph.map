@@ -1,4 +1,4 @@
 <map id="cppemacs::detail::can_stuff_into_void_ptr&lt; T &gt;" name="cppemacs::detail::can_stuff_into_void_ptr&lt; T &gt;">
-<area shape="rect" id="node1" title=" " alt="" coords="268,35,456,76"/>
+<area shape="rect" id="node1" title="Whether T can be stored directly in a void pointer for the typical C Ret foo(Args...." alt="" coords="268,35,456,76"/>
 <area shape="rect" id="node2" title=" " alt="" coords="5,5,220,105"/>
 </map>

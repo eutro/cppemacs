@@ -1,27 +1,21 @@
+<!DOCTYPE html>
 <!--
 - Copyright (C) 2024 Eutro <https://eutro.dev>
 -
-- This file is part of cppemacs.
+- This file is part of the cppemacs reference documentation.
 -
-- cppemacs is free software: you can redistribute it and/or modify it
-- under the terms of the GNU General Public License as published by
-- the Free Software Foundation, either version 3 of the License, or
-- (at your option) any later version.
--
-- cppemacs is distributed in the hope that it will be useful, but
-- WITHOUT ANY WARRANTY; without even the implied warranty of
-- MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
-- General Public License for more details.
--
-- You should have received a copy of the GNU General Public License
-- along with cppemacs. If not, see <https://www.gnu.org/licenses/>.
+- Permission is granted to copy, distribute and/or modify this document
+- under the terms of the GNU Free Documentation License, Version 1.3 or
+- any later version published by the Free Software Foundation; with no
+- Invariant Sections, no Front-Cover Texts, and no Back-Cover Texts. A
+- copy of the license is included in the section entitled "GNU Free
+- Documentation License".
 -
 - SPDX-FileCopyrightText: 2024 Eutro <https://eutro.dev>
 -
-- SPDX-License-Identifier: GPL-3.0-or-later
+- SPDX-License-Identifier: GFDL-1.3-or-later
 -->
 <!-- HTML header for doxygen 1.11.0-->
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "https://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="$langISO">
 <head>
 <meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
@@ -50,6 +44,7 @@ $darkmode
 <link href="doxygen-awesome.css" rel="stylesheet" type="text/css"/>
 <link href="doxygen-awesome-sidebar-only.css" rel="stylesheet" type="text/css"/>
 <link href="doxygen-awesome-sidebar-only-darkmode-toggle.css" rel="stylesheet" type="text/css"/>
+<link href="cppemacs.css" rel="stylesheet" type="text/css"/>
 </head>
 <script type="text/javascript" src="doxygen-awesome-darkmode-toggle.js"></script>
 <script type="text/javascript">DoxygenAwesomeDarkModeToggle.init()</script>
@@ -147,14 +142,13 @@ $(document).ready(function(){initNavTree('structcppemacs_1_1user__ptr.html','');
 
 <p>This is the complete list of members for <a class="el" href="structcppemacs_1_1user__ptr.html">cppemacs::user_ptr&lt; T, Deleter &gt;</a>, including all inherited members.</p>
 <table class="directory">
-  <tr bgcolor="#f0f0f0" class="even"><td class="entry"><b>fin</b>(void *ptr) noexcept (defined in <a class="el" href="structcppemacs_1_1user__ptr.html">cppemacs::user_ptr&lt; T, Deleter &gt;</a>)</td><td class="entry"><a class="el" href="structcppemacs_1_1user__ptr.html">cppemacs::user_ptr&lt; T, Deleter &gt;</a></td><td class="entry"><span class="mlabel">inline</span><span class="mlabel">static</span></td></tr>
+  <tr class="even"><td class="entry"><a class="el" href="structcppemacs_1_1user__ptr.html#af2992268e8fd08ce08a8148c03b260db">fin</a>(void *ptr) noexcept</td><td class="entry"><a class="el" href="structcppemacs_1_1user__ptr.html">cppemacs::user_ptr&lt; T, Deleter &gt;</a></td><td class="entry"><span class="mlabel">inline</span><span class="mlabel">static</span></td></tr>
   <tr><td class="entry"><a class="el" href="structcppemacs_1_1user__ptr.html#a75cd28f0eed90ca98ac55634ff005392">from_emacs</a>(expected_type_t&lt; user_ptr &gt;, envw nv, value val)</td><td class="entry"><a class="el" href="structcppemacs_1_1user__ptr.html">cppemacs::user_ptr&lt; T, Deleter &gt;</a></td><td class="entry"><span class="mlabel">friend</span></td></tr>
-  <tr bgcolor="#f0f0f0" class="even"><td class="entry"><b>get</b>() const noexcept (defined in <a class="el" href="structcppemacs_1_1user__ptr.html">cppemacs::user_ptr&lt; T, Deleter &gt;</a>)</td><td class="entry"><a class="el" href="structcppemacs_1_1user__ptr.html">cppemacs::user_ptr&lt; T, Deleter &gt;</a></td><td class="entry"><span class="mlabel">inline</span></td></tr>
-  <tr bgcolor="#f0f0f0"><td class="entry"><b>operator*</b>() const noexcept (defined in <a class="el" href="structcppemacs_1_1user__ptr.html">cppemacs::user_ptr&lt; T, Deleter &gt;</a>)</td><td class="entry"><a class="el" href="structcppemacs_1_1user__ptr.html">cppemacs::user_ptr&lt; T, Deleter &gt;</a></td><td class="entry"><span class="mlabel">inline</span></td></tr>
-  <tr bgcolor="#f0f0f0" class="even"><td class="entry"><b>operator-&gt;</b>() const noexcept (defined in <a class="el" href="structcppemacs_1_1user__ptr.html">cppemacs::user_ptr&lt; T, Deleter &gt;</a>)</td><td class="entry"><a class="el" href="structcppemacs_1_1user__ptr.html">cppemacs::user_ptr&lt; T, Deleter &gt;</a></td><td class="entry"><span class="mlabel">inline</span></td></tr>
-  <tr bgcolor="#f0f0f0"><td class="entry"><b>ptr</b> (defined in <a class="el" href="structcppemacs_1_1user__ptr.html">cppemacs::user_ptr&lt; T, Deleter &gt;</a>)</td><td class="entry"><a class="el" href="structcppemacs_1_1user__ptr.html">cppemacs::user_ptr&lt; T, Deleter &gt;</a></td><td class="entry"></td></tr>
-  <tr class="even"><td class="entry"><a class="el" href="structcppemacs_1_1user__ptr.html#a6ff8575c22126bed61a20cfb867269b2">to_emacs</a>(expected_type_t&lt; user_ptr &gt;, envw nv, const user_ptr &amp;ptr)</td><td class="entry"><a class="el" href="structcppemacs_1_1user__ptr.html">cppemacs::user_ptr&lt; T, Deleter &gt;</a></td><td class="entry"><span class="mlabel">friend</span></td></tr>
-  <tr bgcolor="#f0f0f0"><td class="entry"><b>user_ptr</b>(T *ptr) noexcept (defined in <a class="el" href="structcppemacs_1_1user__ptr.html">cppemacs::user_ptr&lt; T, Deleter &gt;</a>)</td><td class="entry"><a class="el" href="structcppemacs_1_1user__ptr.html">cppemacs::user_ptr&lt; T, Deleter &gt;</a></td><td class="entry"><span class="mlabel">inline</span></td></tr>
+  <tr class="even"><td class="entry"><a class="el" href="structcppemacs_1_1user__ptr.html#a7d7f558d5056e60db53b793e3a4d5a43">get</a>() const noexcept</td><td class="entry"><a class="el" href="structcppemacs_1_1user__ptr.html">cppemacs::user_ptr&lt; T, Deleter &gt;</a></td><td class="entry"><span class="mlabel">inline</span></td></tr>
+  <tr><td class="entry"><a class="el" href="structcppemacs_1_1user__ptr.html#aeb39374b4799a696a77280c377492db7">operator*</a>() const noexcept</td><td class="entry"><a class="el" href="structcppemacs_1_1user__ptr.html">cppemacs::user_ptr&lt; T, Deleter &gt;</a></td><td class="entry"><span class="mlabel">inline</span></td></tr>
+  <tr class="even"><td class="entry"><a class="el" href="structcppemacs_1_1user__ptr.html#aa00208d25404c6f9314132116d18b2b1">operator-&gt;</a>() const noexcept</td><td class="entry"><a class="el" href="structcppemacs_1_1user__ptr.html">cppemacs::user_ptr&lt; T, Deleter &gt;</a></td><td class="entry"><span class="mlabel">inline</span></td></tr>
+  <tr><td class="entry"><a class="el" href="structcppemacs_1_1user__ptr.html#a8bdd385b96b6e190d82d553467caf100">to_emacs</a>(expected_type_t&lt; user_ptr &gt;, envw nv, const user_ptr &amp;ptr) noexcept</td><td class="entry"><a class="el" href="structcppemacs_1_1user__ptr.html">cppemacs::user_ptr&lt; T, Deleter &gt;</a></td><td class="entry"><span class="mlabel">friend</span></td></tr>
+  <tr class="even"><td class="entry"><a class="el" href="structcppemacs_1_1user__ptr.html#aa9721273ae4db20de5546c0f9aca86eb">user_ptr</a>(T *ptr) noexcept</td><td class="entry"><a class="el" href="structcppemacs_1_1user__ptr.html">cppemacs::user_ptr&lt; T, Deleter &gt;</a></td><td class="entry"><span class="mlabel">inline</span></td></tr>
 </table></div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->

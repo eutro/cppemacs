@@ -1,4 +1,4 @@
 <map id="cppemacs::literals::eread_literal" name="cppemacs::literals::eread_literal">
-<area shape="rect" id="node1" title=" " alt="" coords="5,95,147,136"/>
-<area shape="rect" id="node2" href="$structcppemacs_1_1literals_1_1estring__literal.html" title=" " alt="" coords="5,5,147,47"/>
+<area shape="rect" id="node1" title="A readable literal, with &quot;&quot;_Eread." alt="" coords="5,95,147,136"/>
+<area shape="rect" id="node2" href="$structcppemacs_1_1literals_1_1estring__literal.html" title="A reference to a string, can be created with &quot;&quot;_Estr()." alt="" coords="5,5,147,47"/>
 </map>

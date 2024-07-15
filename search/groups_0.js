@@ -1,5 +1,4 @@
 var searchData=
 [
-  ['conversions_90',['Conversions',['../group__Conversions.html',1,'']]],
-  ['core_91',['Core',['../group__Core.html',1,'']]]
+  ['core_20types_317',['Core Types',['../group__cppemacs__core.html',1,'']]]
 ];

@@ -25,12 +25,19 @@
 var NAVTREE =
 [
   [ "cppemacs", "index.html", [
+    [ "Introduction", "index.html#autotoc_md0", [
+      [ "The Emacs Lisp Reference Manual", "index.html#autotoc_md1", null ]
+    ] ],
+    [ "Dynamic Modules", "index.html#autotoc_md2", null ],
+    [ "Interfacing with Emacs", "index.html#autotoc_md3", null ],
+    [ "GNU Free Documentation License", "GFDL-1_83-or-later.html", null ],
     [ "Modules", "modules.html", "modules" ],
     [ "Namespaces", "namespaces.html", [
       [ "Namespace List", "namespaces.html", "namespaces_dup" ],
       [ "Namespace Members", "namespacemembers.html", [
         [ "All", "namespacemembers.html", null ],
         [ "Functions", "namespacemembers_func.html", null ],
+        [ "Variables", "namespacemembers_vars.html", null ],
         [ "Typedefs", "namespacemembers_type.html", null ]
       ] ]
     ] ],
@@ -41,6 +48,8 @@ var NAVTREE =
       [ "Class Members", "functions.html", [
         [ "All", "functions.html", null ],
         [ "Functions", "functions_func.html", null ],
+        [ "Variables", "functions_vars.html", null ],
+        [ "Typedefs", "functions_type.html", null ],
         [ "Related Functions", "functions_rela.html", null ]
       ] ]
     ] ],
@@ -52,7 +61,8 @@ var NAVTREE =
 
 var NAVTREEINDEX =
 [
-""
+"GFDL-1_83-or-later.html",
+"structcppemacs_1_1literals_1_1estring__literal.html#ad56c5fe3cdc727ea5ef6d126124a35f9"
 ];
 
 var SYNCONMSG = 'click to disable panel synchronisation';

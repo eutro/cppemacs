@@ -1,4 +1,8 @@
 var searchData=
 [
-  ['from_5femacs_74',['from_emacs',['../group__Conversions.html#gae2e149d0e0243b271ea38abc936ffe20',1,'cppemacs::from_emacs(expected_type_t&lt; std::string &gt;, envw nv, value val)'],['../group__Conversions.html#gac7308e5f74293092c2f1bda026c0eeba',1,'cppemacs::from_emacs(expected_type_t&lt; Int &gt;, envw nv, value val)'],['../group__Conversions.html#gaf311596680c726068c4ed8ccc4623d4d',1,'cppemacs::from_emacs(expected_type_t&lt; Float &gt;, envw nv, value val)'],['../group__Conversions.html#ga51e2d152f238df6cdad11ee18c26662e',1,'cppemacs::from_emacs(expected_type_t&lt; struct timespec &gt;, envw nv, value val)']]]
+  ['call_183',['call',['../structcppemacs_1_1cell.html#a34d44a78aaefb0c7319bfe6d6d850b58',1,'cppemacs::cell']]],
+  ['cell_184',['cell',['../structcppemacs_1_1cell.html#a1c76c96513a7637f508993595fbbba03',1,'cppemacs::cell']]],
+  ['cell_5fextracted_185',['cell_extracted',['../structcppemacs_1_1cell__extracted.html#ae225632a47f7ecd0ffb7510a1659779c',1,'cppemacs::cell_extracted::cell_extracted(cell val) noexcept(noexcept(ValueType(val.extract&lt; FromEmacsType &gt;())))'],['../structcppemacs_1_1cell__extracted.html#a11a0d6e723bfae3233b08ae19b5f4a92',1,'cppemacs::cell_extracted::cell_extracted(Args &amp;&amp;...args)']]],
+  ['check_5fcompatible_186',['check_compatible',['../structcppemacs_1_1envw.html#a826907bd575e978486e692f43af036d7',1,'cppemacs::envw']]],
+  ['copy_5fstring_5fcontents_187',['copy_string_contents',['../structcppemacs_1_1envw.html#a9434165b5e0bb070e029284bb0ded477',1,'cppemacs::envw']]]
 ];
