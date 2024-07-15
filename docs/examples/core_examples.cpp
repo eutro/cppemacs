@@ -33,7 +33,7 @@ using namespace cppemacs;
 int emacs_module_init(emacs_runtime *rt) noexcept {
   envw env = rt->get_environment(rt);
   env.run_catching([&]() {
-    (env->*"defconst-1")("my-cool-constant", 12345);
+    (env->*"set-default-toplevel-value")("my-cool-constant", 12345);
 
     cell defalias = env->*"defalias";
     defalias(

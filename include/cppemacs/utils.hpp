@@ -199,9 +199,9 @@ struct module_function_repr {
       return retfn;
     }
 #endif
-    value gensym = nv.intern("gensym");
+    value make_symbol = nv.intern("make-symbol");
     // bind the module function to a new symbol, for which we can add a finalizer
-    value func_sym = (nv->*gensym)(nv.make_string("c++fun-"));
+    value func_sym = (nv->*make_symbol)(nv.make_string("cpp--finalized-fun"));
     (nv->*nv.intern("defalias"))(func_sym, retfn);
 
     // make a user pointer as a finalizer
@@ -211,7 +211,7 @@ struct module_function_repr {
 
     // attach the finalizer, so that the lifetimes of `retfn` and the finalizer are tied
     // (unless users do something stupid!)
-    nv.funcall(nv.intern("put"), {func_sym, (nv->*gensym)(), finalizer});
+    nv.funcall(nv.intern("put"), {func_sym, (nv->*"cpp--data-ptr"), finalizer});
     if (nv.non_local_exit_check()) return nullptr; // make sure that we don't return if the lifetimes weren't tied
 
     return func_sym; // an alias to our module function in a fresh uninterned symbol

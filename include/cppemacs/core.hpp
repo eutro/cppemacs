@@ -24,9 +24,33 @@
 #ifndef CPPEMACS_EMACS_HPP_
 #define CPPEMACS_EMACS_HPP_
 
-#include <cassert>
+#ifndef CPPEMACS_MODULE_INIT_HEADER_HACK
+/** @addtogroup cppemacs_optional
+ *@{*/
+/**
+ * @brief Define as 0 before including to omit the workaround for the
+ * missing noexcept specifier on `emacs_module_init()` in
+ * `<emacs-module.h>` in Emacs 25.
+ */
+#  define CPPEMACS_MODULE_INIT_HEADER_HACK 1
+/**@}*/
+#endif
+
+#if CPPEMACS_MODULE_INIT_HEADER_HACK
+// In Emacs 25, emacs_module_init is declared without the noexcept
+// specifier, we rename the definition so that ours below doesn't
+// conflict. To my knowledge, there should be no issues having an
+// undefined extern symbol in a header.
+#  define emacs_module_init emacs_module_init_CPPEMACS_MODULE_INIT_HEADER_HACK
+#endif
+
 #include <emacs-module.h>
 
+#if CPPEMACS_MODULE_INIT_HEADER_HACK
+#  undef emacs_module_init
+#endif
+
+#include <cassert>
 #include <exception>
 #include <initializer_list>
 #include <stdexcept>
@@ -134,8 +158,8 @@ namespace cppemacs {}
  * @endcode
  * @endspoiler
  *
- * It can then be loaded in Emacs using `require`, `load`, or the low-level
- * `module-load`:
+ * It can then be loaded in Emacs using `require`, `load`,
+ * `load-file`, or `module-load`:
  *
  * @spoiler{Emacs Lisp}
  * @code{lisp}
@@ -364,11 +388,6 @@ extern "C" int emacs_module_init(cppemacs::emacs_runtime *runtime) noexcept;
 
 namespace cppemacs {
 
-/** @brief Possible function call outcomes. @manual{Module-Nonlocal.html} */
-using emacs_funcall_exit = ::emacs_funcall_exit;
-/** @brief envw::process_input() outcomes. */
-using emacs_process_input_result = ::emacs_process_input_result;
-
 /** @brief MAX_ARITY for variadic functions. */
 static constexpr ptrdiff_t emacs_variadic_function = ::emacs_variadic_function;
 
@@ -441,6 +460,13 @@ using emacs_finalizer = void (*)(void *data);
 using emacs_limb_t = ::emacs_limb_t;
 #endif
 
+/**
+ * @brief Possible function call outcomes. @manual{Module-Nonlocal.html}
+ *
+ * @see cppemacs::funcall_exit for the wrapper.
+ */
+using emacs_funcall_exit = ::emacs_funcall_exit;
+
 /** @brief Enum wrapper for @ref emacs_funcall_exit.
  *
  * When @ref operator bool() "converted to bool", this is true if there is a
@@ -472,6 +498,14 @@ struct funcall_exit {
   constexpr operator bool() const { return raw != return_; }
 };
 
+#if (EMACS_MAJOR_VERSION >= 27)
+/**
+ * @brief envw::process_input() outcomes.
+ *
+ * @see cppemacs::process_input_result for the wrapper.
+ */
+using emacs_process_input_result = ::emacs_process_input_result;
+
 /** @brief Enum wrapper for @ref emacs_process_input_result.
  *
  * @manual{Module-Misc.html#index-process_005finput} */
@@ -493,6 +527,7 @@ struct process_input_result {
   /** @brief True if this is not equal to @ref continue_. */
   constexpr operator bool() const { return raw != continue_; }
 };
+#endif
 
 /** @brief A valueless exception indicating a pending non-local exit.
  *
@@ -798,13 +833,24 @@ public:
    *
    * @see check_compatible() which throws an exception if the runtime check
    * fails.
+   *
+   * @see is_compatible_relaxed() which returns false, instead of
+   * erroring, if the compile-time check fails.
    */
   template <size_t MajorVersion> bool is_compatible() const noexcept {
     static_assert(MajorVersion <= 29, "This version of cppemacs only supports up to Emacs 29");
     static_assert(MajorVersion <= EMACS_MAJOR_VERSION,
-                  "The Emacs version we are compiling against is too low");
+                  "The Emacs version we are compiling against is too low; "
+                  "use `is_compatible_relaxed()` if this should not be an error");
+    return is_compatible_relaxed<MajorVersion>();
+  }
+
+  /**
+   * @brief Like is_compatible(), but doesn't fail at compile time if
+   * the `MajorVersion` is newer than the one we are compiling against.
+   */
+  template <size_t MajorVersion> bool is_compatible_relaxed() const noexcept {
     static_assert(MajorVersion >= 25, "The Emacs module API only exists since Emacs 25");
-    static_assert(!MajorVersion, "There should be a specialization for is_compatible, this is a bug in cppemacs");
     return false;
   }
 
@@ -1452,19 +1498,19 @@ public:
 #ifndef CPPEMACS_DOXYGEN_RUNNING
 // specializations for is_compatible, these must be defined out of line, GCC complains otherwise
 #  if (EMACS_MAJOR_VERSION >= 25)
-template <> inline bool envw::is_compatible<25>() const noexcept { return size() >= sizeof(emacs_env_26); }
+template <> inline bool envw::is_compatible_relaxed<25>() const noexcept { return size() >= sizeof(emacs_env_25); }
 #  endif
 #  if (EMACS_MAJOR_VERSION >= 26)
-template <> inline bool envw::is_compatible<26>() const noexcept { return size() >= sizeof(emacs_env_26); }
+template <> inline bool envw::is_compatible_relaxed<26>() const noexcept { return size() >= sizeof(emacs_env_26); }
 #  endif
 #  if (EMACS_MAJOR_VERSION >= 27)
-template <> inline bool envw::is_compatible<27>() const noexcept { return size() >= sizeof(emacs_env_27); }
+template <> inline bool envw::is_compatible_relaxed<27>() const noexcept { return size() >= sizeof(emacs_env_27); }
 #  endif
 #  if (EMACS_MAJOR_VERSION >= 28)
-template <> inline bool envw::is_compatible<28>() const noexcept { return size() >= sizeof(emacs_env_28); }
+template <> inline bool envw::is_compatible_relaxed<28>() const noexcept { return size() >= sizeof(emacs_env_28); }
 #  endif
 #  if (EMACS_MAJOR_VERSION >= 29)
-template <> inline bool envw::is_compatible<29>() const noexcept { return size() >= sizeof(emacs_env_29); }
+template <> inline bool envw::is_compatible_relaxed<29>() const noexcept { return size() >= sizeof(emacs_env_29); }
 #  endif
 #endif
 

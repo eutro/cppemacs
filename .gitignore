@@ -20,11 +20,14 @@
 # SPDX-License-Identifier: GPL-3.0-or-later
 
 *~
-venv
-build
+venv/
+build/
+build-*/
+cmake-build/
+cmake-build-*/
 *.o
-.cache
-.idea
-.vscode
+.cache/
+.idea/
+.vscode/
 compile_commands.json
 Testing/

@@ -22,6 +22,18 @@
  */
 
 #include <cppemacs/all.hpp>
+
+#if (EMACS_MAJOR_VERSION < 27)
+extern "C" {
+int plugin_is_GPL_compatible;
+
+int emacs_module_init(emacs_runtime *rt) noexcept {
+  return 0;
+}
+}
+#else
+
+#include <cppemacs/all.hpp>
 #include <vector>
 
 #if defined(__cpp_lib_optional) || (__cplusplus > 201606L)
@@ -144,3 +156,5 @@ static void module_init(envw env) {
   cell_extracted_optcell(env);
 #endif
 }
+
+#endif

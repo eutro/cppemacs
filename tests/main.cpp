@@ -46,7 +46,7 @@ int plugin_is_GPL_compatible;
 
 int emacs_module_init(emacs_runtime *rt) noexcept {
   envw nv(rt->get_environment(rt));
-  if (nv->size < sizeof(emacs_env_29)) return 1;
+  if (!nv.is_compatible<25>()) return 1;
 
   nv.run_catching([&]() {
     (nv->*"defalias")(

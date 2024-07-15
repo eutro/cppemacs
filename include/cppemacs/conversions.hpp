@@ -75,7 +75,7 @@ struct is_integral_smaller_than_intmax : std::integral_constant<bool, (
   (std::numeric_limits<T>::digits <= std::numeric_limits<intmax_t>::digits)
 )> {};
 
-#ifndef CPPEMACS_DOXYGEN_RUNNING
+#if (EMACS_MAJOR_VERSION >= 27) && !defined(CPPEMACS_DOXYGEN_RUNNING)
 /** @brief number of `emacs_limb_t`s required to represent a `uintmax_t` */
 static constexpr ptrdiff_t uintmax_limb_count =
   1 + // ceil division

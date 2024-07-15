@@ -29,8 +29,7 @@
 
 (let ((status
        (cppemacs-test
-        (seq-concatenate
-         'vector
+        (vconcat
          command-line-args-left
          (split-string-and-unquote (or (getenv "CATCH2_FLAGS") ""))))))
   (unless (= status 0)

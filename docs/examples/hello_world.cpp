@@ -21,6 +21,18 @@
  * SPDX-License-Identifier: GPL-3.0-or-later
  */
 
+#include <cppemacs/all.hpp>
+
+#if (EMACS_MAJOR_VERSION < 28)
+extern "C" {
+int plugin_is_GPL_compatible;
+
+int emacs_module_init(emacs_runtime *rt) noexcept {
+  return 0;
+}
+}
+#else
+
 //! [Full example]
 #include <cppemacs/all.hpp>
 using namespace cppemacs;
@@ -38,7 +50,7 @@ int emacs_module_init(emacs_runtime *rt) noexcept {
   envw env = rt->get_environment(rt);
 
   // check that certain features are available
-  if (!env.is_compatible<27>()) return 2;
+  if (!env.is_compatible<28>()) return 2;
 
   // propagate C++ exceptions and Emacs non-local exits
   env.run_catching([&]() {
@@ -58,6 +70,7 @@ int emacs_module_init(emacs_runtime *rt) noexcept {
 
         return false; // -> nil
       });
+    // make the function interactive (Emacs 28+)
     env.make_interactive(cppemacs_hello_world, env->*""_Estr);
 
     // expose them to Emacs
@@ -69,3 +82,5 @@ int emacs_module_init(emacs_runtime *rt) noexcept {
 
 }
 //! [Full example]
+
+#endif
