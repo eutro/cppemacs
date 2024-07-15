@@ -1,5 +1,5 @@
 ;; -*- lexical-binding: t -*-
-;
+
 ;; Copyright (C) 2024 Eutro <https://eutro.dev>
 ;;
 ;; This file is part of cppemacs.
@@ -21,18 +21,20 @@
 ;;
 ;; SPDX-License-Identifier: GPL-3.0-or-later
 
-(require 'cl-lib)
+((license "scripts/license-header-gpl.txt")
+ (recurse
+  (".")
+  "CMakeLists.txt"
+  "*.cmake"
+  "Makefile"
+  "*.md"
+  "*.el"
+  "*.hpp" "*.cpp"
+  (recurse ("scripts" "include/cppemacs" "tests" "cmake") ..)
 
-(setq backtrace-on-error-noninteractive nil)
-
-(module-load (pop command-line-args-left))
-
-(let ((status
-       (cppemacs-test
-        (seq-concatenate
-         'vector
-         command-line-args-left
-         (split-string-and-unquote (or (getenv "CATCH2_FLAGS") ""))))))
-  (unless (= status 0)
-    (kill-emacs status)))
-
+  (recurse
+   ("docs")
+   "CMakeLists.txt"
+   "*.css"
+   (recurse ("examples") "*.cpp")
+   (recurse ("*.html" "*.xml") (license "../scripts/license-header-gfdl.txt")))))

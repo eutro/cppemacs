@@ -25,10 +25,33 @@
 #define CPPEMACS_WRAPPERS_HPP_
 
 #include "core.hpp"
-#include <cstring>
+#include "conversions.hpp"
 #include <memory>
+#include <type_traits>
+#include <utility>
+
+#ifdef __GNUC__
+#include <cxxabi.h>
+#endif
 
 namespace cppemacs {
+namespace detail {
+#ifdef __GNUC__
+inline std::string demangle(const char *name) {
+  int status;
+  std::unique_ptr<char[], decltype(&std::free)> s(
+    abi::__cxa_demangle(name, 0, 0, &status),
+    &std::free);
+  return std::string(s ? s.get() : name);
+}
+#else
+inline std::string demangle(std::string &&s) { return s; }
+#endif
+
+template <typename T>
+inline std::string type_name() { return demangle(typeid(T).name()); }
+}
+}
 
 /**
  * @defgroup cppemacs_utilities Utilities
@@ -37,72 +60,7 @@ namespace cppemacs {
  * @addtogroup cppemacs_utilities
  * @{
  */
-
-/**
- * @brief Wrapper type over Emacs vectors.
- *
- * Supports the @ref operator[]() "subscript operator" and @ref
- * size().
- */
-struct vecw {
-private:
-  cell c;
-
-public:
-  /** @brief Constructor that forwards to @ref cell. */
-  template <typename...Args>
-  vecw(Args &&...args): c(std::forward<Args>(args)...) {}
-  /** @brief Get the underlying @ref cell. */
-  operator cell() const { return c; }
-
-  /**
-   * @brief An unevaluated reference to a vector element.
-   *
-   * This can be @ref operator=() "assigned", @ref get() "gotten",
-   * or @ref set() "set".
-   */
-  struct reference {
-  private:
-    cell v;
-    ptrdiff_t idx;
-
-  public:
-    /** @brief Construct a reference from a vector and index. */
-    reference(cell v, intmax_t idx): v(v), idx(idx) {}
-
-    /** @brief Get the value of the reference. */
-    operator cell() const {
-      value ret = v->vec_get(v, idx);
-      v->maybe_non_local_exit();
-      return v->*ret;
-    }
-
-    /** @brief Get the value of the reference, performing @ref cppemacs_conversions "conversions". */
-    template <FROM_EMACS_TYPE T = cell>
-    T get() const { return cell(*this).extract<T>(); }
-
-    /** @brief Set the reference to the given value. */
-    cell operator=(value x) const {
-      v->vec_set(v, idx, x);
-      v->maybe_non_local_exit();
-      return v->*x;
-    }
-
-    /** @brief Set the reference to the given value, performing @ref cppemacs_conversions "conversions". */
-    template <TO_EMACS_TYPE T>
-    cell set(T &&x) const { return *this = v->*std::forward<T>(x); }
-  };
-
-  /** @brief Reference the idx-th element of the vector. */
-  reference operator[](ptrdiff_t idx) const { return reference(*this, idx); }
-
-  /** @brief Get the size of the vector. */
-  ptrdiff_t size() const {
-    ptrdiff_t ret = c->vec_size(c);
-    c->maybe_non_local_exit();
-    return ret;
-  }
-};
+namespace cppemacs {
 
 /** @brief Type-safe Emacs user pointer representation. */
 template <typename T, typename Deleter = std::default_delete<T>>
@@ -233,7 +191,7 @@ struct module_function_repr {
       fptr_data); // fptr still owned by us for a bit
 
 #if (EMACS_MAJOR_VERSION >= 28) // we have module finalizers, maybe
-    if (nv->size >= sizeof(emacs_env_28)) {
+    if (nv.is_compatible<28>()) {
       // we have function finalizers, just attach it
       nv.set_function_finalizer(retfn, fin);
       if (nv.non_local_exit_check()) return nullptr;
@@ -304,19 +262,23 @@ CPPEMACS_SUPPRESS_WCOMPAT_MANGLING_END
  * @brief A wrapper over `F` that allows it to be @ref
  * envw::operator->*() "converted" to an Emacs function.
  *
- * A reference to `F` must be nothrow invocable with (@ref emacs_env
- * *env, ptrdiff_t nargs, @ref value *args), returning a @ref
- * value. This differs from a simple @ref emacs_function, in that the
- * `data` parameter is converted to `F` according to the @ref
- * data_repr.
+ * A reference to `F` must be invocable with <code>(::emacs_env *env, ptrdiff_t
+ * nargs, ::value *args)</code>, returning a <code>::value</code>. This differs
+ * from a simple @ref emacs_function, in that the `data` parameter is converted
+ * to `F` according to the @ref data_repr, instead of being passed to `F`.
+ *
+ * `F` will be wrapped in @ref envw::run_catching(), and so is free to
+ * throw exceptions.
+ *
+ * @see make_module_function() and make_spreader_function() for creating
+ * instances.
  */
 template <typename F>
 struct module_function {
   static_assert(!std::is_reference<F>::value, "Must not be a reference type");
 #ifdef CPPEMACS_HAVE_IS_INVOCABLE
-  static_assert(std::is_nothrow_invocable_r_v<value, F&, emacs_env *, ptrdiff_t, value *>,
-                "Must be no-throw invocable with Emacs function arguments\n"
-                "Add `nothrow` and consider wraping with `env.run_catching`");
+  static_assert(std::is_invocable_r_v<value, F&, emacs_env *, ptrdiff_t, value *>,
+                "F must be invocable with Emacs function arguments");
 #endif
 
   /** @brief The representation used to convert between the `data`
@@ -335,9 +297,9 @@ struct module_function {
    */
   using data_repr = module_function_repr<F>;
 
-  /** @brief The minimum number of arguments that F is to be called with. */
+  /** @brief The minimum number of arguments that `F` is to be called with. */
   ptrdiff_t min_arity;
-  /** @brief The maximum number of arguments that F is to be called with. */
+  /** @brief The maximum number of arguments that `F` is to be called with. */
   ptrdiff_t max_arity;
   /** @brief The documentation string for the Emacs function that will
    * be created. */
@@ -345,8 +307,12 @@ struct module_function {
   /** @brief The invokable function. */
   F f;
 
-  /** @brief Construct with the provided arities, doc-string and
-   * in-place arguments for F. */
+  /**
+   * @brief Construct with the provided arities, doc-string and
+   * in-place arguments for `F`.
+   *
+   * @see make_module_function() which infers `F`.
+   */
   template <typename...Args>
   module_function(
     ptrdiff_t min_arity, ptrdiff_t max_arity,
@@ -361,7 +327,12 @@ struct module_function {
   /** @brief An @ref cppemacs::emacs_function "emacs_function" which
    * converts @e data to `F` and invokes it. */
   static value invoke(emacs_env *nv, ptrdiff_t nargs, value *args, void *data) noexcept {
-    return data_repr::extract(data)(nv, nargs, args);
+    return envw(nv).run_catching(
+      [&]() noexcept(
+        noexcept(value(data_repr::extract(data)(nv, nargs, args)))
+      ) -> value {
+        return data_repr::extract(data)(nv, nargs, args);
+      });
   }
 
   /**
@@ -383,7 +354,32 @@ struct module_function {
 #define CPPEMACS_HAVE_RETURN_TYPE_DEDUCTION 0
 #endif
 
-/** Make a module_function with the given minimum and maximum arity. */
+/** @brief Make a module_function with the given minimum and maximum arity.
+ *
+ * @param min_arity The minimum number of arguments the function can be
+ * invoked with.
+ *
+ * @param max_arity
+ * The maximum number of arguments the function can be
+ * invoked with. <br> If this is @ref emacs_variadic_function, the function can be called
+ * with any number of arguments `>= min_arity`.
+ *
+ * @param doc The documentation string of the
+ * function. @manual{Function-Documentation.html} In particular, a
+ * <code>(fn @e arglist)</code> line at the end is helpful to provide
+ * argument names, since they cannot be inferred from the source code.
+ *
+ * @param f The implementation of the function, which will be called with a new
+ * environment and the arguments. It must be invocable with
+ * <br><code>(::emacs_env *env, ptrdiff_t nargs, ::value *args)</code> for
+ * `min_arity <= nargs <= max_arity`, and return a <code>::value</code>. It will
+ * be wrapped with envw::run_catching().
+ *
+ * @returns A <code>@ref "module_function"<F></code>, suitable for @ref
+ * cppemacs_conversions "conversion" to an Emacs function.
+ *
+ * @see make_spreader_function() which automatically unpacks the arguments.
+ */
 template <typename F> auto make_module_function(
   ptrdiff_t min_arity, ptrdiff_t max_arity,
   const char *doc, F &&f
@@ -397,26 +393,45 @@ template <typename F> auto make_module_function(
     std::forward<F>(f));
 }
 
+/**
+ * @brief Used to provide a span-like argument to a @link
+ * make_spreader_function() spreader function @endlink.
+ *
+ * This is just an pointer to arguments and a length. This can implicitly be
+ * converted via a <code>(::value *begin, ::value *end)</code> constructor, such as
+ * `std::vector`. In C++20, this is also compatible with the <a
+ * href="https://en.cppreference.com/w/cpp/ranges">ranges library</a>, and can
+ * be converted to a `std::span<value>`.
+ *
+ * @snippet utils_examples.cpp VA Spreader Functions
+ */
+struct spreader_restargs {
+private:
+  value *args; size_t nargs;
+
+public:
+  /** @brief Construct from a pointer and length. */
+  spreader_restargs(value *args, size_t nargs);
+
+  /** @brief Convert this to `T` with a <code>(::value *begin, ::value
+      *end)</code> constructor. */
+  template <typename T, detail::enable_if_t
+            <std::is_constructible<T, value *, value *>::value, int> = 0>
+  operator T() const { return {begin(), end()}; }
+
+  /** @brief Get the argument pointer. */
+  value *data() const { return args; }
+  /** @brief Get the argument pointer. */
+  value *begin() const { return args; }
+  /** @brief Get a pointer one past the arguments. */
+  value *end() const { return args + nargs; }
+  /** @brief Get the number of aguments. */
+  size_t size() const { return nargs; }
+  /** @brief Get the nth argument. */
+  value &operator[](ptrdiff_t n) const { return args[n]; }
+};
+
 namespace detail {
-
-#if (defined(__cpp_lib_integer_sequence) || (__cplusplus >= 201304L)) || defined(CPPEMACS_DOXYGEN_RUNNING)
-/** @brief C++14 @c std::index_sequence */
-template <size_t...Idx> using index_sequence = std::index_sequence<Idx...>;
-/** @brief C++14 @c std::make_index_sequence */
-template <size_t N> using make_index_sequence = std::make_index_sequence<N>;
-#else
-template <size_t...Idx> struct index_sequence {};
-
-template <size_t N, typename> struct index_sequence_snoc;
-template <size_t N, size_t...Idx> struct index_sequence_snoc<N, index_sequence<Idx...>>
-{ using type = index_sequence<Idx..., N>; };
-template <size_t N> struct make_index_sequence_ :
-    index_sequence_snoc<N, typename make_index_sequence_<N - 1>::type> {};
-template <> struct make_index_sequence_<0> { using type = index_sequence<>; };
-
-template <size_t N> using make_index_sequence = typename make_index_sequence_<N>::type;
-#endif
-
 /** @brief Used to provide a default-constructed argument to a function. */
 struct unprovided_value_t {
   /** @brief Return a default-constructed T. */
@@ -426,7 +441,37 @@ struct unprovided_value_t {
   }
 };
 
-/** @brief A wrapper over F that adapts it to an @ref module_function style callable.
+template <bool IsProvided>
+inline typename std::conditional<IsProvided, cell, unprovided_value_t>::type
+arg_or_default(envw nv, value *args, size_t idx) noexcept;
+template <> inline cell arg_or_default<true>(envw nv, value *args, size_t idx)
+  noexcept { return nv->*args[idx]; }
+template <> inline unprovided_value_t arg_or_default<false>(envw, value *, size_t)
+  noexcept { return {}; }
+
+template <bool IsVar, typename SI> struct spreader_caller;
+template <typename SI> struct spreader_caller<false, SI> {
+  template <size_t NArgs, size_t...Idx> static value
+  invoke_with_arity(detail::index_sequence<Idx...>, SI &si, envw nv, value *args) noexcept(false)
+  { return si.asserted_call(nv, arg_or_default<Idx < NArgs>(nv, args, Idx)...); }
+  template <size_t CallArity, size_t...Idx> static value
+  invoke_variadic(detail::index_sequence<Idx...>, SI &, envw, ptrdiff_t, value *) noexcept(false) { return {}; }
+};
+template <typename SI> struct spreader_caller<true, SI> {
+  template <size_t NArgs, size_t...Idx> static value
+  invoke_with_arity(detail::index_sequence<Idx...>, SI &si, envw nv, value *args) noexcept(false) {
+    return si.asserted_call(nv, arg_or_default<Idx < NArgs>(nv, args, Idx)...,
+                            spreader_restargs(nullptr, 0));
+  }
+  template <size_t CallArity, size_t...Idx> static value
+  invoke_variadic(detail::index_sequence<Idx...>, SI &si, envw nv, ptrdiff_t nargs, value *args) noexcept(false) {
+    return si.asserted_call(nv, arg_or_default<true>(nv, args, Idx)...,
+                            spreader_restargs(args + CallArity, nargs - CallArity));
+  }
+};
+
+/**
+ * @brief A wrapper over F that adapts it to an @ref module_function style callable.
  *
  * @see make_spread_invoker()
  */
@@ -439,39 +484,31 @@ struct spread_invoker {
   spread_invoker(Arg &&arg): f(std::forward<Arg>(arg)) {}
 
 private:
-  template <bool IsProvided> detail::enable_if_t<IsProvided, cell>
-  arg_or_default(envw nv, value *args, size_t idx) noexcept(false) { return nv->*args[idx]; }
-  template <bool IsProvided> detail::enable_if_t<!IsProvided, unprovided_value_t>
-  arg_or_default(envw, value *, size_t) noexcept { return {}; }
+  using arity_seq = detail::make_index_sequence<MaxArity>;
+  using caller = spreader_caller<IsVariadic, spread_invoker>;
+  friend caller;
 
-  template <size_t NArgs, size_t...Idx, bool IsVar = IsVariadic> detail::enable_if_t<!IsVar, value>
-  invoke_with_arity(detail::index_sequence<Idx...>, envw nv, value *args) noexcept(false)
-  { return nv->*f(nv, arg_or_default<Idx < NArgs>(nv, args, Idx)...); }
-  template <size_t...Idx, bool IsVar = IsVariadic> detail::enable_if_t<!IsVar, value>
-  invoke_variadic(detail::index_sequence<Idx...>, envw, ptrdiff_t, value *) noexcept(false) { return {}; }
-
-  template <size_t NArgs, size_t...Idx, bool IsVar = IsVariadic> detail::enable_if_t<IsVar, value>
-  invoke_with_arity(detail::index_sequence<Idx...>, envw nv, value *args) noexcept(false)
-  { return nv->*f(nv, arg_or_default<Idx < NArgs>(nv, args, Idx)..., {nullptr, 0}); }
-  template <size_t...Idx, bool IsVar = IsVariadic> detail::enable_if_t<IsVar, value>
-  invoke_variadic(detail::index_sequence<Idx...>, envw nv, ptrdiff_t nargs, value *args) noexcept(false)
-  { return nv->*f(nv, arg_or_default<true>(nv, args, Idx)..., {args + MaxArity, nargs - MaxArity}); }
+  template <typename ...Args>
+  value asserted_call(envw nv, Args&&...args)
+  {
+    auto ret = f(nv, std::forward<Args>(args)...);
+    return nv->*ret;
+  }
 
   template <size_t...OffIdx>
   value invoke(
     detail::index_sequence<OffIdx...>,
     envw nv, ptrdiff_t nargs, value *args
   ) noexcept(false) {
-    using arity_seq = detail::make_index_sequence<MaxArity>;
     if (IsVariadic && nargs > MaxArity) {
-      return invoke_variadic(arity_seq(), nv, nargs, args);
+      return caller::template invoke_variadic<MaxArity>(arity_seq(), *this, nv, nargs, args);
     } else if (nargs < MinArity || nargs > MaxArity) {
       // should have been caught by Emacs
       throw std::runtime_error("Bad arity");
     } else {
       static constexpr value (*Vt[])(spread_invoker *, envw, value*) = {
         ([](spread_invoker *self, envw nv, value *args)
-        { return self->invoke_with_arity<MinArity + OffIdx>(arity_seq(), nv, args); })
+        { return caller::template invoke_with_arity<MinArity + OffIdx>(arity_seq(), *self, nv, args); })
         ...
       };
       return Vt[nargs](this, nv, args);
@@ -481,7 +518,7 @@ private:
 public:
   /** @brief Call the underlying function with the given arguments. */
   value operator()(envw nv, ptrdiff_t nargs, value *args) noexcept {
-    return nv.run_catching([&]() noexcept(false) {
+    return nv.run_catching([&]() -> value {
       return invoke(
         detail::make_index_sequence<MaxArity - MinArity + 1>(),
         nv, nargs, args);
@@ -491,61 +528,73 @@ public:
 }
 
 /**
- * Make a spreader module function with the given minimum and maximum arity.
+ * @brief An encoded arity for @ref make_spreader_function().
  *
- * Returns a module_function that takes between `MinArity` and
- * `MaxArity` arguments. `f` will be invoked with an `emacs_env *`
- * followed by `MaxArity` value arguments. Arguments that are provided
- * by the caller will be given as `cell`s, whereas absent arguments
- * will be default-initialized.
- *
- * With `IsVariadic` true, the function becomes variadic. `f` is
- * additionally invoked with a `{value *, size_t}` argument containing
- * the remaining arguments after the first `MaxArity`.
- *
- * Examples:
- *
- * @code
- * make_spreader_function<0>(
- *   "This function takes zero arguments.",
- *   [](envw env) {
- *     // ...
- *   })
- * @endcode
- *
- * @code
- * make_spreader_function<2, false, 1>(
- *   "This function takes one or two arguments.",
- *   [](envw env, value arg1, value arg2) {
- *     if (arg2) {
- *       // invoked with two arguments
- *     } else {
- *       // invoked with one argument
- *     }
- *   })
- * @endcode
- *
- * @code
- * make_spreader_function<1, true>(
- *   "This function takes one or more arguments.",
- *   [](envw env, value arg1, std::span<value> rest) {
- *     // ...
- *   })
- * @endcode
+ * @see spreader_thunk, spreader_pred, spreader_variadic.
  */
-template <ptrdiff_t MaxArity, bool IsVariadic = false, ptrdiff_t MinArity = MaxArity, typename F>
+template <ptrdiff_t MinArity, ptrdiff_t MaxArity = MinArity, bool IsVariadic = false>
+struct spreader_arity {
+  /** @brief The minimum number of arguments to the function. */
+  static constexpr ptrdiff_t min_arity = MinArity;
+  /** @brief The number of arguments that the spreader function receives. */
+  static constexpr ptrdiff_t max_arity = MaxArity;
+  /** @brief Whether an arbitrary number of arguments are accepted. */
+  static constexpr bool is_variadic = IsVariadic;
+};
+/** @brief Arity for a function with no arguments. */
+using spreader_thunk = spreader_arity<0>;
+/** @brief Arity for a function with `MinArity` or more arguments,
+ * where the C++ function takes exactly `CallArity` arguments. */
+template <ptrdiff_t MinArity, ptrdiff_t CallArity = MinArity>
+using spreader_variadic = spreader_arity<MinArity, CallArity, true>;
+
+/**
+ * @brief Make a spreader module function with the given minimum and maximum arity.
+ *
+ * Returns a module_function that can be called with at least `MinArity`
+ * arguments. Arguments are passed as @ref cell "cells", and the return type is
+ * @link cppemacs_conversions converted @endlink.
+ *
+ * @warning The function must return a @link cppemacs_conversions to-Emacs
+ * convertible @endlink type (not void). Despite my best efforts, this can
+ * generate incomprehensible errors, particularly if used without C++20
+ * concepts.
+ *
+ * With `IsVariadic` false, `f` will be invoked with ::emacs_env followed by
+ * exactly `MaxArity` arguments: <br><code>(::emacs_env *env, A_1 arg_1, ...,
+ * A_MaxArity arg_MaxArity)</code>. Arguments that are provided by the caller
+ * will be given as @ref cell "cells", whereas absent arguments will be
+ * default-initialized. On the Emacs side, the function cannot be invoked with
+ * more than `MaxArity` arguments.
+ *
+ * With `IsVariadic` true, the resulting function can be called with more than
+ * `MaxArity` arguments, and `f` is additionally invoked with a
+ * <code>@ref spreader_restargs</code> argument containing the remaining
+ * arguments: <br><code>(::emacs_env *env, A_1 arg_1, ..., A_MaxArity
+ * arg_MaxArity, @ref spreader_restargs rest)</code>.
+ *
+ * @see cell_extracted, which automatically converts function arguments to the
+ * desired type.
+ *
+ * @b Examples
+ *
+ * @snippet utils_examples.cpp Spreader Functions
+ */
+template <ptrdiff_t MinArity, ptrdiff_t MaxArity, bool IsVariadic, typename F>
 auto make_spreader_function(
+  spreader_arity<MinArity, MaxArity, IsVariadic> ar,
   const char *doc, F &&f
 )
 #if !CPPEMACS_HAVE_RETURN_TYPE_DEDUCTION
   -> module_function<detail::spread_invoker<MinArity, MaxArity, IsVariadic, detail::remove_reference_t<F>>>
 #endif
 {
-  static_assert(MaxArity >= MinArity, "MaxArity must be greater than or equal to MinArity");
+  constexpr bool is_variadic = decltype(ar)::is_variadic;
+  static_assert(is_variadic || MaxArity >= MinArity, "MaxArity must be greater than or equal to MinArity");
   static_assert(MinArity >= 0, "MinArity must be nonnegative");
   return make_module_function(
-    MinArity, IsVariadic ? emacs_variadic_function : MaxArity, doc,
-    detail::spread_invoker<MinArity, MaxArity, IsVariadic,
+    MinArity, MaxArity, doc,
+    detail::spread_invoker<MinArity, MaxArity, is_variadic,
     detail::remove_reference_t<F>>(std::forward<F>(f)));
 }
 
@@ -554,8 +603,45 @@ inline std::ostream &operator<<(std::ostream &os, const cell &v) {
   return os << (v->*"format")(v->make_string("%s", 2), v).extract<std::string>();
 }
 
-/** @} */
+/**
+ * @brief An instance of `ValueType` that can be implicitly constructed from a
+ * @ref cell.
+ *
+ * This is useful for e.g. make_spreader_function() where cells are passed
+ * directly, since @ref cell (deliberately) does not apply conversions
+ * implicitly. It is particularly useful for functions with optional arguments,
+ * which are default-constructed by make_spreader_function().
+ *
+ * @snippet utils_examples.cpp Cell Extracted
+ */
+template <FROM_EMACS_TYPE FromEmacsType, typename ValueType = FromEmacsType>
+struct cell_extracted {
+private:
+  ValueType val;
+public:
+  /** @brief Construct `ValueType` by extracting a `FromEmacsType` from a @ref cell. */
+  cell_extracted(cell val) noexcept(noexcept(ValueType(val.extract<FromEmacsType>()))) :
+    val(val.extract<FromEmacsType>()) {}
+  /** @brief Construct `ValueType` by forwarding to its constructor. */
+  template <typename...Args>
+  constexpr cell_extracted(Args&&...args) : val(std::forward<Args>(args)...) {}
 
+  /** @brief Returns the held `ValueType`. */
+  operator ValueType() { return val; }
+  /** @brief Returns a reference to the held `ValueType`. */
+  ValueType &get() noexcept { return val; }
+  /** @brief Returns a pointer to the held `ValueType`. */
+  ValueType *operator->() noexcept { return &val; }
+  /** @brief Returns a reference to the held `ValueType`. */
+  ValueType &operator*() noexcept { return val; }
+
+  /** @brief Extract the `FromEmacsType` from `val`. */
+  friend cell_extracted from_emacs(expected_type_t<cell_extracted>, envw env, value val)
+    noexcept(noexcept(cell_extracted(cell(env, val))))
+  { return cell_extracted(cell(env, val)); }
+};
+
+/** @} */
 }
 
 #endif /* CPPEMACS_WRAPPERS_HPP_ */

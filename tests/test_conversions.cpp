@@ -53,7 +53,7 @@ static void checkRoundTrip(const Arg &value, F f = {}) {
   }
 }
 
-SCENARIO("round trip converting values") {
+TEST_SCOPED(SCENARIO("round trip converting values")) {
   WHEN("reading malformed input") {
     THEN("an exception is thrown") {
       REQUIRE_THROWS((envp->*")"_Eread, envp.maybe_non_local_exit())); // mismatched delimiter
@@ -76,8 +76,8 @@ SCENARIO("round trip converting values") {
   checkRoundTrip<intmax_t>(INTMAX_MAX);
   checkRoundTrip<intmax_t>(INTMAX_MIN);
 
-#ifdef CPPEMACS_HAS_UINTMAX_CONVERSION
-  if (envp->size >= sizeof(emacs_env_27)) {
+#if (EMACS_MAJOR_VERSION >= 27)
+  if (envp.is_compatible<27>()) {
     checkRoundTrip<uintmax_t>(UINTMAX_MAX);
     checkRoundTrip<uintmax_t>(static_cast<uintmax_t>(INTMAX_MAX) + 15);
     checkRoundTrip<uintmax_t>(INTMAX_MAX);
@@ -87,9 +87,62 @@ SCENARIO("round trip converting values") {
     checkRoundTrip<intmax_t, uintmax_t, throws_an_exception>(-10);
     checkRoundTrip<eread_literal, uintmax_t, throws_an_exception>(
       eread_literal(std::to_string(UINTMAX_MAX) += "0"));
+
+#  ifdef CPPEMACS_ENABLE_GMPXX
+    checkRoundTrip<mpz_class>(mpz_class(0));
+    checkRoundTrip<mpz_class>(mpz_class(-99));
+    checkRoundTrip<mpz_class>(mpz_class(99));
+    checkRoundTrip<mpz_class>(mpz_class(LONG_MAX) * LONG_MAX * LONG_MAX - 999);
+    checkRoundTrip<mpz_class>(mpz_class(LONG_MIN) * LONG_MAX * LONG_MAX + 999);
+
+    checkRoundTrip<estring_literal, mpz_class, throws_an_exception>("not an integer"_Estr);
+#  endif
   }
 #endif
 
   checkRoundTrip<int, std::string, throws_an_exception>(1);
   checkRoundTrip<std::string, int, throws_an_exception>("abcd");
+}
+
+TEST_SCOPED(SCENARIO("constructing functions")) {
+  std::shared_ptr<int> sptr{new int{0}};
+  REQUIRE(sptr.use_count() == 1);
+
+  GIVEN("a lambda that captures many things") {
+    long long w = 0, x = 0, y = 0, z = 0;
+    using llcell = cell_extracted<long long>;
+    auto func = make_spreader_function(
+      spreader_arity<4>(),
+      "Update the internal state.",
+      [w, x, y, z, sptr](envw env, llcell wv, llcell xv, llcell yv, llcell zv) mutable {
+        CHECK(sptr.use_count() >= 1);
+        value ret = (env->*"list")(w, x, y, z);
+        std::tie(w, x, y, z) = std::make_tuple(wv, xv, yv, zv);
+        return ret;
+      });
+
+    WHEN("it is converted") {
+      unsigned old_count;
+      envp.run_scoped([&](envw env) {
+        cell f = env->*std::move(func);
+        CHECK(sptr.use_count() == 2);
+
+        THEN("it updates its state correctly") {
+          cell equal = env->*"equal";
+          cell list = env->*"list";
+
+          REQUIRE_THAT(f(1, 2, 3, 4), LispEquals(list(0, 0, 0, 0)));
+          REQUIRE_THAT(f(4, 5, 6, 7), LispEquals(list(1, 2, 3, 4)));
+        }
+
+        CHECK(sptr.use_count() == 2);
+      });
+
+      THEN("it gets destroyed after garbage collection") {
+        if ((envp->*"garbage-collect")()) {
+          REQUIRE(sptr.use_count() == 1);
+        }
+      }
+    }
+  }
 }

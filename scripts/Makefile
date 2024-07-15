@@ -22,14 +22,9 @@
 .PHONY:
 default: all
 
-# using https://github.com/lluissm/license-header-checker
-ALL_LICENSE_TYPES=c el py html
-ALL_LICENSE_HEADERS=$(addprefix license-header-,$(addsuffix .txt,$(ALL_LICENSE_TYPES)))
-LICENSE_CHECK_IGNORES?=build,.cache
-
 .PHONY:
 clean:
-	rm -rf license-header-*.txt *.tmp.*
+	rm -rf *.tmp.*
 
 .PHONY:
 add-tmp-extension:
@@ -41,30 +36,9 @@ remove-tmp-extension:
 
 CHECK_HEADER_FLAGS?=
 .PHONY:
-check-headers: $(ALL_LICENSE_HEADERS)
-	license-header-checker $(CHECK_HEADER_FLAGS) -i $(LICENSE_CHECK_IGNORES) license-header-c.txt .. hpp cpp
-	license-header-checker $(CHECK_HEADER_FLAGS) -i $(LICENSE_CHECK_IGNORES) -e '(;[^\n]*\n)*' license-header-el.txt .. el
-	@$(MAKE) --no-print-directory add-tmp-extension NAME=CMakeLists.txt EXT=cmake
-	@$(MAKE) --no-print-directory add-tmp-extension NAME=Makefile EXT=make
-	license-header-checker $(CHECK_HEADER_FLAGS) -i $(LICENSE_CHECK_IGNORES),cmake/vendored -e '(#[^\n]*\n)*' license-header-py.txt .. make cmake gitignore
-	@$(MAKE) --no-print-directory remove-tmp-extension NAME=CMakeLists.txt EXT=cmake
-	@$(MAKE) --no-print-directory remove-tmp-extension NAME=Makefile EXT=make
-	license-header-checker $(CHECK_HEADER_FLAGS) -i $(LICENSE_CHECK_IGNORES) license-header-html.txt .. html md
-
-license-header-c.txt: license-header.txt
-	@(echo '/*' && \
-	 sed 's/.*/ *\0/' $< && \
-	 echo ' */') > $@
-license-header-el.txt: license-header.txt
-	@(echo ';; -*- lexical-binding: t -*-' && \
-	 echo ';' && \
-	 sed 's/.*/;;\0/' $<) > $@
-license-header-py.txt: license-header.txt
-	@(sed 's/.*/#\0/' $<) > $@
-license-header-html.txt: license-header.txt
-	@(echo '<!--' && \
-	 sed 's/.*/-\0/' $< && \
-	 echo '-->') > $@
+check-headers:
+	emacs --batch --quick --script check-license.el --eval '(check-license-main)' -- \
+	  --color auto -s check-license-spec.el $(CHECK_HEADER_FLAGS) -C ..
 
 .PHONY:
 all:

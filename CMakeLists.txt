@@ -19,7 +19,7 @@
 #
 # SPDX-License-Identifier: GPL-3.0-or-later
 
-cmake_minimum_required(VERSION 3.0...3.27)
+cmake_minimum_required(VERSION 3.0...3.30)
 
 project(cppemacs
   VERSION 0.1.0
@@ -49,6 +49,7 @@ include(GNUInstallDirs)
 option(CPPEMACS_Test "Build cppemacs tests" ${MAIN_PROJECT})
 option(CPPEMACS_Coverage "Test with code coverage" OFF)
 option(CPPEMACS_Documentation "Generate documentation" OFF)
+option(CPPEMACS_Examples "Build documentation examples" ${CPPEMACS_Test})
 option(CPPEMACS_Install "Add cppemacs installation rules" ${MAIN_PROJECT})
 
 set(CPPEMACS_TARGET_NAME ${PROJECT_NAME})
@@ -107,7 +108,7 @@ if (CPPEMACS_Documentation OR CPPEMACS_Test)
   include(FetchContent)
 endif()
 
-if (CPPEMACS_Documentation)
+if (CPPEMACS_Documentation OR CPPEMACS_Examples)
   add_subdirectory(docs)
 endif()
 if (CPPEMACS_Test)

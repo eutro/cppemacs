@@ -23,32 +23,43 @@
 
 #include "common.hpp"
 
-SCENARIO("throwing exceptions") {
+TEST_SCOPED(SCENARIO("throwing exceptions")) {
   GIVEN("definitions of `cppemacs-funN'") {
     cell defalias = envp->*"defalias";
+    cell eval = envp->*"eval";
 
-    defalias("cppemacs-fun1", envp->*make_spreader_function<2>(
+    defalias("cppemacs-fun1", envp->*make_spreader_function(
+               spreader_arity<2>(),
                "Equivalent to `signal'.",
                [](envw nv, value sym, value data) -> value
                { throw signal(sym, data); }));
 
-    defalias("cppemacs-fun2", envp->*make_spreader_function<2>(
+    defalias("cppemacs-fun2", envp->*make_spreader_function(
+               spreader_arity<2>(),
                "Equivalent to `throw'.",
                [](envw nv, value sym, value data) -> value
                { throw thrown(sym, data); }));
 
-    defalias("cppemacs-fun3", envp->*make_spreader_function<1>(
+    defalias("cppemacs-fun3", envp->*make_spreader_function(
+               spreader_arity<1>(),
                "Throw a C++ `runtime_error' with the argument.",
                [](envw nv, cell msg) -> value
                { throw std::runtime_error(msg.extract<std::string>()); }));
 
-    defalias("cppemacs-fun4", envp->*make_spreader_function<0, true>(
+    defalias("cppemacs-fun4", envp->*make_spreader_function(
+               spreader_variadic<0>(),
                "Call `error'.",
-               [](envw nv, std::pair<value *, size_t> rest) {
-                 nv.funcall(nv->*"error", rest.second, rest.first);
+               [](envw nv, spreader_restargs rest) {
+                 nv.funcall(nv->*"error", rest.size(), rest.data());
                  nv.maybe_non_local_exit();
                  return false;
                }));
+
+    defalias("cppemacs-fun5", envp->*make_spreader_function(
+               spreader_thunk(),
+               "Throw a `non_local_exit' without an actual non-local exit.",
+               [](envw nv) -> value
+               { throw non_local_exit{}; }));
 
     auto [expr, sig_type] = GENERATE(
       std::make_pair(
@@ -83,12 +94,12 @@ SCENARIO("throwing exceptions") {
       ),
 
       std::make_pair(
-        R"((cppemacs-fun4))"_Eread,
+        R"((cppemacs-fun5))"_Eread,
         funcall_exit::signal_
       )
     );
     WHEN("evaluating " << expr) {
-      auto eval_expr = [e = expr]() { ((envp->*"eval")(e), envp.rethrow_non_local_exit()); };
+      auto eval_expr = [&]() { (eval(expr), envp.rethrow_non_local_exit<false>()); };
       switch (sig_type) {
       case funcall_exit::signal_:
         THEN("a signal is raised") {
@@ -108,5 +119,33 @@ SCENARIO("throwing exceptions") {
         break;
       }
     }
+
+  }
+
+  GIVEN("a new exception type") {
+    struct super_cool_boxed_exception {};
+
+    REQUIRE_THROWS_AS(
+      ((envp->*make_spreader_function(
+          spreader_arity<0>(),
+          "Throw `super_cool_boxed_exception'",
+          [](envw env) {
+            return env.run_catching<true>([]() -> value {
+              throw super_cool_boxed_exception();
+            });
+          }))(),
+        envp.rethrow_non_local_exit<true>()),
+      super_cool_boxed_exception
+    );
+  }
+
+  GIVEN("an expression that raises an 'error") {
+    using Catch::Matchers::Message;
+    REQUIRE_THROWS_MATCHES(
+      ((envp->*"eval")(R"((error "This is an error"))"_Eread),
+       envp.rethrow_non_local_exit<true>()),
+      std::runtime_error,
+      Message("This is an error")
+    );
   }
 }

@@ -26,7 +26,13 @@
 class Type1 {};
 class Type2 {};
 
-SCENARIO("using user_ptr") {
+extern "C" void cppemacs_this_should_show_up_in_valgrind() {
+  make_user_ptr<int>(10);
+}
+
+TEST_SCOPED(SCENARIO("using user_ptr")) {
+  cppemacs_this_should_show_up_in_valgrind();
+
   GIVEN("a single user_ptr") {
     auto uptr = make_user_ptr<int>(10);
     cell ptrv = envp->*uptr;
@@ -34,6 +40,20 @@ SCENARIO("using user_ptr") {
     THEN("unwrapping it yields the same pointer") {
       auto unwrapped = ptrv.extract<user_ptr<int>>();
       REQUIRE(unwrapped.get() == uptr.get()); envp.maybe_non_local_exit();
+    }
+  }
+
+  GIVEN("a user_ptr<shared_ptr>") {
+    std::shared_ptr<int> sptr(new int{0});
+    envp.run_scoped([&](envw env) {
+      env->*make_user_ptr<decltype(sptr)>(sptr);
+    });
+    CHECK(sptr.use_count() == 2);
+
+    THEN("garbage collection releases it") {
+      if ((envp->*"garbage-collect")()) {
+        REQUIRE(sptr.use_count() == 1);
+      }
     }
   }
 

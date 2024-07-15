@@ -30,13 +30,6 @@
 #include <string>
 #include <limits>
 
-#ifdef CPPEMACS_ENABLE_GMPXX
-#  include <gmpxx.h>
-#  include <memory>
-#endif
-
-namespace cppemacs {
-
 /**
  * @defgroup cppemacs_conversions Type Conversions
  * @brief Conversion functions between C++ and Emacs values.
@@ -54,49 +47,24 @@ namespace cppemacs {
  * cppemacs::to_emacs_convertible "to_emacs_convertible",
  * respectively.
  *
+ * @note String literals are converted to @e symbols instead of Emacs
+ * @e strings, because they are far more common. The types
+ * `std::string`, C++17 `std::string_view`, and @ref cppemacs::literals::estring_literal can
+ * be used to make Emacs strings instead.
+ *
  * Some example conversions:
- * @code
- * void cpp_to_emacs_conversions(envw env) {
- *   // `defalias' symbol
- *   value defalias_sym = env->*"defalias";
- *
- *   // create numbers
- *   env->*10; env->*12345L; env->*5.5;
- *
- *   using namespace cppemacs::literals;
- *   env->*"This is a string."_Estr; // create a string
- *
- *   // or with C++17 string_view
- *   using namespace std::string_view_literals
- *   env->*"This is also a string."sv
- *
- *   // `t' and `nil'
- *   env->*true; env->*false;
- *
- *   // inject()/->* return a cell directly
- *   cell defalias = env->*"defalias";
- *   // ->* with an existing value just wraps it in a cell
- *   defalias = env->*defalias_sym;
- *
- *   // cell::operator()() automatically converts
- *   defalias("identity-alias", "identity"); // = (defalias 'identity-alias 'identity)
- * }
- *
- * void cpp_from_emacs_conversions(envw env, value val) {
- *   // convert to an integer
- *   int x = env->unwrap<int>(val);
- *
- *   // cell provides an even more convenient interface
- *   cell cel(env, val);
- *   int y = cel.unwrap<int>();
- *   double d = cel.unwrap<double>();
- *   std::string s = cel.unwrap<std::string>();
- * }
- * @endcode
+ * @snippet core_examples.cpp Conversions
  *
  * @addtogroup cppemacs_conversions
  * @{
  */
+
+#if CPPEMACS_ENABLE_GMPXX
+#  include <gmpxx.h>
+#  include <memory>
+#endif
+
+namespace cppemacs {
 
 namespace detail {
 
@@ -119,7 +87,9 @@ static_assert(CPPEMACS_UINTMAX_ONE_LIMB == (detail::uintmax_limb_count == 1), "I
 
 }
 
-/** @brief Convert a string constant to a symbol. */
+/**
+ * @brief Convert a string constant to a symbol.
+ */
 inline value to_emacs(expected_type_t<const char *>, envw nv, const char *name)
 { return nv.intern(name); }
 
@@ -133,18 +103,8 @@ inline value to_emacs(expected_type_t<std::string_view>, envw nv, const std::str
 { return nv.make_string(str.data(), str.length()); }
 #endif
 
-/** @brief Convert an Emacs string to a C++ string. */
-inline std::string from_emacs(expected_type_t<std::string>, envw nv, value val) {
-  ptrdiff_t len = 0;
-  if (nv.copy_string_contents(val, nullptr, len)) {
-    std::string ret(len - 1, '\0');
-    if (nv.copy_string_contents(val, &ret[0], len)) {
-      return ret;
-    }
-  }
-  nv.maybe_non_local_exit();
-  throw std::runtime_error("String conversion failed");
-}
+/** @brief Return Emacs `nil`. */
+inline value to_emacs(expected_type_t<std::nullptr_t>, envw nv, std::nullptr_t) { return nv.intern("nil"); }
 
 /** @brief Convert x to Emacs `t` or `nil`. */
 inline value to_emacs(expected_type_t<bool>, envw nv, bool x) { return nv.intern(x ? "t" : "nil"); }
@@ -165,7 +125,7 @@ value to_emacs(expected_type_t<Int>, envw nv, Int n)
 
 /** @brief Convert a C++ `uintmax_t` to an Emacs integer. Emacs 27+ only. */
 inline value to_emacs(expected_type_t<uintmax_t>, envw nv, uintmax_t n) {
-  CPPEMACS_CHECK_VERSION(nv, 27);
+  nv.check_compatible<27>();
   using namespace detail;
   // uintmax_t may overflow intmax_t (bad), so fallback to the bigint version
   if (n > static_cast<uintmax_t>(std::numeric_limits<intmax_t>::max())) {
@@ -185,6 +145,19 @@ inline value to_emacs(expected_type_t<uintmax_t>, envw nv, uintmax_t n) {
 }
 #endif
 
+namespace detail {
+template <typename Int>
+[[noreturn]] inline void throw_out_of_range(envw nv, value val) {
+  throw signal(
+    (nv->*"args-out-of-range"),
+    nv.funcall(nv->*"list", {
+        val,
+        nv->*std::numeric_limits<Int>::min(),
+        nv->*std::numeric_limits<Int>::max()
+      }));
+}
+}
+
 /** @brief Convert an Emacs integer to a C++ integer.
  *
  * This only works with integral types that are no larger than
@@ -197,7 +170,7 @@ inline Int from_emacs(expected_type_t<Int>, envw nv, value val) {
   nv.maybe_non_local_exit();
   if (int_val < static_cast<intmax_t>(std::numeric_limits<Int>::min())
       || int_val > static_cast<intmax_t>(std::numeric_limits<Int>::max())) {
-    throw std::runtime_error("Integer out of range");
+    detail::throw_out_of_range<Int>(nv, val);
   }
   return static_cast<Int>(int_val);
 }
@@ -206,7 +179,7 @@ inline Int from_emacs(expected_type_t<Int>, envw nv, value val) {
 
 /** @brief Convert an Emacs integer to a C++ `uintmax_t`. Emacs 27+ only. */
 inline uintmax_t from_emacs(expected_type_t<uintmax_t>, envw nv, value val) {
-  CPPEMACS_CHECK_VERSION(nv, 27);
+  nv.check_compatible<27>();
   using namespace detail;
   // always use bigint conversion
   int sign = 0;
@@ -215,14 +188,17 @@ inline uintmax_t from_emacs(expected_type_t<uintmax_t>, envw nv, value val) {
   if (!nv.extract_big_integer(val, &sign, &count, magnitude)
       || sign < 0) {
     nv.maybe_non_local_exit();
-    throw std::runtime_error("Integer out of range");
+    detail::throw_out_of_range<uintmax_t>(nv, val);
   }
-  constexpr size_t ndigits =
+  constexpr size_t extra_digits =
     std::numeric_limits<uintmax_t>::digits
     % std::numeric_limits<emacs_limb_t>::digits;
-  if (magnitude[uintmax_limb_count - 1] >= (1 << ndigits)) {
-    throw std::runtime_error("Integer out of range");
-  }
+  // uintmax_t is (by definition) the biggest integer type, and it
+  // would be bizarre for this not to be a multiple of size_t (which
+  // is what emacs_limb_t) is
+  static_assert(extra_digits == 0,
+                "UINTMAX_DIGITS must be a multiple of EMACS_LIMB_DIGITS\n"
+                "Please tell me what platform you are using!");
 #if CPPEMACS_UINTMAX_ONE_LIMB
   return static_cast<uintmax_t>(magnitude[0]);
 #else
@@ -255,13 +231,13 @@ inline Float from_emacs(expected_type_t<Float>, envw nv, value val)
 #if (EMACS_MAJOR_VERSION >= 27)
 /** @brief Convert a C timespec to an Emacs timespec. Emacs 27+ only. */
 inline value to_emacs(expected_type_t<struct timespec>, envw nv, struct timespec time)
-{ CPPEMACS_CHECK_VERSION(nv, 27); return nv.make_time(time); }
+{ nv.check_compatible<27>(); return nv.make_time(time); }
 /** @brief Convert a C timespec to an Emacs timespec. Emacs 27+ only. */
 inline struct timespec from_emacs(expected_type_t<struct timespec>, envw nv, value val)
-{ CPPEMACS_CHECK_VERSION(nv, 27); return nv.extract_time(val); }
+{ nv.check_compatible<27>(); return nv.extract_time(val); }
 #endif
 
-#if ((EMACS_MAJOR_VERSION >= 27) && defined(CPPEMACS_ENABLE_GMPXX)) || defined(CPPEMACS_DOXYGEN_RUNNING)
+#if ((EMACS_MAJOR_VERSION >= 27) && CPPEMACS_ENABLE_GMPXX) || defined(CPPEMACS_DOXYGEN_RUNNING)
 
 /**
  * @brief Convert a GMP integer to an Emacs integer.
@@ -270,7 +246,7 @@ inline struct timespec from_emacs(expected_type_t<struct timespec>, envw nv, val
  * before including this file.
  */
 inline value to_emacs(expected_type_t<mpz_class>, envw nv, const mpz_class &zc) {
-  CPPEMACS_CHECK_VERSION(nv, 27);
+  nv.check_compatible<27>();
   nv.maybe_non_local_exit();
 
   mpz_srcptr z = zc.get_mpz_t();
@@ -298,7 +274,7 @@ inline value to_emacs(expected_type_t<mpz_class>, envw nv, const mpz_class &zc) 
  * before including this file.
  */
 inline mpz_class from_emacs(expected_type_t<mpz_class>, envw nv, value x) {
-  CPPEMACS_CHECK_VERSION(nv, 27);
+  nv.check_compatible<27>();
 
   int sign = 0;
   ptrdiff_t count = 0;
@@ -309,11 +285,7 @@ inline mpz_class from_emacs(expected_type_t<mpz_class>, envw nv, value x) {
 
     std::unique_ptr<emacs_limb_t[]> magnitude(new emacs_limb_t[count]);
     if (nv.extract_big_integer(x, &sign, &count, magnitude.get())) {
-      mpz_class ret(
-        0,
-        count * std::numeric_limits<emacs_limb_t>::digits +
-        std::numeric_limits<mp_limb_t>::digits
-      );
+      mpz_class ret;
 
       mpz_ptr z = ret.get_mpz_t();
       mpz_import(

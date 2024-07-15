@@ -21,22 +21,30 @@
  * SPDX-License-Identifier: GPL-3.0-or-later
  */
 
-#include "common.hpp"
-#include <vector>
+//! [Brief Example]
+#include <cppemacs/all.hpp>
+using namespace cppemacs;
 
-TEST_SCOPED(SCENARIO("using vectors")) {
-  GIVEN("a heterogenous vector") {
-    cell vec = (envp->*"vector")(1, 1.5, "hello"_Estr, "some-symbol");
+extern "C" {
 
-    THEN("all the elements are correct") {
-      cell format = envp->*"format";
-      std::vector<std::string> elts;
-      for (ptrdiff_t ii = 0, end = vec.vec_size(); ii < end; ++ii) {
-        elts.push_back(format("%S"_Estr, vec.vec_get(ii)).extract<std::string>());
-      }
+  // must be compatible with Emacs' license
+  int plugin_is_GPL_compatible;
 
-      std::vector<std::string> expected{"1", "1.5", "\"hello\"", "some-symbol"};
-      REQUIRE(elts == expected);
-    }
+  // the entrypoint of the module
+  int emacs_module_init(emacs_runtime *rt) noexcept {
+    envw env = rt->get_environment(rt);
+
+    // ... define module functions
+    cell defalias = env->*"defalias";
+    defalias("example-function", env->*make_spreader_function(
+               spreader_thunk(), "Do something useful.",
+               [](envw env) {
+                 // ... do something useful
+                 return nullptr; // return nil
+               }));
+
+    return 0;
   }
+
 }
+//! [Brief Example]

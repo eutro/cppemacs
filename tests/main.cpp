@@ -51,13 +51,17 @@ int emacs_module_init(emacs_runtime *rt) noexcept {
   nv.run_catching([&]() {
     (nv->*"defalias")(
       "cppemacs-test",
-      make_spreader_function<1>("Run cppemacs tests", [](envw nv, vecw args) {
-        std::vector<std::string> sargs(args.size());
-        for (size_t ii = 0; ii < sargs.size(); ++ii) {
-          sargs[ii] = args[ii].get<std::string>();
-        }
-        return run_tests(nv, sargs);
-      }));
+      make_spreader_function(
+        spreader_arity<1>(),
+        "Run cppemacs tests",
+        [](envw nv, cell args) {
+          std::vector<std::string> sargs(args.vec_size());
+          nv.maybe_non_local_exit();
+          for (size_t ii = 0; ii < sargs.size(); ++ii) {
+            sargs[ii] = args.vec_get(ii).extract<std::string>();
+          }
+          return run_tests(nv, sargs);
+        }));
   });
 
   return 0;

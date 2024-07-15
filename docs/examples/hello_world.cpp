@@ -26,38 +26,46 @@
 using namespace cppemacs;
 using namespace cppemacs::literals;
 
-extern "C" int plugin_is_GPL_compatible;
-extern "C" int emacs_module_init(runtime *rt) noexcept {
+extern "C" {
+
+int plugin_is_GPL_compatible;
+
+int emacs_module_init(emacs_runtime *rt) noexcept {
   // make sure rt has all the members we know of
   if (rt->size < sizeof(*rt)) return 1;
 
   // wrap the environment
-  envw env(rt->get_environment());
+  envw env = rt->get_environment(rt);
 
   // check that certain features are available
-  if (env->size < sizeof(emacs_env_28)) return 2;
+  if (!env.is_compatible<27>()) return 2;
 
   // propagate C++ exceptions and Emacs non-local exits
   env.run_catching([&]() {
+    // call a function
+    (env->*"message")("Hello, world!"_Estr);
 
     // create functions with any arity
-    cell cppemacs_hello_world = env->*make_spreader_function<0>(
+    cell cppemacs_hello_world = env->*make_spreader_function(
+      spreader_thunk(),
       "Run Hello, world!",
       [](envw env) {
-        // call Emacs functions with ease
+        // (message "Hello, %s!" (read-string "What is your name?"))
         (env->*"message")(
           "Hello, %s!"_Estr,
           (env->*"read-string")("What is your name? "_Estr)
         );
 
-        return false;
+        return false; // -> nil
       });
     env.make_interactive(cppemacs_hello_world, env->*""_Estr);
 
-    // define them from C++
+    // expose them to Emacs
     (env->*"defalias")("cppemacs-hello-world", cppemacs_hello_world);
   });
 
   return 0;
+}
+
 }
 //! [Full example]

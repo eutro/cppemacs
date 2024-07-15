@@ -27,8 +27,6 @@
 #include "core.hpp"
 #include <ostream>
 
-namespace cppemacs {
-
 /**
  * @defgroup cppemacs_literals Literals
  * @brief Custom string literals for Emacs values.
@@ -36,10 +34,32 @@ namespace cppemacs {
  * @addtogroup cppemacs_literals
  * @{
  */
+namespace cppemacs {
 
+/**
+ * @brief String literals for constructing Emacs values.
+ *
+ * @code
+ * envw env = ...;
+ * using namespace cppemacs::literals;
+ * value str = env->*"This is a string!"_Estr;
+ * value expr = env->*"(foo 1 2)"_Eread; // == '(foo 1 2)
+ * value very_big_number = env->*98765432198765432198_Eread;
+ * @endcode
+ */
 namespace literals {
-
-/** @brief A reference to a string, with `""_Estr`. */
+/**
+ * @brief A reference to a string, can be created with `""_Estr()`.
+ *
+ * This is a barebones version of `std::string_view`, and
+ * @ref cppemacs_conversions "converts to" an Emacs string.
+ *
+ * @code
+ * envw env = ...;
+ * using namespace cppemacs::literals;
+ * value str = env->*"This is a string!"_Estr;
+ * @endcode
+ */
 struct estring_literal {
   /** @brief The utf8 data of the string. */
   const char *data;
@@ -74,8 +94,23 @@ struct estring_literal {
 /** @brief `""_Estr` string literal. */
 inline constexpr estring_literal operator "" _Estr(const char *data, size_t len)
 { return estring_literal(data, len); }
+/** @brief `""_ES` string literal, equivalent to `_Estr`. */
+inline constexpr estring_literal operator "" _ES(const char *data, size_t len)
+{ return estring_literal(data, len); }
 
-/** @brief A readable literal, with `""_Eread`. */
+/**
+ * @brief A readable literal, with `""_Eread`.
+ *
+ * This is like @ref estring_literal, but @ref cppemacs_conversions
+ * "converts" using Emacs `read`.
+ *
+ * @code
+ * envw env = ...;
+ * using namespace cppemacs::literals;
+ * value expr = env->*"(foo 1 2)"_Eread; // == '(foo 1 2)
+ * value very_big_number = env->*98765432198765432198_Eread;
+ * @endcode
+ */
 struct eread_literal : estring_literal {
   /** @brief Constructor which forwards to `estring_literal` */
   template <typename...Args>
@@ -83,7 +118,7 @@ struct eread_literal : estring_literal {
 
   /** @brief Read the string. */
   friend value to_emacs(expected_type_t<eread_literal>, envw nv, const eread_literal &str)
-  { return (nv->*"read")(nv.make_string(str.data, str.len)); }
+  { return nv.funcall(nv.intern("read"), {nv->*static_cast<const estring_literal &>(str)}); }
 };
 /** @brief `""_Eread` literal, uses `read` for conversion to Emacs. */
 inline eread_literal operator "" _Eread(const char *data) { return eread_literal(data); }

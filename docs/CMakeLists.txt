@@ -19,6 +19,39 @@
 #
 # SPDX-License-Identifier: GPL-3.0-or-later
 
+set(CPPEMACS_EXAMPLES_BASE
+  brief_example.cpp
+  hello_world.cpp
+  core_examples.cpp
+  utils_examples.cpp)
+if (Emacs_FOUND)
+  add_custom_target(${PROJECT_NAME}_examples_load_all)
+endif()
+foreach (EXAMPLE ${CPPEMACS_EXAMPLES_BASE})
+  string(REGEX MATCH "^[a-z_]+" BASE_NAME "${EXAMPLE}")
+  set(EXAMPLE_TARGET "${PROJECT_NAME}_example_${BASE_NAME}")
+  add_library("${EXAMPLE_TARGET}"
+    SHARED "${CMAKE_CURRENT_SOURCE_DIR}/examples/${EXAMPLE}")
+  target_link_libraries("${EXAMPLE_TARGET}" PRIVATE cppemacs)
+  set_target_properties("${EXAMPLE_TARGET}" PROPERTIES
+    EXCLUDE_FROM_ALL ON)
+  if (Emacs_FOUND)
+    add_custom_target(
+      "${EXAMPLE_TARGET}_load"
+      COMMAND Emacs::emacs -Q --batch --eval
+      "(module-load \"$<TARGET_FILE:${EXAMPLE_TARGET}>\")"
+      DEPENDS "${EXAMPLE_TARGET}"
+      COMMENT "Loading ${BASE_NAME}"
+      VERBATIM
+    )
+    add_dependencies(${PROJECT_NAME}_examples_load_all "${EXAMPLE_TARGET}_load")
+  endif()
+endforeach()
+
+if (NOT CPPEMACS_Documentation)
+  return()
+endif()
+
 if (${CMAKE_VERSION} VERSION_LESS 3.13)
   message(WARNING "CMake >= 3.13 required to build documentation")
   return()
@@ -50,7 +83,8 @@ if (Doxygen_FOUND)
   set(DOXYGEN_HTML_EXTRA_STYLESHEET
     "${doxygenawesome_SOURCE_DIR}/doxygen-awesome.css"
     "${doxygenawesome_SOURCE_DIR}/doxygen-awesome-sidebar-only.css"
-    "${doxygenawesome_SOURCE_DIR}/doxygen-awesome-sidebar-only-darkmode-toggle.css")
+    "${doxygenawesome_SOURCE_DIR}/doxygen-awesome-sidebar-only-darkmode-toggle.css"
+    "${CMAKE_CURRENT_SOURCE_DIR}/cppemacs.css")
   set(DOXYGEN_HTML_EXTRA_FILES
     "${doxygenawesome_SOURCE_DIR}/doxygen-awesome-darkmode-toggle.js"
     "${doxygenawesome_SOURCE_DIR}/doxygen-awesome-fragment-copy-button.js"
@@ -71,9 +105,7 @@ if (Doxygen_FOUND)
   set(DOXYGEN_DOT_TRANSPARENT YES)
 
   set(DOXYGEN_PROJECT_BRIEF "C++11 Emacs module API wrapper")
-  set(DOXYGEN_PREDEFINED
-    EMACS_MAJOR_VERSION=29
-    CPPEMACS_DOXYGEN_RUNNING)
+  set(DOXYGEN_PREDEFINED CPPEMACS_DOXYGEN_RUNNING)
   set(DOXYGEN_INLINE_SOURCES NO)
   set(DOXYGEN_BUILTIN_STL_SUPPORT YES)
   set(DOXYGEN_GROUP_NESTED_COMPOUNDS YES)
@@ -112,15 +144,20 @@ if (Doxygen_FOUND)
   endif()
 
   set(DOXYGEN_ALIASES
-    "manlink{2}=[\\1](${CPPEMACS_ELISP_MANUAL_LOCATION}/\\2)"
-    "manual{2}=See the manual: @manlink{\\1,\\2}."
-    "manual{1}=See the @manlink{manual,\\1}."
+    "manloc=${CPPEMACS_ELISP_MANUAL_LOCATION}"
+    "manlink{2|}=[\\1](\\manloc/\\2)"
+    "manlink{3|}=[\\1](\\manloc/\\2)\\3"
+    "manual{2}=See the manual: \\manlink{\\1|\\2}."
+    "manual{1}=See the \\manlink{manual|\\1}."
+    "spoiler{1}=<details><summary>\\1</summary>"
+    "endspoiler=</details>"
   )
 
-  set(CPPEMACS_EXAMPLES
-    hello_world.cpp)
-
-  list(TRANSFORM CPPEMACS_EXAMPLES PREPEND "${CMAKE_CURRENT_SOURCE_DIR}/examples/")
+  list(
+    TRANSFORM CPPEMACS_EXAMPLES_BASE
+    PREPEND "${CMAKE_CURRENT_SOURCE_DIR}/examples/"
+    OUTPUT_VARIABLE CPPEMACS_EXAMPLES
+  )
 
   # add a target for examples, but don't build them by default (this
   # brings them in for compile_commands.json and lets us build them if
@@ -132,7 +169,7 @@ if (Doxygen_FOUND)
     EXCLUDE_FROM_ALL ON
   )
 
-  set(DOXYGEN_EXAMPLE_PATH "${CPPEMACS_EXAMPLES}")
+  set(DOXYGEN_EXAMPLE_PATH "${CPPEMACS_EXAMPLES}" "${CMAKE_CURRENT_SOURCE_DIR}/../LICENSES")
 
   set(DOXYGEN_OUTPUT_DIRECTORY "${CPPEMACS_DOCS_BUILD_DIR}")
   set(DOXYGEN_STRIP_FROM_INC_PATH "${CPPEMACS_INCLUDE_BUILD_DIR}")

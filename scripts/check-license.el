@@ -2,6 +2,27 @@
 
 ;;; Commentary:
 
+;; Copyright (C) 2024 Eutro <https://eutro.dev>
+;;
+;; This file is part of cppemacs.
+;;
+;; cppemacs is free software: you can redistribute it and/or modify it
+;; under the terms of the GNU General Public License as published by
+;; the Free Software Foundation, either version 3 of the License, or
+;; (at your option) any later version.
+;;
+;; cppemacs is distributed in the hope that it will be useful, but
+;; WITHOUT ANY WARRANTY; without even the implied warranty of
+;; MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+;; General Public License for more details.
+;;
+;; You should have received a copy of the GNU General Public License
+;; along with cppemacs. If not, see <https://www.gnu.org/licenses/>.
+;;
+;; SPDX-FileCopyrightText: 2024 Eutro <https://eutro.dev>
+;;
+;; SPDX-License-Identifier: GPL-3.0-or-later
+
 ;; Script for checking and inserting license headers.
 
 ;;; Code:
@@ -123,7 +144,7 @@ or `absent'."
    skip-lines))
 
 (defconst check-license-alist
-  `(("\\.[hc]pp$" check-license-delimited "/*\n" " *" "*/" 0)
+  `(("\\.\\(?:[hc]pp\\|css\\)$" check-license-delimited "/*\n" " *" "\n */" 0)
     ("\\.el$" check-license-line-comments ";;" 2)
     ("\\.cmake$\\|^\\(?:CmakeLists.txt\\|Makefile\\|\\.gitignore\\)$" check-license-line-comments "#" 0)
     ("\\.\\(?:html\\|xml\\)$" check-license-delimited "<!--\n" "-" "\n-->" 1)
@@ -230,24 +251,59 @@ Return the log."
     (check-license-apply (expand-file-name root default-directory) (list spec))
     check-license-log))
 
-(check-license-run
- ".."
- '((license "scripts/license-header-gpl.txt")
-   (recurse
-    (".")
-    "CMakeLists.txt"
-    "*.cmake"
-    "Makefile"
-    "*.md"
-    "*.el"
-    (recurse ("scripts" "include/cppemacs" "tests") ..)
+(defconst check-license-status-color-alist
+  '((present . "\033[32m") ;; green
+    (added . "\033[36m") ;; cyan
+    (replaced . "\033[35m") ;; magenta
+    (incorrect . "\033[33m") ;; red
+    (absent . "\033[91m") ;; bright red
+    ))
 
-    (recurse
-     ("docs")
-     "CMakeLists.txt"
-     (recurse ("examples") "*.cpp")
-     (recurse ("*.html" "*.xml") (license "../scripts/license-header-gfdl.txt")))))
- '(check))
+(defun check-license-main ()
+  "Run this from the command line."
+  (catch 'quit
+    (let ((modes '(check))
+          (root ".")
+          color
+          spec)
+      (while command-line-args-left
+        (pcase (pop command-line-args-left)
+          ((or "--help" "-h")
+           (message "Usage: check-license.el [--replace/-r | --add/-a | --spec/-s <spec-file> | --root/-C <root-dir>]")
+           (throw 'quit nil))
+          ((or "--replace" "-r") (push 'replace modes))
+          ((or "--add" "-a") (push 'add modes))
+          ((or "--spec" "-s")
+           (setq spec
+                 (read
+                  (check-license-slurp
+                   (or (pop command-line-args-left)
+                       (error "Expected argument after --spec"))))))
+          ((or "--root" "-C")
+           (setq root
+                 (or (pop command-line-args-left)
+                     (error "Expected argument after --root"))))
+          ((or "--color" "--colour" "-c")
+           (setq color
+                 (pcase (pop command-line-args-left)
+                   ((or 'nil "on" "yes" "1" "true") t)
+                   ((or "off" "no" "0" "false") nil)
+                   ("auto"
+                    (and (string-match-p "color" (getenv "TERM"))
+                         (let ((nc (getenv "NO_COLOR")))
+                           (or (not nc) (string-empty-p nc)))))
+                   (it (push it command-line-args-left)
+                       t))))))
+      (unless spec
+        (error "No spec file specified"))
+      (setq root (expand-file-name root default-directory))
+      (pcase-dolist (`(,file ,status) (check-license-run root spec modes))
+        (message "%s%s: %s%s"
+                 (if color
+                     (alist-get status check-license-status-color-alist "\033[32m")
+                   "")
+                 (file-relative-name file root) status
+                 (if color "\033[0m" ""))))))
 
 (provide 'check-license)
 ;;; check-license.el ends here

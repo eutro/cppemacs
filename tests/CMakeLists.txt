@@ -65,6 +65,20 @@ endif()
 target_link_libraries(${CPPEMACS_TEST_TARGET} PRIVATE
   cppemacs Catch2::Catch2)
 
+find_package(GMP) # optional GMP dependency
+if (GMP_FOUND)
+  message(STATUS "Testing with GMP")
+  target_link_libraries(${CPPEMACS_TEST_TARGET} PRIVATE
+    GMP::GMP GMP::GMPXX)
+  target_compile_definitions(${CPPEMACS_TEST_TARGET} PRIVATE
+    CPPEMACS_ENABLE_GMPXX=1)
+endif()
+
+set(CPPEMACS_TEST_TARGETS
+  ${CPPEMACS_TEST_TARGET}
+  ${CPPEMACS_TEST2_TARGET}
+)
+
 # test with strict C++11 compliance
 add_executable(${CPPEMACS_TEST2_TARGET} test_inst_all.cpp)
 target_link_libraries(${CPPEMACS_TEST2_TARGET} PRIVATE cppemacs)
@@ -85,13 +99,23 @@ add_test(NAME ${CPPEMACS_TEST_TARGET}
   "${CMAKE_CURRENT_SOURCE_DIR}/test.el"
   "$<TARGET_FILE:${CPPEMACS_TEST_TARGET}>")
 
+if (CPPEMACS_Examples)
+  list(APPEND CPPEMACS_TEST_TARGETS "${PROJECT_NAME}_examples")
+  add_test(
+    NAME ${PROJECT_NAME}_doctest
+    COMMAND "${CMAKE_COMMAND}"
+    --build ${CMAKE_BINARY_DIR}
+    --target "${PROJECT_NAME}_examples_load_all"
+  )
+endif()
+
 if (CPPEMACS_Coverage)
   include(CodeCoverage)
   message(STATUS "Testing with code coverage")
   append_coverage_compiler_flags_to_target(${CPPEMACS_TEST_TARGET})
   set(CPPEMACS_SETUP_COVERAGE_ARGS
     EXECUTABLE ctest
-    DEPENDENCIES ${CPPEMACS_TEST_TARGET}
+    DEPENDENCIES ${CPPEMACS_TEST_TARGETS}
     EXCLUDE /usr ${CMAKE_BINARY_DIR})
 
   if (NOT ((LCOV_PATH AND GENHTML_PATH)
