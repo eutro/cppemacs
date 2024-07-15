@@ -175,11 +175,11 @@ Introduction</h1>
 <div class="line">  }</div>
 <div class="line"> </div>
 <div class="line">}</div>
-<div class="ttc" id="agroup__cppemacs__core_html_ga033e1c05132033352240fe379b14cf9d"><div class="ttname"><a href="group__cppemacs__core.html#ga033e1c05132033352240fe379b14cf9d">cppemacs::emacs_runtime</a></div><div class="ttdeci">::emacs_runtime emacs_runtime</div><div class="ttdoc">Struct passed to emacs_module_init().</div><div class="ttdef"><b>Definition:</b> core.hpp:336</div></div>
+<div class="ttc" id="agroup__cppemacs__core_html_ga033e1c05132033352240fe379b14cf9d"><div class="ttname"><a href="group__cppemacs__core.html#ga033e1c05132033352240fe379b14cf9d">cppemacs::emacs_runtime</a></div><div class="ttdeci">::emacs_runtime emacs_runtime</div><div class="ttdoc">Struct passed to emacs_module_init().</div><div class="ttdef"><b>Definition:</b> core.hpp:360</div></div>
 <div class="ttc" id="agroup__cppemacs__core_html_ga3a13d40e5da070f30ce46bbcea618f01"><div class="ttname"><a href="group__cppemacs__core.html#ga3a13d40e5da070f30ce46bbcea618f01">emacs_module_init</a></div><div class="ttdeci">int emacs_module_init(cppemacs::emacs_runtime *runtime) noexcept</div><div class="ttdoc">The main entrypoint of the dynamic module. See the \manlink{manual|Module-Initialization....</div><div class="ttdef"><b>Definition:</b> brief_example.cpp:34</div></div>
 <div class="ttc" id="agroup__cppemacs__utilities_html_ga18fe9586cb561bd3a4609527052e502e"><div class="ttname"><a href="group__cppemacs__utilities.html#ga18fe9586cb561bd3a4609527052e502e">cppemacs::make_spreader_function</a></div><div class="ttdeci">auto make_spreader_function(spreader_arity&lt; MinArity, MaxArity, IsVariadic &gt; ar, const char *doc, F &amp;&amp;f)</div><div class="ttdoc">Make a spreader module function with the given minimum and maximum arity.</div><div class="ttdef"><b>Definition:</b> utils.hpp:584</div></div>
 <div class="ttc" id="agroup__cppemacs__utilities_html_gacc69cce08917f09d4a75b5b0414a3c12"><div class="ttname"><a href="group__cppemacs__utilities.html#gacc69cce08917f09d4a75b5b0414a3c12">cppemacs::spreader_thunk</a></div><div class="ttdeci">spreader_arity&lt; 0 &gt; spreader_thunk</div><div class="ttdoc">Arity for a function with no arguments.</div><div class="ttdef"><b>Definition:</b> utils.hpp:545</div></div>
-<div class="ttc" id="anamespacecppemacs_html"><div class="ttname"><a href="namespacecppemacs.html">cppemacs</a></div><div class="ttdoc">cppemacs is a C++11 API wrapper for writing Emacs Dynamic Modules.</div><div class="ttdef"><b>Definition:</b> core.hpp:66</div></div>
+<div class="ttc" id="anamespacecppemacs_html"><div class="ttname"><a href="namespacecppemacs.html">cppemacs</a></div><div class="ttdoc">cppemacs is a C++11 API wrapper for writing Emacs Dynamic Modules.</div><div class="ttdef"><b>Definition:</b> core.hpp:90</div></div>
 </div><!-- fragment --><p> &lt;details&gt; </p>
 <p>Longer Example </p>
 <div class="fragment"><div class="line"><span class="preprocessor">#include &lt;cppemacs/all.hpp&gt;</span></div>
@@ -198,7 +198,7 @@ Introduction</h1>
 <div class="line">  envw env = rt-&gt;get_environment(rt);</div>
 <div class="line"> </div>
 <div class="line">  <span class="comment">// check that certain features are available</span></div>
-<div class="line">  <span class="keywordflow">if</span> (!env.is_compatible&lt;27&gt;()) <span class="keywordflow">return</span> 2;</div>
+<div class="line">  <span class="keywordflow">if</span> (!env.is_compatible&lt;28&gt;()) <span class="keywordflow">return</span> 2;</div>
 <div class="line"> </div>
 <div class="line">  <span class="comment">// propagate C++ exceptions and Emacs non-local exits</span></div>
 <div class="line">  env.run_catching([&amp;]() {</div>
@@ -218,6 +218,7 @@ Introduction</h1>
 <div class="line"> </div>
 <div class="line">        <span class="keywordflow">return</span> <span class="keyword">false</span>; <span class="comment">// -&gt; nil</span></div>
 <div class="line">      });</div>
+<div class="line">    <span class="comment">// make the function interactive (Emacs 28+)</span></div>
 <div class="line">    env.make_interactive(cppemacs_hello_world, env-&gt;*<span class="stringliteral">&quot;&quot;</span>_Estr);</div>
 <div class="line"> </div>
 <div class="line">    <span class="comment">// expose them to Emacs</span></div>
@@ -263,7 +264,7 @@ Dynamic Modules</h1>
 <div class="line"># Link against `cppemacs` (adds include paths).</div>
 <div class="line">target_link_libraries(my_dynamic_module cppemacs)</div>
 </div><!-- fragment --><p> &lt;/details&gt;</p>
-<p>It can then be loaded in Emacs using <code>require</code>, <code>load</code>, or the low-level <code>module-load</code>:</p>
+<p>It can then be loaded in Emacs using <code>require</code>, <code>load</code>, <code>load-file</code>, or <code>module-load</code>:</p>
 <p>&lt;details&gt; </p>
 <p>Emacs Lisp </p>
 <div class="fragment"><div class="line">(add-to-list &#39;load-path &quot;/path/to/containing/directory&quot;)</div>
@@ -282,7 +283,7 @@ Interfacing with Emacs</h1>
 <div class="line"><span class="keywordtype">int</span> <a class="code" href="group__cppemacs__core.html#ga3a13d40e5da070f30ce46bbcea618f01">emacs_module_init</a>(<a class="code" href="group__cppemacs__core.html#ga033e1c05132033352240fe379b14cf9d">emacs_runtime</a> *rt) noexcept {</div>
 <div class="line">  envw env = rt-&gt;get_environment(rt);</div>
 <div class="line">  env.run_catching([&amp;]() {</div>
-<div class="line">    (env-&gt;*<span class="stringliteral">&quot;defconst-1&quot;</span>)(<span class="stringliteral">&quot;my-cool-constant&quot;</span>, 12345);</div>
+<div class="line">    (env-&gt;*<span class="stringliteral">&quot;set-default-toplevel-value&quot;</span>)(<span class="stringliteral">&quot;my-cool-constant&quot;</span>, 12345);</div>
 <div class="line"> </div>
 <div class="line">    cell defalias = env-&gt;*<span class="stringliteral">&quot;defalias&quot;</span>;</div>
 <div class="line">    defalias(</div>

@@ -62,7 +62,7 @@ var NAVTREE =
 var NAVTREEINDEX =
 [
 "GFDL-1_83-or-later.html",
-"structcppemacs_1_1literals_1_1estring__literal.html#ad56c5fe3cdc727ea5ef6d126124a35f9"
+"structcppemacs_1_1literals_1_1estring__literal.html#a5d9f2610bfde7ae60f9945d39cddaa35"
 ];
 
 var SYNCONMSG = 'click to disable panel synchronisation';

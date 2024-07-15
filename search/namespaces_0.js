@@ -1,5 +1,5 @@
 var searchData=
 [
-  ['cppemacs_180',['cppemacs',['../namespacecppemacs.html',1,'']]],
-  ['literals_181',['literals',['../namespacecppemacs_1_1literals.html',1,'cppemacs']]]
+  ['cppemacs_182',['cppemacs',['../namespacecppemacs.html',1,'']]],
+  ['literals_183',['literals',['../namespacecppemacs_1_1literals.html',1,'cppemacs']]]
 ];

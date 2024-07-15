@@ -18,6 +18,7 @@ var structcppemacs_1_1envw =
     [ "inject", "structcppemacs_1_1envw.html#a1eec660dd9e009d04c7f237750a74324", null ],
     [ "intern", "structcppemacs_1_1envw.html#aaa610d1bed0752f07707913d1b496693", null ],
     [ "is_compatible", "structcppemacs_1_1envw.html#ac40343a3ce5e040369dd433cef0f6b29", null ],
+    [ "is_compatible_relaxed", "structcppemacs_1_1envw.html#a46c5a5102a8f2a2adb1dd64bcff12c71", null ],
     [ "is_not_nil", "structcppemacs_1_1envw.html#af3a483624852313bc3fef4b82098ab8e", null ],
     [ "make_big_integer", "structcppemacs_1_1envw.html#a33b672e9fa41af3d9c18a6ce0390356e", null ],
     [ "make_float", "structcppemacs_1_1envw.html#ab9254087dc1050fe7f0eae8a5d1508fa", null ],

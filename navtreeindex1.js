@@ -1,5 +1,7 @@
 var NAVTREEINDEX1 =
 {
+"structcppemacs_1_1literals_1_1estring__literal.html#a5d9f2610bfde7ae60f9945d39cddaa35":[6,0,0,1,0,2],
+"structcppemacs_1_1literals_1_1estring__literal.html#a7d06be13e349615307be7730e9d31020":[6,0,0,1,0,8],
 "structcppemacs_1_1literals_1_1estring__literal.html#ad56c5fe3cdc727ea5ef6d126124a35f9":[6,0,0,1,0,9],
 "structcppemacs_1_1module__function.html":[6,0,0,12],
 "structcppemacs_1_1module__function.html#a5d27b0bc08b84a9bd9aa144a9aa430dc":[6,0,0,12,0],

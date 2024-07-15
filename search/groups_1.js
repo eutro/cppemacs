@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['literals_318',['Literals',['../group__cppemacs__literals.html',1,'']]]
+  ['literals_321',['Literals',['../group__cppemacs__literals.html',1,'']]]
 ];
