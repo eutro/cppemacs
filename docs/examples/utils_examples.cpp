@@ -25,9 +25,9 @@
 
 #if (EMACS_MAJOR_VERSION < 27)
 extern "C" {
-int plugin_is_GPL_compatible;
+CPPEMACS_EXPORT int plugin_is_GPL_compatible;
 
-int emacs_module_init(emacs_runtime *rt) noexcept {
+CPPEMACS_EXPORT int emacs_module_init(emacs_runtime *rt) noexcept {
   return 0;
 }
 }
@@ -50,9 +50,9 @@ static void module_init(envw env);
 
 extern "C" {
 
-int plugin_is_GPL_compatible;
+CPPEMACS_EXPORT int plugin_is_GPL_compatible;
 
-int emacs_module_init(emacs_runtime *rt) noexcept {
+CPPEMACS_EXPORT int emacs_module_init(emacs_runtime *rt) noexcept {
   if (rt->size < sizeof(*rt)) return 1;
   envw env = rt->get_environment(rt);
   if (!env.is_compatible<27>()) return 2;

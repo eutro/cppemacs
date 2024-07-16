@@ -324,7 +324,7 @@ struct module_function {
   }
 };
 
-#if (defined(__cpp_return_type_deduction) || (__cplusplus >= 201304L)) || defined(CPPEMACS_DOXYGEN_RUNNING)
+#if (defined(__cpp_return_type_deduction) || defined(CPPEMACS_HAVE_CXX14)) || defined(CPPEMACS_DOXYGEN_RUNNING)
 // opaque return types for documentation and C++14
 #define CPPEMACS_HAVE_RETURN_TYPE_DEDUCTION 1
 #else

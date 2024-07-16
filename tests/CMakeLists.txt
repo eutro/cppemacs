@@ -95,7 +95,12 @@ add_test(NAME ${CPPEMACS_TEST2_TARGET}
   COMMAND ${CPPEMACS_TEST2_TARGET})
 
 if (NOT Emacs_FOUND)
-  message(FATAL_ERROR "Emacs not found! Aborting...")
+  message(FATAL_ERROR
+    [=[Emacs not found, but required to build tests
+You could try to:
+- Install Emacs and put it on your PATH
+- Set Emacs_ROOT to point to the directory containing the Emacs executable
+- Disable tests with -DCPPEMACS_Test=OFF]=])
 endif ()
 
 add_test(NAME ${CPPEMACS_TEST_TARGET}

@@ -25,9 +25,9 @@
 
 #if (EMACS_MAJOR_VERSION < 28)
 extern "C" {
-int plugin_is_GPL_compatible;
+CPPEMACS_EXPORT int plugin_is_GPL_compatible;
 
-int emacs_module_init(emacs_runtime *rt) noexcept {
+CPPEMACS_EXPORT int emacs_module_init(emacs_runtime *rt) noexcept {
   return 0;
 }
 }
@@ -40,9 +40,9 @@ using namespace cppemacs::literals;
 
 extern "C" {
 
-int plugin_is_GPL_compatible;
+CPPEMACS_EXPORT int plugin_is_GPL_compatible;
 
-int emacs_module_init(emacs_runtime *rt) noexcept {
+CPPEMACS_EXPORT int emacs_module_init(emacs_runtime *rt) noexcept {
   // make sure rt has all the members we know of
   if (rt->size < sizeof(*rt)) return 1;
 

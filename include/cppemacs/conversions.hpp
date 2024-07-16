@@ -242,8 +242,7 @@ inline struct timespec from_emacs(expected_type_t<struct timespec>, envw nv, val
 /**
  * @brief Convert a GMP integer to an Emacs integer.
  *
- * Emacs 27+ only. Requires `CPPEMACS_ENABLE_GMPXX` to be defined
- * before including this file.
+ * Emacs 27+ only. Requires @ref CPPEMACS_ENABLE_GMPXX.
  */
 inline value to_emacs(expected_type_t<mpz_class>, envw nv, const mpz_class &zc) {
   nv.check_compatible<27>();
@@ -270,8 +269,7 @@ inline value to_emacs(expected_type_t<mpz_class>, envw nv, const mpz_class &zc) 
 /**
  * @brief Convert an Emacs integer to a GMP integer.
  *
- * Emacs 27+ only. Requires `CPPEMACS_ENABLE_GMPXX` to be defined
- * before including this file.
+ * Emacs 27+ only. Requires @ref CPPEMACS_ENABLE_GMPXX.
  */
 inline mpz_class from_emacs(expected_type_t<mpz_class>, envw nv, value x) {
   nv.check_compatible<27>();
