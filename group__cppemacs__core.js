@@ -16,10 +16,10 @@ var group__cppemacs__core =
       [ "raw", "structcppemacs_1_1process__input__result.html#a97a1344e7467be73d301b67aeb77ee03", null ]
     ] ],
     [ "cppemacs::non_local_exit", "structcppemacs_1_1non__local__exit.html", null ],
-    [ "cppemacs::signal", "structcppemacs_1_1signal.html", [
-      [ "signal", "structcppemacs_1_1signal.html#add58775ebe2c073ffe2abef175480c6d", null ],
-      [ "data", "structcppemacs_1_1signal.html#aecf81422f75fb6b2d2d6eccfeb6008da", null ],
-      [ "symbol", "structcppemacs_1_1signal.html#a41f3de9eb85f8bb0927d9e546ac35f9e", null ]
+    [ "cppemacs::signalled", "structcppemacs_1_1signalled.html", [
+      [ "signalled", "structcppemacs_1_1signalled.html#acd9171c40fdf63a998222aa4759d75eb", null ],
+      [ "data", "structcppemacs_1_1signalled.html#af2d7dda6dc3ddc4121c47f40383c9928", null ],
+      [ "symbol", "structcppemacs_1_1signalled.html#a3807cf9b5781f0db74b159fe790ba7ae", null ]
     ] ],
     [ "cppemacs::thrown", "structcppemacs_1_1thrown.html", [
       [ "thrown", "structcppemacs_1_1thrown.html#a264b2c70b829578bd5fb904bf9bff523", null ],

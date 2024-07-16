@@ -18,7 +18,7 @@ var hierarchy =
     [ "cppemacs::module_function_repr< F, typename >", "structcppemacs_1_1module__function__repr.html", null ],
     [ "cppemacs::non_local_exit", "structcppemacs_1_1non__local__exit.html", null ],
     [ "cppemacs::process_input_result", "structcppemacs_1_1process__input__result.html", null ],
-    [ "cppemacs::signal", "structcppemacs_1_1signal.html", null ],
+    [ "cppemacs::signalled", "structcppemacs_1_1signalled.html", null ],
     [ "cppemacs::detail::spread_invoker< MinArity, MaxArity, IsVariadic, F >", "structcppemacs_1_1detail_1_1spread__invoker.html", null ],
     [ "cppemacs::spreader_arity< MinArity, MaxArity, IsVariadic >", "structcppemacs_1_1spreader__arity.html", null ],
     [ "cppemacs::detail::spreader_caller< IsVar, SI >", "structcppemacs_1_1detail_1_1spreader__caller.html", null ],

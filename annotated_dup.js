@@ -23,7 +23,7 @@ var annotated_dup =
       [ "module_function_repr", "structcppemacs_1_1module__function__repr.html", null ],
       [ "non_local_exit", "structcppemacs_1_1non__local__exit.html", null ],
       [ "process_input_result", "structcppemacs_1_1process__input__result.html", "structcppemacs_1_1process__input__result" ],
-      [ "signal", "structcppemacs_1_1signal.html", "structcppemacs_1_1signal" ],
+      [ "signalled", "structcppemacs_1_1signalled.html", "structcppemacs_1_1signalled" ],
       [ "spreader_arity", "structcppemacs_1_1spreader__arity.html", null ],
       [ "spreader_restargs", "structcppemacs_1_1spreader__restargs.html", "structcppemacs_1_1spreader__restargs" ],
       [ "thrown", "structcppemacs_1_1thrown.html", "structcppemacs_1_1thrown" ],

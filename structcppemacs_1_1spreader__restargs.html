@@ -164,10 +164,10 @@ $(document).ready(function(){initNavTree('structcppemacs_1_1spreader__restargs.h
 <div class="line">    });</div>
 <div class="line"><span class="preprocessor">#endif</span></div>
 <div class="ttc" id="agroup__cppemacs__core_html_gabd2db90fff7d715e8649f37147f60a3a"><div class="ttname"><a href="group__cppemacs__core.html#gabd2db90fff7d715e8649f37147f60a3a">cppemacs::value</a></div><div class="ttdeci">emacs_value value</div><div class="ttdoc">Raw opaque pointer representing an Emacs value. See cell for the wrapper, and envw for functions that...</div><div class="ttdef"><b>Definition</b> core.hpp:339</div></div>
-<div class="ttc" id="agroup__cppemacs__utilities_html_ga18fe9586cb561bd3a4609527052e502e"><div class="ttname"><a href="group__cppemacs__utilities.html#ga18fe9586cb561bd3a4609527052e502e">cppemacs::make_spreader_function</a></div><div class="ttdeci">auto make_spreader_function(spreader_arity&lt; MinArity, MaxArity, IsVariadic &gt; ar, const char *doc, F &amp;&amp;f)</div><div class="ttdoc">Make a spreader module function with the given minimum and maximum arity.</div><div class="ttdef"><b>Definition</b> utils.hpp:584</div></div>
+<div class="ttc" id="agroup__cppemacs__utilities_html_ga18fe9586cb561bd3a4609527052e502e"><div class="ttname"><a href="group__cppemacs__utilities.html#ga18fe9586cb561bd3a4609527052e502e">cppemacs::make_spreader_function</a></div><div class="ttdeci">auto make_spreader_function(spreader_arity&lt; MinArity, MaxArity, IsVariadic &gt; ar, const char *doc, F &amp;&amp;f)</div><div class="ttdoc">Make a spreader module function with the given minimum and maximum arity.</div><div class="ttdef"><b>Definition</b> utils.hpp:562</div></div>
 <div class="ttc" id="astructcppemacs_1_1envw_html"><div class="ttname"><a href="structcppemacs_1_1envw.html">cppemacs::envw</a></div><div class="ttdoc">General Emacs environment wrapper.</div><div class="ttdef"><b>Definition</b> core.hpp:795</div></div>
-<div class="ttc" id="astructcppemacs_1_1spreader__arity_html"><div class="ttname"><a href="structcppemacs_1_1spreader__arity.html">cppemacs::spreader_arity</a></div><div class="ttdoc">An encoded arity for make_spreader_function().</div><div class="ttdef"><b>Definition</b> utils.hpp:536</div></div>
-<div class="ttc" id="astructcppemacs_1_1spreader__restargs_html"><div class="ttname"><a href="structcppemacs_1_1spreader__restargs.html">cppemacs::spreader_restargs</a></div><div class="ttdoc">Used to provide a span-like argument to a spreader function .</div><div class="ttdef"><b>Definition</b> utils.hpp:408</div></div>
+<div class="ttc" id="astructcppemacs_1_1spreader__arity_html"><div class="ttname"><a href="structcppemacs_1_1spreader__arity.html">cppemacs::spreader_arity</a></div><div class="ttdoc">An encoded arity for make_spreader_function().</div><div class="ttdef"><b>Definition</b> utils.hpp:514</div></div>
+<div class="ttc" id="astructcppemacs_1_1spreader__restargs_html"><div class="ttname"><a href="structcppemacs_1_1spreader__restargs.html">cppemacs::spreader_restargs</a></div><div class="ttdoc">Used to provide a span-like argument to a spreader function .</div><div class="ttdef"><b>Definition</b> utils.hpp:385</div></div>
 </div><!-- fragment --> </div><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
@@ -200,6 +200,9 @@ Public Member Functions</h2></td></tr>
 
 <div class="memitem">
 <div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
       <table class="memname">
         <tr>
           <td class="memname">cppemacs::spreader_restargs::spreader_restargs </td>
@@ -219,6 +222,11 @@ Public Member Functions</h2></td></tr>
           <td></td><td></td>
         </tr>
       </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
 </div><div class="memdoc">
 
 <p>Construct from a pointer and length. </p>

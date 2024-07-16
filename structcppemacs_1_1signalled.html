@@ -22,7 +22,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=11"/>
 <meta name="generator" content="Doxygen 1.9.8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>cppemacs: cppemacs::signal Struct Reference</title>
+<title>cppemacs: cppemacs::signalled Struct Reference</title>
 <!--BEGIN PROJECT_ICON-->
 <link rel="icon" href="$projecticon" type="image/x-icon" />
 <!--END PROJECT_ICON-->
@@ -99,7 +99,7 @@ $(function() {
 </div>
 <script type="text/javascript">
 /* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
-$(document).ready(function(){initNavTree('structcppemacs_1_1signal.html',''); initResizable(); });
+$(document).ready(function(){initNavTree('structcppemacs_1_1signalled.html',''); initResizable(); });
 /* @license-end */
 </script>
 <div id="doc-content">
@@ -128,8 +128,8 @@ $(document).ready(function(){initNavTree('structcppemacs_1_1signal.html',''); in
   <div class="summary">
 <a href="#pub-methods">Public Member Functions</a> &#124;
 <a href="#pub-attribs">Public Attributes</a> &#124;
-<a href="structcppemacs_1_1signal-members.html">List of all members</a>  </div>
-  <div class="headertitle"><div class="title">cppemacs::signal Struct Reference<div class="ingroups"><a class="el" href="group__cppemacs__core.html">Core Types</a></div></div></div>
+<a href="structcppemacs_1_1signalled-members.html">List of all members</a>  </div>
+  <div class="headertitle"><div class="title">cppemacs::signalled Struct Reference<div class="ingroups"><a class="el" href="group__cppemacs__core.html">Core Types</a></div></div></div>
 </div><!--header-->
 <div class="contents">
 
@@ -137,27 +137,27 @@ $(document).ready(function(){initNavTree('structcppemacs_1_1signal.html',''); in
 <a name="details" id="details"></a><h2 class="groupheader">Description</h2>
 <div class="textblock"><p>An exception representing an Emacs <code>signal</code> exit. </p>
 <dl class="section warning"><dt>Warning</dt><dd>This should not be constructed or thrown if there is already a pending non-local exit, as Emacs module API functions will not return meaningful values.</dd></dl>
-<dl class="section see"><dt>See also</dt><dd><a class="el" href="structcppemacs_1_1envw.html#aa977b2b678096adf617ec7500359d353" title="Run f() and catch all exceptions, propagating them to Emacs via signal or throw.">envw::run_catching()</a>, which raises an Emacs <a class="el" href="structcppemacs_1_1signal.html" title="An exception representing an Emacs signal exit.">signal</a> if this is caught.</dd></dl>
-<p><a class="el" href="structcppemacs_1_1envw.html#abc22b0e8abe9817b095870cf43419e0b" title="Check for non-local exit, and throw it as a C++ exception (signal or thrown) if there is one.">envw::rethrow_non_local_exit()</a>, which throws this if an Emacs signal is pending. </p>
+<dl class="section see"><dt>See also</dt><dd><a class="el" href="structcppemacs_1_1envw.html#aa977b2b678096adf617ec7500359d353" title="Run f() and catch all exceptions, propagating them to Emacs via signal or throw.">envw::run_catching()</a>, which raises an Emacs signal if this is caught.</dd></dl>
+<p><a class="el" href="structcppemacs_1_1envw.html#abc22b0e8abe9817b095870cf43419e0b" title="Check for non-local exit, and throw it as a C++ exception (signalled or thrown) if there is one.">envw::rethrow_non_local_exit()</a>, which throws this if an Emacs signal is pending. </p>
 </div><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:add58775ebe2c073ffe2abef175480c6d" id="r_add58775ebe2c073ffe2abef175480c6d"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structcppemacs_1_1signal.html#add58775ebe2c073ffe2abef175480c6d">signal</a> (<a class="el" href="group__cppemacs__core.html#gabd2db90fff7d715e8649f37147f60a3a">value</a> <a class="el" href="structcppemacs_1_1signal.html#a41f3de9eb85f8bb0927d9e546ac35f9e">symbol</a>, <a class="el" href="group__cppemacs__core.html#gabd2db90fff7d715e8649f37147f60a3a">value</a> <a class="el" href="structcppemacs_1_1signal.html#aecf81422f75fb6b2d2d6eccfeb6008da">data</a>) noexcept</td></tr>
-<tr class="memdesc:add58775ebe2c073ffe2abef175480c6d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Construct a signal exception.  <br /></td></tr>
-<tr class="separator:add58775ebe2c073ffe2abef175480c6d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:acd9171c40fdf63a998222aa4759d75eb" id="r_acd9171c40fdf63a998222aa4759d75eb"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structcppemacs_1_1signalled.html#acd9171c40fdf63a998222aa4759d75eb">signalled</a> (<a class="el" href="group__cppemacs__core.html#gabd2db90fff7d715e8649f37147f60a3a">value</a> <a class="el" href="structcppemacs_1_1signalled.html#a3807cf9b5781f0db74b159fe790ba7ae">symbol</a>, <a class="el" href="group__cppemacs__core.html#gabd2db90fff7d715e8649f37147f60a3a">value</a> <a class="el" href="structcppemacs_1_1signalled.html#af2d7dda6dc3ddc4121c47f40383c9928">data</a>) noexcept</td></tr>
+<tr class="memdesc:acd9171c40fdf63a998222aa4759d75eb"><td class="mdescLeft">&#160;</td><td class="mdescRight">Construct a signal exception.  <br /></td></tr>
+<tr class="separator:acd9171c40fdf63a998222aa4759d75eb"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-attribs" name="pub-attribs"></a>
 Public Attributes</h2></td></tr>
-<tr class="memitem:a41f3de9eb85f8bb0927d9e546ac35f9e" id="r_a41f3de9eb85f8bb0927d9e546ac35f9e"><td class="memItemLeft" align="right" valign="top"><a class="el" href="group__cppemacs__core.html#gabd2db90fff7d715e8649f37147f60a3a">value</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structcppemacs_1_1signal.html#a41f3de9eb85f8bb0927d9e546ac35f9e">symbol</a></td></tr>
-<tr class="memdesc:a41f3de9eb85f8bb0927d9e546ac35f9e"><td class="mdescLeft">&#160;</td><td class="mdescRight">The ERROR-SYMBOL of the signal.  <br /></td></tr>
-<tr class="separator:a41f3de9eb85f8bb0927d9e546ac35f9e"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aecf81422f75fb6b2d2d6eccfeb6008da" id="r_aecf81422f75fb6b2d2d6eccfeb6008da"><td class="memItemLeft" align="right" valign="top"><a class="el" href="group__cppemacs__core.html#gabd2db90fff7d715e8649f37147f60a3a">value</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structcppemacs_1_1signal.html#aecf81422f75fb6b2d2d6eccfeb6008da">data</a></td></tr>
-<tr class="memdesc:aecf81422f75fb6b2d2d6eccfeb6008da"><td class="mdescLeft">&#160;</td><td class="mdescRight">The associated DATA of the signal.  <br /></td></tr>
-<tr class="separator:aecf81422f75fb6b2d2d6eccfeb6008da"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3807cf9b5781f0db74b159fe790ba7ae" id="r_a3807cf9b5781f0db74b159fe790ba7ae"><td class="memItemLeft" align="right" valign="top"><a class="el" href="group__cppemacs__core.html#gabd2db90fff7d715e8649f37147f60a3a">value</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structcppemacs_1_1signalled.html#a3807cf9b5781f0db74b159fe790ba7ae">symbol</a></td></tr>
+<tr class="memdesc:a3807cf9b5781f0db74b159fe790ba7ae"><td class="mdescLeft">&#160;</td><td class="mdescRight">The ERROR-SYMBOL of the signal.  <br /></td></tr>
+<tr class="separator:a3807cf9b5781f0db74b159fe790ba7ae"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af2d7dda6dc3ddc4121c47f40383c9928" id="r_af2d7dda6dc3ddc4121c47f40383c9928"><td class="memItemLeft" align="right" valign="top"><a class="el" href="group__cppemacs__core.html#gabd2db90fff7d715e8649f37147f60a3a">value</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structcppemacs_1_1signalled.html#af2d7dda6dc3ddc4121c47f40383c9928">data</a></td></tr>
+<tr class="memdesc:af2d7dda6dc3ddc4121c47f40383c9928"><td class="mdescLeft">&#160;</td><td class="mdescRight">The associated DATA of the signal.  <br /></td></tr>
+<tr class="separator:af2d7dda6dc3ddc4121c47f40383c9928"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
-<a id="add58775ebe2c073ffe2abef175480c6d" name="add58775ebe2c073ffe2abef175480c6d"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#add58775ebe2c073ffe2abef175480c6d">&#9670;&#160;</a></span>signal()</h2>
+<a id="acd9171c40fdf63a998222aa4759d75eb" name="acd9171c40fdf63a998222aa4759d75eb"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#acd9171c40fdf63a998222aa4759d75eb">&#9670;&#160;</a></span>signalled()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -166,7 +166,7 @@ Public Attributes</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">cppemacs::signal::signal </td>
+          <td class="memname">cppemacs::signalled::signalled </td>
           <td>(</td>
           <td class="paramtype"><a class="el" href="group__cppemacs__core.html#gabd2db90fff7d715e8649f37147f60a3a">value</a>&#160;</td>
           <td class="paramname"><em>symbol</em>, </td>
@@ -195,14 +195,14 @@ Public Attributes</h2></td></tr>
 </div>
 </div>
 <h2 class="groupheader">Member Data Documentation</h2>
-<a id="aecf81422f75fb6b2d2d6eccfeb6008da" name="aecf81422f75fb6b2d2d6eccfeb6008da"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aecf81422f75fb6b2d2d6eccfeb6008da">&#9670;&#160;</a></span>data</h2>
+<a id="af2d7dda6dc3ddc4121c47f40383c9928" name="af2d7dda6dc3ddc4121c47f40383c9928"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af2d7dda6dc3ddc4121c47f40383c9928">&#9670;&#160;</a></span>data</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="group__cppemacs__core.html#gabd2db90fff7d715e8649f37147f60a3a">value</a> cppemacs::signal::data</td>
+          <td class="memname"><a class="el" href="group__cppemacs__core.html#gabd2db90fff7d715e8649f37147f60a3a">value</a> cppemacs::signalled::data</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -211,14 +211,14 @@ Public Attributes</h2></td></tr>
 
 </div>
 </div>
-<a id="a41f3de9eb85f8bb0927d9e546ac35f9e" name="a41f3de9eb85f8bb0927d9e546ac35f9e"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a41f3de9eb85f8bb0927d9e546ac35f9e">&#9670;&#160;</a></span>symbol</h2>
+<a id="a3807cf9b5781f0db74b159fe790ba7ae" name="a3807cf9b5781f0db74b159fe790ba7ae"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a3807cf9b5781f0db74b159fe790ba7ae">&#9670;&#160;</a></span>symbol</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="group__cppemacs__core.html#gabd2db90fff7d715e8649f37147f60a3a">value</a> cppemacs::signal::symbol</td>
+          <td class="memname"><a class="el" href="group__cppemacs__core.html#gabd2db90fff7d715e8649f37147f60a3a">value</a> cppemacs::signalled::symbol</td>
         </tr>
       </table>
 </div><div class="memdoc">
@@ -235,7 +235,7 @@ Public Attributes</h2></td></tr>
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="navelem"><a class="el" href="namespacecppemacs.html">cppemacs</a></li><li class="navelem"><a class="el" href="structcppemacs_1_1signal.html">signal</a></li>
+    <li class="navelem"><a class="el" href="namespacecppemacs.html">cppemacs</a></li><li class="navelem"><a class="el" href="structcppemacs_1_1signalled.html">signalled</a></li>
     <li class="footer">Generated by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8 </li>
   </ul>
 </div>
