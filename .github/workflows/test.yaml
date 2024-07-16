@@ -2,33 +2,69 @@ name: Tests
 
 on:
   push:
-    branches: [ main ]
+    branches: [ main, ci ]
 
 jobs:
   build:
     strategy:
+      fail-fast: false
       matrix:
-        emacs_version: [25.3, 27.2, 28.2]
+        emacs_version:
+          - 26.2 # first version to include module-env.h in installation
+          - 27.2
+          - 28.2 # latest major with new features
         os:
           - ubuntu-latest
           - macos-13 # latest x86_64
 
-    runs-on: ${{ matrix.os }}
+    runs-on: ${{matrix.os}}
+    env:
+      EMACS_VERSION: ${{matrix.emacs_version}}
+      EMACS_CONFIGURE_FLAGS: >-
+        --disable-build-details --with-modules --with-x=no
+        --with-ns=no --with-xpm=no --with-jpeg=no --with-png=no
+        --with-gif=no --with-tiff=no
+      EMACS_MAKEFLAGS: FAST=true -j4
+      EMACS_PREFIX: .cache/emacs
+      EMACS_CONFIGURE_COUNTER: 0 # change to invalidate the configure flags
 
     steps:
     - uses: actions/checkout@v4
       with:
         fetch-depth: 0
 
-    - uses: purcell/setup-emacs@v6.0
+    - name: Install Emacs Dependencies
+      if: ${{ matrix.os == 'ubuntu-latest' }}
+      run: sudo apt-get install gnutls-dev
+
+    - name: Cache Emacs
+      id: cache-emacs
+      uses: actions/cache/restore@v4
       with:
-        version: ${{ matrix.emacs_version }}
+        path: ${{env.EMACS_PREFIX}}
+        key: ${{matrix.os}}-emacs-${{env.EMACS_VERSION}}-c${{env.EMACS_CONFIGURE_COUNTER}}
+    - name: Install Emacs
+      run: ${{github.workspace}}/.github/scripts/install-emacs
+    - name: Save Emacs Cache
+      uses: actions/cache/save@v4
+      if: ${{ steps.cache-emacs.outputs.cache-hit != 'true' }}
+      with:
+        path: ${{env.EMACS_PREFIX}}
+        key: ${{ steps.cache-emacs.outputs.cache-primary-key }}
 
     - name: Configure CMake
-      run: cmake -B ${{github.workspace}}/build -DCPPEMACS_Documentation=OFF -DCPPEMACS_Test=ON
+      run: |
+        cmake -B "${{github.workspace}}/build" \
+          -DCPPEMACS_Documentation=OFF -DCPPEMACS_Examples=ON -DCPPEMACS_Test=ON
 
     - name: Build
-      run: cmake --build ${{github.workspace}}/build
+      run: cmake --build "${{github.workspace}}/build" -j 4
 
     - name: Test
-      run: ctest --test-dir ${{github.workspace}}/build --output-on-failure
+      run: ctest --test-dir "${{github.workspace}}/build" --output-on-failure
+
+    #- name: Setup tmate session
+    #  if: ${{ failure() }}
+    #  uses: mxschmitt/action-tmate@v3
+    #  with:
+    #    limit-access-to-actor: true

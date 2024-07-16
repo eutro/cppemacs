@@ -90,7 +90,7 @@ find_package(Emacs)
 if (Emacs_FOUND)
   target_link_libraries(${CPPEMACS_TARGET_NAME} INTERFACE Emacs::emacs_module)
 else ()
-  message(WARN "Emacs not found on this machine")
+  message(WARNING "Emacs not found on this machine")
 endif ()
 
 # Export target for other projects to use

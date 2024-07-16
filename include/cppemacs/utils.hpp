@@ -30,29 +30,6 @@
 #include <type_traits>
 #include <utility>
 
-#ifdef __GNUC__
-#include <cxxabi.h>
-#endif
-
-namespace cppemacs {
-namespace detail {
-#ifdef __GNUC__
-inline std::string demangle(const char *name) {
-  int status;
-  std::unique_ptr<char[], decltype(&std::free)> s(
-    abi::__cxa_demangle(name, 0, 0, &status),
-    &std::free);
-  return std::string(s ? s.get() : name);
-}
-#else
-inline std::string demangle(std::string &&s) { return s; }
-#endif
-
-template <typename T>
-inline std::string type_name() { return demangle(typeid(T).name()); }
-}
-}
-
 /**
  * @defgroup cppemacs_utilities Utilities
  * @brief Utility types built on top of the core cppemacs API.
@@ -411,7 +388,7 @@ private:
 
 public:
   /** @brief Construct from a pointer and length. */
-  spreader_restargs(value *args, size_t nargs);
+  spreader_restargs(value *args, size_t nargs) : args(args), nargs(nargs) {}
 
   /** @brief Convert this to `T` with a <code>(::value *begin, ::value
       *end)</code> constructor. */
@@ -495,6 +472,11 @@ private:
     return nv->*ret;
   }
 
+  template <size_t Arity>
+  static value vt_fun(spread_invoker *self, envw nv, value *args)
+  { return caller::template invoke_with_arity<Arity>(arity_seq(), *self, nv, args); }
+  using vt_funtype = value (*)(spread_invoker *, envw, value *);
+
   template <size_t...OffIdx>
   value invoke(
     detail::index_sequence<OffIdx...>,
@@ -506,12 +488,8 @@ private:
       // should have been caught by Emacs
       throw std::runtime_error("Bad arity");
     } else {
-      static constexpr value (*Vt[])(spread_invoker *, envw, value*) = {
-        ([](spread_invoker *self, envw nv, value *args)
-        { return caller::template invoke_with_arity<MinArity + OffIdx>(arity_seq(), *self, nv, args); })
-        ...
-      };
-      return Vt[nargs](this, nv, args);
+      static constexpr vt_funtype Vt[] = { &spread_invoker::vt_fun<MinArity + OffIdx> ... };
+      return Vt[nargs - MinArity](this, nv, args);
     }
   }
 

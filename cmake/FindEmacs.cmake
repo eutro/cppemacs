@@ -75,11 +75,10 @@ endfunction()
 
 macro(_Emacs_find_emacs)
   find_program(
-    Emacs_EXECUTABLE
-    NAMES emacs
-    PATHS ${_Emacs_SEARCH_PATHS}
-    HINT ${_Emacs_SEARCH_PATHS_HINT}
+    Emacs_EXECUTABLE NAMES emacs
     DOC "Emacs text editor"
+    HINTS "${_Emacs_SEARCH_PATHS_HINT}"
+    PATHS "${_Emacs_SEARCH_PATHS}"
     VALIDATOR _Emacs_version_validator
   )
   mark_as_advanced(Emacs_EXECUTABLE)
@@ -89,7 +88,7 @@ macro(_Emacs_find_emacs)
 
     if(NOT (${_Emacs_version_result} EQUAL 0))
       if(NOT Emacs_FIND_QUIETLY)
-        message(WARNING "Emacs executable failed unexpected while determining version (exit status: ${_Emacs_version_result}). Disabling Emacs.")
+        message(WARNING "Emacs executable failed unexpectedly while determining version (exit status: ${_Emacs_version_result}). Disabling Emacs.")
       endif()
       set(Emacs_EXECUTABLE "${Emacs_EXECUTABLE}-FAILED_EXECUTION-NOTFOUND")
     else()
@@ -111,9 +110,10 @@ endmacro()
 macro(_Emacs_find_emacs_headers)
   find_path(Emacs_INCLUDE_DIR emacs-module.h
     DOC "Path to Emacs module header"
-    PATH_SUFFIXES emacs/include include
-    PATHS ${Emacs_SEARCH_PATHS}
-    HINT ${Emacs_SEARCH_PATHS_HINT})
+    PATH_SUFFIXES include emacs/include ../include
+    HINTS ${_Emacs_SEARCH_PATHS_HINT}
+    PATHS ${_Emacs_SEARCH_PATHS}
+  )
 
   if(Emacs_INCLUDE_DIR)
     if (NOT TARGET Emacs::emacs_module)
@@ -131,6 +131,7 @@ set(_Emacs_SEARCH_PATHS
   /opt/local # DarwinPorts
   /opt/csw # Blastwave
   ~/.guix-profile # Guix
+  ~/.nix-profile # Nix
   ${Emacs_PATH})
 set(_Emacs_SEARCH_PATHS_HINT)
 

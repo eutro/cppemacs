@@ -32,7 +32,7 @@ TEST_SCOPED(SCENARIO("throwing exceptions")) {
                spreader_arity<2>(),
                "Equivalent to `signal'.",
                [](envw nv, value sym, value data) -> value
-               { throw signal(sym, data); }));
+               { throw signalled(sym, data); }));
 
     defalias("cppemacs-fun2", envp->*make_spreader_function(
                spreader_arity<2>(),
@@ -103,7 +103,7 @@ TEST_SCOPED(SCENARIO("throwing exceptions")) {
       switch (sig_type) {
       case funcall_exit::signal_:
         THEN("a signal is raised") {
-          REQUIRE_THROWS_AS(eval_expr(), signal);
+          REQUIRE_THROWS_AS(eval_expr(), signalled);
         }
         break;
       case funcall_exit::throw_:

@@ -28,11 +28,11 @@
 /** @addtogroup cppemacs_optional
  *@{*/
 /**
- * @brief Define as 0 before including to omit the workaround for the
- * missing noexcept specifier on `emacs_module_init()` in
- * `<emacs-module.h>` in Emacs 25.
+ * @brief Define as 1 before including to work around the missing
+ * noexcept specifier on `emacs_module_init()` in `<emacs-module.h>`
+ * in Emacs 25.
  */
-#  define CPPEMACS_MODULE_INIT_HEADER_HACK 1
+#  define CPPEMACS_MODULE_INIT_HEADER_HACK 0
 /**@}*/
 #endif
 
@@ -56,6 +56,7 @@
 #include <stdexcept>
 #include <utility>
 #include <type_traits>
+#include <string>
 
 /**
  * @page GFDL-1.3-or-later GNU Free Documentation License
@@ -223,7 +224,7 @@ namespace cppemacs {}
  *
  * - @ref cppemacs::envw::maybe_non_local_exit() "envw::maybe_non_local_exit()"
  *   will @ref cppemacs::envw::rethrow_non_local_exit() "rethrow" the non-local
- *   exit, so it can be caught as @ref cppemacs::signal or @ref
+ *   exit, so it can be caught as @ref cppemacs::signalled or @ref
  *   cppemacs::thrown, and without leaving the non-local exit pending. Most
  *   parts of cppemacs that fail using exceptions use `maybe_non_local_exit()`
  *   to raise the error.
@@ -489,7 +490,7 @@ struct funcall_exit {
 
   /** @brief Function has returned normally.  */
   static constexpr emacs_funcall_exit return_ = emacs_funcall_exit_return;
-  /** @brief Function has signaled an error using `signal`.  */
+  /** @brief Function has signalled an error using `signal`.  */
   static constexpr emacs_funcall_exit signal_ = emacs_funcall_exit_signal;
   /** @brief Function has exited using `throw`.  */
   static constexpr emacs_funcall_exit throw_ = emacs_funcall_exit_throw;
@@ -553,13 +554,13 @@ struct non_local_exit {};
  *
  * envw::rethrow_non_local_exit(), which throws this if an Emacs signal is pending.
  */
-struct signal {
+struct signalled {
   /** @brief The ERROR-SYMBOL of the signal. */
   value symbol;
   /** @brief The associated DATA of the signal. */
   value data;
   /** @brief Construct a signal exception. */
-  signal(value symbol, value data) noexcept
+  signalled(value symbol, value data) noexcept
     : symbol(symbol), data(data) {}
 };
 
@@ -975,7 +976,7 @@ public:
 
   /**
    * @brief Check for @ref non_local_exit_check() "non-local exit", and throw it
-   * as a C++ exception (@ref signal or @ref thrown) if there is one.
+   * as a C++ exception (@ref signalled or @ref thrown) if there is one.
    *
    * Unlike @ref maybe_non_local_exit(), this method @b always clears the
    * pending non-local exit, and does capture the type and its data.
@@ -1012,7 +1013,7 @@ public:
           }
         }
       }
-      throw signal(symbol, data);
+      throw signalled(symbol, data);
     } else {
       throw thrown(symbol, data);
     }
@@ -1314,7 +1315,7 @@ private:
     if (non_local_exit_check()) return;
     try {
       throw;
-    } catch (const signal &s) {
+    } catch (const signalled &s) {
       non_local_exit_signal(s.symbol, s.data);
     } catch (const thrown &s) {
       non_local_exit_throw(s.symbol, s.data);
@@ -1404,8 +1405,9 @@ public:
    *
    * - If a non-local exit is pending when the exception is caught, do nothing.
    *
-   * - If it is @ref signal or @ref thrown, raise it with @ref
-   *   non_local_exit_signal() or @ref non_local_exit_throw(), respectively.
+   * - If it is @ref signalled or @ref thrown, raise it with @ref
+   *   non_local_exit_signal() or @ref non_local_exit_throw(),
+   *   respectively.
    *
    * - If it is @ref non_local_exit, and `Box` is false, signal an unspecified
    *   `error`.

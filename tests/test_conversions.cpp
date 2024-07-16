@@ -27,7 +27,7 @@
 
 struct is_the_same {
   template <typename Lhs, typename Res>
-  void operator()(expected_type_t<Res>, Lhs &&lhs, const cell &val) const {
+  void operator()(expected_type_t<Res>, const Lhs &lhs, const cell &val) const {
     THEN("is the same") {
       REQUIRE(lhs == val.extract<Res>());
     }
@@ -61,7 +61,9 @@ TEST_SCOPED(SCENARIO("round trip converting values")) {
   }
 
   checkRoundTrip<std::string>("abcd");
-#ifdef __cpp_lib_string_view
+
+  // check Catch config as well otherwise it might not link
+#if defined(CPPEMACS_HAVE_STRING_VIEW)
   checkRoundTrip<std::string_view, std::string>("abcdefgh");
 #endif
 
@@ -113,7 +115,7 @@ TEST_SCOPED(SCENARIO("constructing functions")) {
     long long w = 0, x = 0, y = 0, z = 0;
     using llcell = cell_extracted<long long>;
     auto func = make_spreader_function(
-      spreader_arity<4>(),
+      spreader_arity<1, 4>(),
       "Update the internal state.",
       [w, x, y, z, sptr](envw env, llcell wv, llcell xv, llcell yv, llcell zv) mutable {
         CHECK(sptr.use_count() >= 1);
@@ -133,7 +135,9 @@ TEST_SCOPED(SCENARIO("constructing functions")) {
           cell list = env->*"list";
 
           REQUIRE_THAT(f(1, 2, 3, 4), LispEquals(list(0, 0, 0, 0)));
-          REQUIRE_THAT(f(4, 5, 6, 7), LispEquals(list(1, 2, 3, 4)));
+          REQUIRE_THAT(f(4, 5, 6),    LispEquals(list(1, 2, 3, 4)));
+          REQUIRE_THAT(f(6, 7),       LispEquals(list(4, 5, 6, 0)));
+          REQUIRE_THAT(f(7),          LispEquals(list(6, 7, 0, 0)));
         }
 
         CHECK(sptr.use_count() == 2);

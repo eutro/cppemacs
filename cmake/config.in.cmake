@@ -35,7 +35,7 @@ if (NOT TARGET @PROJECT_NAME@::@CPPEMACS_TARGET_NAME@)
       INTERFACE_LINK_LIBRARIES Emacs::emacs_module
     )
   elseif(NOT @PROJECT_NAME@_FIND_QUIETLY)
-    message(WARN "Emacs not found on this machine")
+    message(WARNING "Emacs not found on this machine")
   endif()
 
   if (NOT TARGET @CPPEMACS_TARGET_NAME@)

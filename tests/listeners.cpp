@@ -23,7 +23,7 @@
 
 #include "common.hpp"
 
-static std::string translate_signal(signal const &sig) {
+static std::string translate_signal(signalled const &sig) {
   return (envp->*"error-message-string")((envp->*"cons")(sig.symbol, sig.data))
     .extract<std::string>();
 }
@@ -73,6 +73,6 @@ public:
 
 CATCH_REGISTER_LISTENER(EmacsExnCkListener);
 
-CATCH_TRANSLATE_EXCEPTION(signal const &sig) { return translate_signal(sig); }
+CATCH_TRANSLATE_EXCEPTION(signalled const &sig) { return translate_signal(sig); }
 CATCH_TRANSLATE_EXCEPTION(thrown const &sig) { return translate_throw(sig); }
 CATCH_TRANSLATE_EXCEPTION(non_local_exit const &sig) { return translate_non_local_exit(sig); }

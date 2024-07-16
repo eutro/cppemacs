@@ -26,6 +26,7 @@
 
 #include <cppemacs/all.hpp>
 #include <catch2/catch_all.hpp>
+#include <string>
 
 namespace cppemacs {
 extern envw envp;
@@ -58,11 +59,38 @@ using namespace cppemacs;
 using namespace cppemacs::literals;
 using namespace cppemacs::detail;
 
-namespace Catch {
-template<>
-struct StringMaker<std::type_info>
-{ static std::string convert(std::type_info const &value) { return demangle(value.name()); } };
-}
+template <typename T, typename = void> struct type_name;
+#define REGISTER_NAME(T) \
+  template<> struct type_name<T> { static constexpr const char *value = #T; }
+#define REGISTER_NAME2(A, B) REGISTER_NAME(A); REGISTER_NAME(B)
+#define REGISTER_NAME4(A, B, C, D) REGISTER_NAME2(A, B); REGISTER_NAME2(C, D)
+
+template <typename T> struct type_name<
+  T, detail::enable_if_t<std::is_integral<T>::value>> {
+  static constexpr const char *prefix =
+    std::numeric_limits<T>::is_signed
+    ? "int" : "uint";
+  static constexpr const int bits =
+    std::numeric_limits<T>::digits
+    + std::numeric_limits<T>::is_signed;
+
+  friend std::ostream &operator<<(std::ostream &os, const type_name &tn) {
+    return os << tn.prefix << tn.bits << "_t";
+  }
+};
+
+REGISTER_NAME2(bool, std::string);
+REGISTER_NAME(estring_literal);
+REGISTER_NAME(eread_literal);
+#ifdef CPPEMACS_HAVE_STRING_VIEW
+REGISTER_NAME(std::string_view);
+#endif
+#ifdef CPPEMACS_ENABLE_GMPXX
+REGISTER_NAME(mpz_class);
+#endif
+
+template <typename T>
+std::ostream &operator<<(std::ostream &os, const type_name<T> &tn) { return os << tn.value; }
 
 struct ReturnsNonNilOn : Catch::Matchers::MatcherGenericBase {
   cell function;

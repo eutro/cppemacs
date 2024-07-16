@@ -148,7 +148,7 @@ inline value to_emacs(expected_type_t<uintmax_t>, envw nv, uintmax_t n) {
 namespace detail {
 template <typename Int>
 [[noreturn]] inline void throw_out_of_range(envw nv, value val) {
-  throw signal(
+  throw signalled(
     (nv->*"args-out-of-range"),
     nv.funcall(nv->*"list", {
         val,
@@ -256,7 +256,7 @@ inline value to_emacs(expected_type_t<mpz_class>, envw nv, const mpz_class &zc) 
 
   int sign = mpz_sgn(z);
   size_t count = 0;
-  size_t nwords = mpz_sizeinbase(z, 2) / std::numeric_limits<emacs_limb_t>::digits;
+  size_t nwords = 1 + (mpz_sizeinbase(z, 2) - 1) / std::numeric_limits<emacs_limb_t>::digits;
   std::unique_ptr<emacs_limb_t[]> magnitude(new emacs_limb_t[nwords]);
   mpz_export(
     magnitude.get(), &count,

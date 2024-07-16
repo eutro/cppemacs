@@ -21,7 +21,6 @@
 
 message(STATUS "Building tests")
 
-set(BUILD_SHARED_LIBS ON)
 FetchContent_Declare(Catch2
   GIT_REPOSITORY https://github.com/catchorg/Catch2
   GIT_TAG v3.6.0
@@ -55,7 +54,12 @@ add_library(${CPPEMACS_TEST_TARGET} SHARED
   test_exceptions.cpp
 )
 set_target_properties(${CPPEMACS_TEST_TARGET} PROPERTIES
-  CXX_STANDARD 20) # attempt to use C++20
+  CXX_STANDARD 20 # attempt to use C++20
+)
+set_target_properties(Catch2 PROPERTIES
+  CXX_STANDARD 20 # ditto for Catch2
+  POSITION_INDEPENDENT_CODE ON # needed to link into shared library
+)
 
 if (NOT CMAKE_VERSION VERSION_LESS "3.16")
   target_precompile_headers(${CPPEMACS_TEST_TARGET}

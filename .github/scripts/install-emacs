@@ -1,0 +1,74 @@
+#!/bin/sh
+
+# Compile and install Emacs from source
+
+mkdir -p "$EMACS_PREFIX"
+EMACS_PREFIX="$(readlink -f "$EMACS_PREFIX")" || exit $?
+THIS_DIR="$(dirname "$(readlink -f "$0")")"
+
+if [ -z "$TMPDIR" ] ; then TMPDIR="$RUNNER_TEMP"; fi
+if [ -z "$TMPDIR" ] ; then TMPDIR="/tmp"; fi
+
+version_less() {
+    test "$(printf "%s\n%s" "$1" "$2" | sort -V | head -1)" != "$2"
+}
+emacs_at_least() {
+    ! version_less "$EMACS_VERSION" "$1"
+}
+emacs_older_than() {
+    version_less "$EMACS_VERSION" "$1"
+}
+
+if emacs_older_than 25 ; then
+    echo "Only Emacs 25+ supported"
+    exit 1
+fi
+echo "Installing Emacs $EMACS_VERSION"
+
+apply_patch() {
+    echo "Applying patch: $1"
+    patch -p1 -i "$THIS_DIR/patches/$1" || exit $?
+}
+
+fetch_and_compile() {
+    BUILD_DIR="$(mktemp -d "$TMPDIR/emacs-build-XXXXXXXXXX")" || exit $?
+    echo "Building in: $BUILD_DIR"
+    echo "::group::Fetch Sources"
+    cd "$BUILD_DIR" || exit $?
+    wget "https://ftpmirror.gnu.org/emacs/emacs-$EMACS_VERSION.tar.gz" || exit $?
+    tar xzf "emacs-$EMACS_VERSION.tar.gz" || exit $?
+    cd "emacs-$EMACS_VERSION" || exit $?
+    echo "::endgroup::"
+
+    echo "::group::Apply Patches"
+    # patches from https://github.com/purcell/nix-emacs-ci/blob/master/emacs.nix
+    # (commit b9321b5076fa498515128310eccea2170bcef228 at time of writing)
+    # security and backport fixes which are required to compile
+    emacs_older_than 26.3 && apply_patch "gnutls-e_again.patch"
+    emacs_older_than 28.1 && apply_patch "sigsegv-stack.patch"
+    emacs_older_than 26.1 && apply_patch "gnutls-use-osx-cert-bundle.patch"
+    emacs_older_than 27.1 && apply_patch "macos-unexec.patch"
+    echo
+
+    echo "::group::Configure"
+    ./configure $EMACS_CONFIGURE_FLAGS --prefix="$EMACS_PREFIX" || exit $?
+    echo "::endgroup::"
+
+    echo "::group::Compile"
+    make $EMACS_MAKEFLAGS || exit $?
+    echo "::endgroup::"
+
+    echo "::group::Install"
+    make install || exit $?
+    echo "::endgroup::"
+}
+
+if [ -e "$EMACS_PREFIX/bin/emacs" ] ; then
+    echo "Emacs already installed at $EMACS_PREFIX"
+else
+    fetch_and_compile
+fi
+
+echo "::group::Add Emacs to PATH"
+echo "$EMACS_PREFIX/bin" >> "$GITHUB_PATH"
+echo "::endgroup::"
