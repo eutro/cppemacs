@@ -42,9 +42,9 @@ static int run_tests(envw nv, const std::vector<std::string> &args) {
 
 extern "C" {
 
-int plugin_is_GPL_compatible;
+CPPEMACS_EXPORT int plugin_is_GPL_compatible;
 
-int emacs_module_init(emacs_runtime *rt) noexcept {
+CPPEMACS_EXPORT int emacs_module_init(emacs_runtime *rt) noexcept {
   envw nv(rt->get_environment(rt));
   if (!nv.is_compatible<25>()) return 1;
 

@@ -24,7 +24,7 @@
 #include <cppemacs/all.hpp>
 
 extern "C" {
-int plugin_is_GPL_compatible;
+CPPEMACS_EXPORT int plugin_is_GPL_compatible;
 }
 
 namespace itf_with_emacs {
@@ -101,7 +101,8 @@ void cpp_from_emacs_conversions(envw env, value val) {
 }
 #endif
 
-extern "C" int emacs_module_init(emacs_runtime *rt) noexcept {
+extern "C" CPPEMACS_EXPORT int
+emacs_module_init(emacs_runtime *rt) noexcept {
   itf_with_emacs::emacs_module_init(rt);
   return 0;
 }

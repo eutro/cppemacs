@@ -61,11 +61,6 @@ set_target_properties(Catch2 PROPERTIES
   POSITION_INDEPENDENT_CODE ON # needed to link into shared library
 )
 
-if (NOT CMAKE_VERSION VERSION_LESS "3.16")
-  target_precompile_headers(${CPPEMACS_TEST_TARGET}
-    PRIVATE common.hpp)
-endif()
-
 target_link_libraries(${CPPEMACS_TEST_TARGET} PRIVATE
   cppemacs Catch2::Catch2)
 
@@ -76,6 +71,11 @@ if (GMP_FOUND)
     GMP::GMP GMP::GMPXX)
   target_compile_definitions(${CPPEMACS_TEST_TARGET} PRIVATE
     CPPEMACS_ENABLE_GMPXX=1)
+endif()
+
+if (NOT CMAKE_VERSION VERSION_LESS "3.16")
+  target_precompile_headers(${CPPEMACS_TEST_TARGET}
+    PRIVATE common.hpp)
 endif()
 
 set(CPPEMACS_TEST_TARGETS
@@ -95,7 +95,12 @@ add_test(NAME ${CPPEMACS_TEST2_TARGET}
   COMMAND ${CPPEMACS_TEST2_TARGET})
 
 if (NOT Emacs_FOUND)
-  message(FATAL_ERROR "Emacs not found! Aborting...")
+  message(FATAL_ERROR
+    [=[Emacs not found, but required to build tests
+You could try to:
+- Install Emacs and put it on your PATH
+- Set Emacs_ROOT to point to the directory containing the Emacs executable
+- Disable tests with -DCPPEMACS_Test=OFF]=])
 endif ()
 
 add_test(NAME ${CPPEMACS_TEST_TARGET}

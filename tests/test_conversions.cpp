@@ -91,7 +91,7 @@ TEST_SCOPED(SCENARIO("round trip converting values")) {
     checkRoundTrip<eread_literal, uintmax_t, throws_an_exception>(
       eread_literal(std::to_string(UINTMAX_MAX) += "0"));
 
-#  ifdef CPPEMACS_ENABLE_GMPXX
+#  if CPPEMACS_ENABLE_GMPXX
     checkRoundTrip<mpz_class>(mpz_class(0));
     checkRoundTrip<mpz_class>(mpz_class(-99));
     checkRoundTrip<mpz_class>(mpz_class(99));

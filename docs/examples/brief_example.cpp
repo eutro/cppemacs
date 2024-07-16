@@ -27,24 +27,24 @@ using namespace cppemacs;
 
 extern "C" {
 
-  // must be compatible with Emacs' license
-  int plugin_is_GPL_compatible;
+// must be compatible with Emacs' license
+CPPEMACS_EXPORT int plugin_is_GPL_compatible;
 
-  // the entrypoint of the module
-  int emacs_module_init(emacs_runtime *rt) noexcept {
-    envw env = rt->get_environment(rt);
+// the entrypoint of the module
+CPPEMACS_EXPORT int emacs_module_init(emacs_runtime *rt) noexcept {
+  envw env = rt->get_environment(rt);
 
-    // ... define module functions
-    cell defalias = env->*"defalias";
-    defalias("example-function", env->*make_spreader_function(
-               spreader_thunk(), "Do something useful.",
-               [](envw env) {
-                 // ... do something useful
-                 return nullptr; // return nil
-               }));
+  // ... define module functions
+  cell defalias = env->*"defalias";
+  defalias("example-function", env->*make_spreader_function(
+             spreader_thunk(), "Do something useful.",
+             [](envw env) {
+               // ... do something useful
+               return nullptr; // return nil
+             }));
 
-    return 0;
-  }
+  return 0;
+}
 
 }
 //! [Brief Example]

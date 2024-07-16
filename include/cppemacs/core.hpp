@@ -24,15 +24,48 @@
 #ifndef CPPEMACS_EMACS_HPP_
 #define CPPEMACS_EMACS_HPP_
 
+#ifndef CPPEMACS_DOXYGEN_RUNNING
+// language version detection
+#  ifdef _MSC_VER
+#    if (_MSVC_LANG >= 201402L)
+#      define CPPEMACS_HAVE_CXX14
+#    endif
+#    if (_MSVC_LANG >= 201703L)
+#      define CPPEMACS_HAVE_CXX17
+#    endif
+#    if (_MSVC_LANG >= 202002L)
+#      define CPPEMACS_HAVE_CXX20
+#    endif
+#  else
+#    if (__cplusplus >= 201402L)
+#      define CPPEMACS_HAVE_CXX14
+#    endif
+#    if (__cplusplus >= 201703L)
+#      define CPPEMACS_HAVE_CXX17
+#    endif
+#    if (__cplusplus >= 202002L)
+#      define CPPEMACS_HAVE_CXX20
+#    endif
+#  endif
+#endif
+
 #ifndef CPPEMACS_MODULE_INIT_HEADER_HACK
 /** @addtogroup cppemacs_optional
  *@{*/
+#  ifdef _MSC_VER
+#    define CPPEMACS_MODULE_INIT_HEADER_HACK 1
+#  else
 /**
  * @brief Define as 1 before including to work around the missing
  * noexcept specifier on `emacs_module_init()` in `<emacs-module.h>`
  * in Emacs 25.
+ *
+ * This is also required on MSVC to work around the fact that
+ * `<emacs-module.h>` uses a `__cplusplus` comparison to declare
+ * noexcept, which isn't correct on MSVC either.
  */
-#  define CPPEMACS_MODULE_INIT_HEADER_HACK 0
+#    define CPPEMACS_MODULE_INIT_HEADER_HACK 0
+#  endif
 /**@}*/
 #endif
 
@@ -46,6 +79,21 @@
 
 #include <emacs-module.h>
 
+// MSVC-specific hacks...
+#ifdef _MSC_VER
+// define them in case someone wants to use them
+#  undef EMACS_NOEXCEPT
+#  define EMACS_NOEXCEPT noexcept
+#  ifdef CPPEMACS_HAVE_CXX17
+#    undef EMACS_NOEXCEPT_TYPEDEF
+#    define EMACS_NOEXCEPT_TYPEDEF noexcept
+#  endif
+// reinterpret_cast on MSVC to work around the missing noexcept specifiers
+#  define CPPEMACS_MSVC_ONLY_REINTERPRET(T, X) reinterpret_cast<T>(X)
+#else
+#  define CPPEMACS_MSVC_ONLY_REINTERPRET(T, X) X
+#endif
+
 #if CPPEMACS_MODULE_INIT_HEADER_HACK
 #  undef emacs_module_init
 #endif
@@ -57,6 +105,7 @@
 #include <utility>
 #include <type_traits>
 #include <string>
+#include <typeinfo>
 
 /**
  * @page GFDL-1.3-or-later GNU Free Documentation License
@@ -127,10 +176,10 @@ namespace cppemacs {}
  * #include <cppemacs/all.hpp>
  *
  * // Indicate that the dynamic module's code is released under the GPL or compatible license.
- * int plugin_is_GPL_compatible;
+ * CPPEMACS_EXPORT int plugin_is_GPL_compatible;
  *
  * // Called when the module is loaded.
- * int emacs_module_function(emacs_runtime *rt) noexcept {
+ * CPPEMACS_EXPORT int emacs_module_init(emacs_runtime *rt) noexcept {
  *   // Perform module initialization, e.g. registering functions with `defalias`.
  * }
  * @endcode
@@ -282,7 +331,7 @@ template <typename T> using remove_reference_t = typename std::remove_reference<
 /** @brief C++14 @c std::void_t */
 template <typename...T> using void_t = void;
 
-#if (defined(__cpp_lib_is_invocable) || (__cplusplus >= 201703L)) || defined(CPPEMACS_DOXYGEN_RUNNING)
+#if (defined(__cpp_lib_is_invocable) || defined(CPPEMACS_HAVE_CXX17)) || defined(CPPEMACS_DOXYGEN_RUNNING)
 #define CPPEMACS_HAVE_IS_INVOCABLE 1
 /** @brief C++17 @c std::invoke_result_t approximation. */
 template <typename T, typename ...Args> using invoke_result_t = std::invoke_result_t<T, Args...>;
@@ -291,7 +340,7 @@ template <typename T, typename ...Args> using invoke_result_t =
   decltype(std::declval<detail::decay_t<T>>()(std::declval<Args>()...));
 #endif
 
-#if (defined(__cpp_lib_integer_sequence) || (__cplusplus >= 201304L)) || defined(CPPEMACS_DOXYGEN_RUNNING)
+#if (defined(__cpp_lib_integer_sequence) || defined(CPPEMACS_HAVE_CXX14)) || defined(CPPEMACS_DOXYGEN_RUNNING)
 /** @brief C++14 `std::index_sequence` */
 template <size_t...Idx> using index_sequence = std::index_sequence<Idx...>;
 /** @brief C++14 `std::make_index_sequence` */
@@ -351,7 +400,7 @@ using value = emacs_value;
  * @ref emacs_env that can be used until emacs_module_init() returns.
  *
  * @code
- * extern "C" int emacs_module_init(emacs_runtime *rt) noexcept {
+ * CPPEMACS_EXPORT int emacs_module_init(emacs_runtime *rt) noexcept {
  *   if (rt->size < sizeof(*rt)) return 1; // check size (though it is unlikely to change)
  *   envw env = rt->get_environment(rt);
  *   // ...
@@ -362,9 +411,34 @@ using emacs_runtime = ::emacs_runtime;
 
 }
 
+#ifndef CPPEMACS_EXPORT
+#  ifdef _MSC_VER
+#    define CPPEMACS_EXPORT __declspec(dllexport)
+#  else
+/**
+ * @brief Declare a symbol as being exported from the shared library.
+ *
+ * On Windows, expands to `__declspec(dllexport)`, and nothing on
+ * other platforms.
+ *
+ * If you have your own export header, such as with CMake
+ * `GenerateExportHeader`, you might need to put <br><code>#define
+ * CPPEMACS_EXPORT MY_LIBRARY_EXPORT</code> before including this
+ * file, so it matches emacs_module_init().
+ */
+#    define CPPEMACS_EXPORT
+#  endif
+#endif
+
 /**
  * @brief The main entrypoint of the dynamic module.
  * @manual{Module-Initialization.html#index-emacs_005fmodule_005finit-1}
+ *
+ * @info A dynamic module is a shared library from which this function
+ * can be loaded. Dynamic modules also have to be GPL compatible, and
+ * export a `plugin_is_GPL_compatible` symbol to indicate this
+ * fact. Exposing these symbols requires extra steps in some cases,
+ * such as when compiling on Windows. See @ref CPPEMACS_EXPORT.
  *
  * @param runtime The @ref cppemacs::emacs_runtime "emacs_runtime", which can be
  * used to obtain an @ref cppemacs::emacs_env "emacs_env" to access the module API.
@@ -374,7 +448,7 @@ using emacs_runtime = ::emacs_runtime;
  *
  * @code
  * using namespace cppemacs;
- * extern "C" int emacs_module_init(emacs_runtime *rt) noexcept {
+ * CPPEMACS_EXPORT int emacs_module_init(emacs_runtime *rt) noexcept {
  *   // check size (though it is unlikely to change)
  *   if (rt->size < sizeof(*rt)) return 1;
  *   envw env = rt->get_environment(rt);
@@ -385,20 +459,21 @@ using emacs_runtime = ::emacs_runtime;
  * }
  * @endcode
  */
-extern "C" int emacs_module_init(cppemacs::emacs_runtime *runtime) noexcept;
+extern "C" CPPEMACS_EXPORT int
+emacs_module_init(cppemacs::emacs_runtime *runtime) noexcept;
 
 namespace cppemacs {
 
 /** @brief MAX_ARITY for variadic functions. */
 static constexpr ptrdiff_t emacs_variadic_function = ::emacs_variadic_function;
 
-#if (defined(__cpp_lib_string_view) || (__cplusplus >= 201606L)) || defined(CPPEMACS_DOXYGEN_RUNNING)
+#if (defined(__cpp_lib_string_view) || defined(CPPEMACS_HAVE_CXX17)) || defined(CPPEMACS_DOXYGEN_RUNNING)
 #define CPPEMACS_HAVE_STRING_VIEW 1
 #endif
 
 // before C++17, the standard forbids noexcept in typedefs, but not in function parameters,
 // so when using these as function parameters they should (conditionally) be expanded
-#if (defined(__cpp_noexcept_function_type) || (__cplusplus >= 201703L)) || defined(CPPEMACS_DOXYGEN_RUNNING)
+#if defined(CPPEMACS_HAVE_CXX17) || defined(CPPEMACS_DOXYGEN_RUNNING)
 #define CPPEMACS_HAVE_NOEXCEPT_TYPEDEFS 1
 /**
  * @brief A raw module function, for envw::make_function().
@@ -612,7 +687,7 @@ struct cell;
 template <typename T> struct expected_type_t {};
 
 #ifndef CPPEMACS_DOXYGEN_RUNNING
-#if defined(__cpp_if_constexpr) || (__cplusplus >= 201606L)
+#if defined(__cpp_if_constexpr) || defined(CPPEMACS_HAVE_CXX17)
 /** @brief Defined if `if constexpr` is available */
 #  define CPPEMACS_HAVE_IF_CONSTEXPR 1
 #  define CPPEMACS_MAYBE_IF_CONSTEXPR if constexpr
@@ -826,7 +901,7 @@ public:
    * (e.g. is_compatible<29>() will return true even when running Emacs 28).
    *
    * @code
-   * int emacs_module_init(emacs_runtime *rt) {
+   * CPPEMACS_EXPORT int emacs_module_init(emacs_runtime *rt) noexcept {
    *   envw env = rt->get_environment(rt);
    *   if (!env.is_compatible<27>()) return 1;
    * }
@@ -888,7 +963,7 @@ public:
    * and raises an error otherwise.
    *
    * @code
-   * int emacs_module_init(emacs_runtime *rt) {
+   * CPPEMACS_EXPORT int emacs_module_init(emacs_runtime *rt) noexcept {
    *   envw env = rt->get_environment(rt);
    *   env.run_catching([&]() {
    *     env.check_compatible<27>();
@@ -1177,11 +1252,15 @@ public:
 
 #if CPPEMACS_HAVE_NOEXCEPT_TYPEDEFS
   /** @brief Extract the finalizer from a `user-ptr` object. @manual{Module-Values.html#index-get_005fuser_005ffinalizer} */
-  emacs_finalizer get_user_finalizer(value uptr) const noexcept { return raw->get_user_finalizer(raw, uptr); }
+  emacs_finalizer get_user_finalizer(value uptr) const noexcept
+  { return CPPEMACS_MSVC_ONLY_REINTERPRET(emacs_finalizer, raw->get_user_finalizer(raw, uptr)); }
   /** @brief Set the finalizer of a `user-ptr` object. @manual{Module-Values.html#index-set_005fuser_005ffinalizer} */
   void set_user_finalizer(value uptr, emacs_finalizer fin) const noexcept { return raw->set_user_finalizer(raw, uptr, fin); }
 #else
-  void (*get_user_finalizer(value uptr) const noexcept)(void*) noexcept { return raw->get_user_finalizer(raw, uptr); }
+  void (*get_user_finalizer(value uptr) const noexcept)(void*) noexcept
+  { return CPPEMACS_MSVC_ONLY_REINTERPRET(
+      void (*)(void*) noexcept,
+      raw->get_user_finalizer(raw, uptr)); }
   void set_user_finalizer(value uptr, void (*fin)(void*) noexcept) const noexcept { return raw->set_user_finalizer(raw, uptr, fin); }
 #endif
 
@@ -1237,11 +1316,15 @@ public:
 
 #if CPPEMACS_HAVE_NOEXCEPT_TYPEDEFS
   /** @brief Get the finalizer of a module function. @manual{Module-Functions.html#index-get_005ffunction_005ffinalizer} */
-  emacs_finalizer get_function_finalizer(value arg) const noexcept { return raw->get_function_finalizer(raw, arg); }
+  emacs_finalizer get_function_finalizer(value arg) const noexcept
+  { return CPPEMACS_MSVC_ONLY_REINTERPRET(emacs_finalizer, raw->get_function_finalizer(raw, arg)); }
   /** @brief Set the finalizer of a module function. @manual{Module-Functions.html#index-set_005ffunction_005ffinalizer} */
   void set_function_finalizer(value arg, emacs_finalizer fin) const noexcept { return raw->set_function_finalizer(raw, arg, fin); }
 #else
-  void (*get_function_finalizer (value arg) const noexcept)(void*) noexcept { return raw->get_function_finalizer(raw, arg); }
+  void (*get_function_finalizer (value arg) const noexcept)(void*) noexcept
+  { return CPPEMACS_MSVC_ONLY_REINTERPRET(
+      void (*)(void *) noexcept,
+      raw->get_function_finalizer(raw, arg)); }
   void set_function_finalizer(value arg, void (*fin)(void*) noexcept) const noexcept { return raw->set_function_finalizer(raw, arg, fin); }
 #endif
 
@@ -1308,44 +1391,46 @@ private:
     return std::forward<F>(f)();
   }
 
+  static void exception_ptr_fin(void *v) noexcept {
+    delete reinterpret_cast<std::exception_ptr*>(v);
+  }
+
   /* Extracted to a non-generic (over F) function, to reduce code size, and
    * for the (not correctness-bearing) `static bool is_init;`. */
   template <bool Box>
   void run_catching_handle_current(std::integral_constant<bool, Box>) const noexcept {
     if (non_local_exit_check()) return;
     try {
-      throw;
-    } catch (const signalled &s) {
-      non_local_exit_signal(s.symbol, s.data);
-    } catch (const thrown &s) {
-      non_local_exit_throw(s.symbol, s.data);
-    } catch (const non_local_exit &) {
-      CPPEMACS_MAYBE_IF_CONSTEXPR(Box) {
+      try {
         throw;
-      } else {
+      } catch (const signalled &s) {
+        non_local_exit_signal(s.symbol, s.data);
+      } catch (const thrown &s) {
+        non_local_exit_throw(s.symbol, s.data);
+      } catch (const non_local_exit &) {
+        CPPEMACS_MAYBE_IF_CONSTEXPR(Box) {
+          throw;
+        } else {
+          funcall(
+            intern("error"),
+            {make_string("Expected non-local exit")}
+          );
+        }
+      } catch (const std::exception &err) {
+        CPPEMACS_MAYBE_IF_CONSTEXPR(Box) {
+          // std::runtime_error is thrown directly as error
+          if (typeid(err) != typeid(std::runtime_error)) {
+            throw;
+          }
+        }
+        const char *str = err.what();
         funcall(
           intern("error"),
-          {make_string("Expected non-local exit")}
+          {make_string(str, std::char_traits<char>::length(str))}
         );
       }
-    } catch (const std::exception &err) {
-      CPPEMACS_MAYBE_IF_CONSTEXPR(Box) {
-        // std::runtime_error is thrown directly as error
-        if (typeid(err) != typeid(std::runtime_error)) {
-          throw;
-        }
-      }
-      const char *str = err.what();
-      funcall(
-        intern("error"),
-        {make_string(str, std::char_traits<char>::length(str))}
-      );
     } catch (...) {
       CPPEMACS_MAYBE_IF_CONSTEXPR(Box) {
-        void (*fin)(void *) noexcept = [](void *v) noexcept
-        { delete reinterpret_cast<std::exception_ptr*>(v); };
-        auto uptr_ptr = new std::exception_ptr(std::current_exception());
-
         static bool is_init = false;
         value tag = intern("cppemacs--exception");
         if (!is_init) {
@@ -1356,8 +1441,19 @@ private:
           is_init = true;
         }
 
-        value uptr = make_user_ptr(fin, uptr_ptr);
-        funcall(intern("signal"), {tag, uptr});
+        if (!non_local_exit_check()) {
+          auto eptr = new std::exception_ptr(std::current_exception());
+          value uptr = make_user_ptr(
+            &envw::exception_ptr_fin,
+            static_cast<void *>(eptr)
+          );
+          if (non_local_exit_check()) {
+            // delete if it didn't make it to the GC
+            delete eptr;
+          } else {
+            funcall(intern("signal"), {tag, uptr});
+          }
+        }
       } else {
         funcall(
           intern("error"),
@@ -1595,6 +1691,11 @@ public:
     value argv[] = {nv->*std::forward<Args>(args)...};
     return call(sizeof...(Args), argv);
   }
+
+#ifndef CPPEMACS_DOXYGEN_RUNNING
+  // 0-arity overload, doesn't create a 0-size array
+  cell operator()() const noexcept { return call(0, nullptr); }
+#endif
 
   /**
    * @brief Call this value as a function on the given arguments.

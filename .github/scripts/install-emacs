@@ -19,7 +19,7 @@ emacs_older_than() {
     version_less "$EMACS_VERSION" "$1"
 }
 
-if emacs_older_than 25 ; then
+if [ -z "$EMACS_VERSION" ] || emacs_older_than 25 ; then
     echo "Only Emacs 25+ supported"
     exit 1
 fi
