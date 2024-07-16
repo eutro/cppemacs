@@ -1,0 +1,6 @@
+<map id="Type Conversions" name="Type Conversions">
+<area shape="rect" id="Node000001" title="Conversion functions between C++ and Emacs values." alt="" coords="5,59,141,85"/>
+<area shape="rect" id="Node000002" href="$group__cppemacs__core.html" title="Core wrapper type definitions for the Emacs module API." alt="" coords="301,10,395,35"/>
+<area shape="rect" id="Node000004" href="$group__cppemacs__literals.html" title="Custom string literals for Emacs values." alt="" coords="313,59,383,85"/>
+<area shape="rect" id="Node000003" href="$group__cppemacs__utilities.html" title="Utility types built on top of the core cppemacs API." alt="" coords="311,119,385,145"/>
+</map>

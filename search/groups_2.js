@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['optional_20features_322',['Optional Features',['../group__cppemacs__optional.html',1,'']]]
+  ['literals_0',['Literals',['../group__cppemacs__literals.html',1,'']]]
 ];

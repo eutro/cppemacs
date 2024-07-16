@@ -1,4 +1,5 @@
 <map id="cppemacs::detail::is_integral_smaller_than_intmax&lt; T &gt;" name="cppemacs::detail::is_integral_smaller_than_intmax&lt; T &gt;">
-<area shape="rect" id="node1" title="true if T is an integral and its range of values is a subseet of intmax_t" alt="" coords="268,27,439,83"/>
-<area shape="rect" id="node2" title=" " alt="" coords="5,5,220,105"/>
+<area shape="rect" id="Node000001" title="true if T is an integral and its range of values is a subseet of intmax_t" alt="" coords="268,27,439,82"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="5,5,220,104"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="234,52,268,52,268,57,234,57"/>
 </map>

@@ -1,14 +1,15 @@
 var indexSectionsWithContent =
 {
-  0: "bcdefgilmnopqrstuv",
+  0: "bcdefgilmnopqrstuvw",
   1: "cefimnpstu",
   2: "c",
   3: "bcdefgimnoprstuv",
   4: "cdfilmqrst",
   5: "deimrsv",
   6: "fot",
-  7: "clotu",
-  8: "g"
+  7: "cflotu",
+  8: "cdfgl",
+  9: "c"
 };
 
 var indexSectionNames =
@@ -21,7 +22,8 @@ var indexSectionNames =
   5: "typedefs",
   6: "related",
   7: "groups",
-  8: "pages"
+  8: "pages",
+  9: "concepts"
 };
 
 var indexSectionLabels =
@@ -34,6 +36,7 @@ var indexSectionLabels =
   5: "Typedefs",
   6: "Friends",
   7: "Modules",
-  8: "Pages"
+  8: "Pages",
+  9: "Concepts"
 };
 

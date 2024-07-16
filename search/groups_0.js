@@ -1,4 +1,5 @@
 var searchData=
 [
-  ['core_20types_320',['Core Types',['../group__cppemacs__core.html',1,'']]]
+  ['conversions_0',['Type Conversions',['../group__cppemacs__conversions.html',1,'']]],
+  ['core_20types_1',['Core Types',['../group__cppemacs__core.html',1,'']]]
 ];

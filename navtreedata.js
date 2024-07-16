@@ -31,16 +31,16 @@ var NAVTREE =
     [ "Dynamic Modules", "index.html#autotoc_md2", null ],
     [ "Interfacing with Emacs", "index.html#autotoc_md3", null ],
     [ "GNU Free Documentation License", "GFDL-1_83-or-later.html", null ],
-    [ "Modules", "modules.html", "modules" ],
+    [ "Topics", "topics.html", "topics" ],
     [ "Namespaces", "namespaces.html", [
       [ "Namespace List", "namespaces.html", "namespaces_dup" ],
       [ "Namespace Members", "namespacemembers.html", [
         [ "All", "namespacemembers.html", null ],
         [ "Functions", "namespacemembers_func.html", null ],
-        [ "Variables", "namespacemembers_vars.html", null ],
         [ "Typedefs", "namespacemembers_type.html", null ]
       ] ]
     ] ],
+    [ "Concepts", "concepts.html", "concepts" ],
     [ "Classes", "annotated.html", [
       [ "Class List", "annotated.html", "annotated_dup" ],
       [ "Class Index", "classes.html", null ],
@@ -50,7 +50,7 @@ var NAVTREE =
         [ "Functions", "functions_func.html", null ],
         [ "Variables", "functions_vars.html", null ],
         [ "Typedefs", "functions_type.html", null ],
-        [ "Related Functions", "functions_rela.html", null ]
+        [ "Related Symbols", "functions_rela.html", null ]
       ] ]
     ] ],
     [ "Files", "files.html", [
@@ -61,8 +61,7 @@ var NAVTREE =
 
 var NAVTREEINDEX =
 [
-"GFDL-1_83-or-later.html",
-"structcppemacs_1_1literals_1_1estring__literal.html#a5d9f2610bfde7ae60f9945d39cddaa35"
+"GFDL-1_83-or-later.html"
 ];
 
 var SYNCONMSG = 'click to disable panel synchronisation';
