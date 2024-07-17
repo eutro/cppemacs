@@ -16,6 +16,7 @@ jobs:
         os:
           - ubuntu-latest
           - macos-13 # latest x86_64
+          - windows-latest
 
     runs-on: ${{matrix.os}}
     env:
