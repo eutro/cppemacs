@@ -9,14 +9,17 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        emacs_version:
-          - 26.2 # first version to include module-env.h in installation
-          - 27.2
-          - 28.2 # latest major with new features
         os:
           - ubuntu-latest
           - macos-13 # latest x86_64
           - windows-latest
+        emacs_version:
+          - 26.2 # first version to include module-env.h in installation
+          - 27.2
+          - 28.2 # latest major with new features
+        exclude:
+          # doesn't have dynamic modules enabled
+          - { os: windows-latest, emacs_version: 26.2 }
 
     runs-on: ${{matrix.os}}
     env:
@@ -65,9 +68,3 @@ jobs:
 
     - name: Test
       run: ctest --test-dir "${{github.workspace}}/build" -C debug --output-on-failure
-
-    - name: Setup tmate session
-      if: ${{ failure() }}
-      uses: mxschmitt/action-tmate@v3
-      with:
-        limit-access-to-actor: true
