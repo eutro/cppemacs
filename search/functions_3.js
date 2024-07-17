@@ -1,6 +1,6 @@
 var searchData=
 [
-  ['emacs_5fmodule_5finit_0',['emacs_module_init',['../group__cppemacs__core.html#ga7240e646f9bbe16f92711b868329cd00',1,'emacs_module_init(emacs_runtime *rt) noexcept:&#160;brief_example.cpp'],['../group__cppemacs__core.html#ga7240e646f9bbe16f92711b868329cd00',1,'emacs_module_init(cppemacs::emacs_runtime *runtime) noexcept:&#160;brief_example.cpp']]],
+  ['emacs_5fmodule_5finit_0',['emacs_module_init',['../group__cppemacs__core.html#ga3a13d40e5da070f30ce46bbcea618f01',1,'emacs_module_init(emacs_runtime *rt) noexcept:&#160;brief_example.cpp'],['../group__cppemacs__core.html#ga3a13d40e5da070f30ce46bbcea618f01',1,'emacs_module_init(cppemacs::emacs_runtime *runtime) noexcept:&#160;brief_example.cpp']]],
   ['end_1',['end',['../structcppemacs_1_1spreader__restargs.html#a5954ccc660cae3a2f27e93791f850bf4',1,'cppemacs::spreader_restargs']]],
   ['env_2',['env',['../structcppemacs_1_1cell.html#a03976ecd26d1f9ec24b4a71b7a694abe',1,'cppemacs::cell']]],
   ['envw_3',['envw',['../structcppemacs_1_1envw.html#a701cbd00a3b4b602d286258b0d43fc76',1,'cppemacs::envw']]],
