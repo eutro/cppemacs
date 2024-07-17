@@ -1,15 +1,8 @@
 var searchData=
 [
-  ['index_5fsequence_0',['index_sequence',['../group__cppemacs__core.html#ga20d741ba06a4b2153a826d405c112a93',1,'cppemacs::detail']]],
-  ['inject_1',['inject',['../structcppemacs_1_1envw.html#a1eec660dd9e009d04c7f237750a74324',1,'cppemacs::envw']]],
-  ['interfacing_20with_20emacs_2',['Interfacing with Emacs',['../index.html#autotoc_md3',1,'']]],
-  ['intern_3',['intern',['../structcppemacs_1_1envw.html#aaa610d1bed0752f07707913d1b496693',1,'cppemacs::envw']]],
-  ['introduction_4',['Introduction',['../index.html#autotoc_md0',1,'']]],
-  ['invoke_5',['invoke',['../structcppemacs_1_1module__function.html#a40f3a23e479ab296e6299e971d7d7e40',1,'cppemacs::module_function']]],
-  ['invoke_5fresult_5ft_6',['invoke_result_t',['../group__cppemacs__core.html#gac178ba75a935094d28d7b37e083e2804',1,'cppemacs::detail']]],
-  ['is_5fcompatible_7',['is_compatible',['../structcppemacs_1_1envw.html#ac40343a3ce5e040369dd433cef0f6b29',1,'cppemacs::envw']]],
-  ['is_5fcompatible_5frelaxed_8',['is_compatible_relaxed',['../structcppemacs_1_1envw.html#a46c5a5102a8f2a2adb1dd64bcff12c71',1,'cppemacs::envw']]],
-  ['is_5fintegral_5fsmaller_5fthan_5fintmax_9',['is_integral_smaller_than_intmax',['../structcppemacs_1_1detail_1_1is__integral__smaller__than__intmax.html',1,'cppemacs::detail']]],
-  ['is_5fnot_5fnil_10',['is_not_nil',['../structcppemacs_1_1envw.html#af3a483624852313bc3fef4b82098ab8e',1,'cppemacs::envw']]],
-  ['is_5fvariadic_11',['is_variadic',['../structcppemacs_1_1spreader__arity.html#a2211d81560d64e40ae6db68fe7bf1cf4',1,'cppemacs::spreader_arity']]]
+  ['get_0',['get',['../structcppemacs_1_1funcall__exit.html#ae4839a27ff556207e02db5ab7d140331',1,'cppemacs::funcall_exit::get()'],['../structcppemacs_1_1process__input__result.html#a36b18201ab947554dd8c014bd5e2bcfd',1,'cppemacs::process_input_result::get()'],['../structcppemacs_1_1user__ptr.html#a91776606cfdb4d35c5f779a94f51a2e4',1,'cppemacs::user_ptr::get()'],['../structcppemacs_1_1cell__extracted.html#ab78f1afde7b9e5e9d659e936a5424fd8',1,'cppemacs::cell_extracted::get()']]],
+  ['get_5ffunction_5ffinalizer_1',['get_function_finalizer',['../structcppemacs_1_1envw.html#a360928dfaf35d6d3a8aa40cdd0fdea0a',1,'cppemacs::envw']]],
+  ['get_5fuser_5ffinalizer_2',['get_user_finalizer',['../structcppemacs_1_1envw.html#abdb376f86e2ab78be1633417f7255dbe',1,'cppemacs::envw']]],
+  ['get_5fuser_5fptr_3',['get_user_ptr',['../structcppemacs_1_1envw.html#a67207ee2eba940e953dd6afb3f76adbd',1,'cppemacs::envw']]],
+  ['gnu_20free_20documentation_20license_4',['GNU Free Documentation License',['../GFDL-1_83-or-later.html',1,'']]]
 ];

@@ -1,7 +1,7 @@
 var structcppemacs_1_1envw =
 [
     [ "envw", "structcppemacs_1_1envw.html#a701cbd00a3b4b602d286258b0d43fc76", null ],
-    [ "check_compatible", "structcppemacs_1_1envw.html#a826907bd575e978486e692f43af036d7", null ],
+    [ "assert_compatible", "structcppemacs_1_1envw.html#ac66cea2ad21bfe21a0c284fbf388d663", null ],
     [ "copy_string_contents", "structcppemacs_1_1envw.html#a9434165b5e0bb070e029284bb0ded477", null ],
     [ "eq", "structcppemacs_1_1envw.html#a41d2663b739140720be0ee7e166cc16b", null ],
     [ "extract", "structcppemacs_1_1envw.html#a25ee0a095d9e15b7da3588ca2dcb88c3", null ],

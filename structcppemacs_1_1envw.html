@@ -172,10 +172,10 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a46c5a5102a8f2a2adb1dd64bcff12c71"><td class="memTemplItemLeft" align="right" valign="top">bool&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="structcppemacs_1_1envw.html#a46c5a5102a8f2a2adb1dd64bcff12c71">is_compatible_relaxed</a> () const noexcept</td></tr>
 <tr class="memdesc:a46c5a5102a8f2a2adb1dd64bcff12c71"><td class="mdescLeft">&#160;</td><td class="mdescRight">Like <a class="el" href="structcppemacs_1_1envw.html#ac40343a3ce5e040369dd433cef0f6b29" title="Check if this environment supports the module API of the given Emacs major version....">is_compatible()</a>, but doesn't fail at compile time if the <code>MajorVersion</code> is newer than the one we are compiling against.  <br /></td></tr>
 <tr class="separator:a46c5a5102a8f2a2adb1dd64bcff12c71"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a826907bd575e978486e692f43af036d7" id="r_a826907bd575e978486e692f43af036d7"><td class="memTemplParams" colspan="2">template&lt;size_t MajorVersion&gt; </td></tr>
-<tr class="memitem:a826907bd575e978486e692f43af036d7"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="structcppemacs_1_1envw.html#a826907bd575e978486e692f43af036d7">check_compatible</a> () const noexcept(false)</td></tr>
-<tr class="memdesc:a826907bd575e978486e692f43af036d7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Check if this environment supports the given major version's module API, and raises an error otherwise.  <br /></td></tr>
-<tr class="separator:a826907bd575e978486e692f43af036d7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac66cea2ad21bfe21a0c284fbf388d663" id="r_ac66cea2ad21bfe21a0c284fbf388d663"><td class="memTemplParams" colspan="2">template&lt;size_t MajorVersion&gt; </td></tr>
+<tr class="memitem:ac66cea2ad21bfe21a0c284fbf388d663"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="structcppemacs_1_1envw.html#ac66cea2ad21bfe21a0c284fbf388d663">assert_compatible</a> () const noexcept(false)</td></tr>
+<tr class="memdesc:ac66cea2ad21bfe21a0c284fbf388d663"><td class="mdescLeft">&#160;</td><td class="mdescRight">Check if this environment supports the given major version's module API, and raises an error otherwise.  <br /></td></tr>
+<tr class="separator:ac66cea2ad21bfe21a0c284fbf388d663"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a1eec660dd9e009d04c7f237750a74324" id="r_a1eec660dd9e009d04c7f237750a74324"><td class="memTemplParams" colspan="2">template&lt;<a class="el" href="group__cppemacs__conversions.html#ga2ac10d5f485b87f1b5ccb279891e41ea">TO_EMACS_TYPE</a> T&gt; </td></tr>
 <tr class="memitem:a1eec660dd9e009d04c7f237750a74324"><td class="memTemplItemLeft" align="right" valign="top"><a class="el" href="structcppemacs_1_1cell.html">cell</a>&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="structcppemacs_1_1envw.html#a1eec660dd9e009d04c7f237750a74324">inject</a> (T &amp;&amp;arg) const</td></tr>
 <tr class="memdesc:a1eec660dd9e009d04c7f237750a74324"><td class="mdescLeft">&#160;</td><td class="mdescRight">Perform an arbitrary conversion to Emacs.  <br /></td></tr>
@@ -371,8 +371,8 @@ Static Public Member Functions</h2></td></tr>
 </div>
 </div>
 <h2 class="groupheader">Member Function Documentation</h2>
-<a id="a826907bd575e978486e692f43af036d7" name="a826907bd575e978486e692f43af036d7"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a826907bd575e978486e692f43af036d7">&#9670;&#160;</a></span>check_compatible()</h2>
+<a id="ac66cea2ad21bfe21a0c284fbf388d663" name="ac66cea2ad21bfe21a0c284fbf388d663"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac66cea2ad21bfe21a0c284fbf388d663">&#9670;&#160;</a></span>assert_compatible()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -383,7 +383,7 @@ template&lt;size_t MajorVersion&gt; </div>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">void cppemacs::envw::check_compatible </td>
+          <td class="memname">void cppemacs::envw::assert_compatible </td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
           <td> const</td>
@@ -400,15 +400,15 @@ template&lt;size_t MajorVersion&gt; </div>
 <div class="fragment"><div class="line"><a class="code hl_define" href="group__cppemacs__core.html#ga551d403bb37596654a499384db7561cf">CPPEMACS_EXPORT</a> <span class="keywordtype">int</span> <a class="code hl_function" href="group__cppemacs__core.html#ga7240e646f9bbe16f92711b868329cd00">emacs_module_init</a>(<a class="code hl_typedef" href="group__cppemacs__core.html#ga033e1c05132033352240fe379b14cf9d">emacs_runtime</a> *rt) <span class="keyword">noexcept</span> {</div>
 <div class="line">  <a class="code hl_struct" href="structcppemacs_1_1envw.html">envw</a> env = rt-&gt;get_environment(rt);</div>
 <div class="line">  env.<a class="code hl_function" href="structcppemacs_1_1envw.html#aa977b2b678096adf617ec7500359d353">run_catching</a>([&amp;]() {</div>
-<div class="line">    env.<a class="code hl_function" href="structcppemacs_1_1envw.html#a826907bd575e978486e692f43af036d7">check_compatible</a>&lt;27&gt;();</div>
+<div class="line">    env.<a class="code hl_function" href="structcppemacs_1_1envw.html#ac66cea2ad21bfe21a0c284fbf388d663">assert_compatible</a>&lt;27&gt;();</div>
 <div class="line">  });</div>
 <div class="line">}</div>
 <div class="ttc" id="agroup__cppemacs__core_html_ga033e1c05132033352240fe379b14cf9d"><div class="ttname"><a href="group__cppemacs__core.html#ga033e1c05132033352240fe379b14cf9d">cppemacs::emacs_runtime</a></div><div class="ttdeci">::emacs_runtime emacs_runtime</div><div class="ttdoc">Struct passed to emacs_module_init().</div><div class="ttdef"><b>Definition</b> core.hpp:410</div></div>
 <div class="ttc" id="agroup__cppemacs__core_html_ga551d403bb37596654a499384db7561cf"><div class="ttname"><a href="group__cppemacs__core.html#ga551d403bb37596654a499384db7561cf">CPPEMACS_EXPORT</a></div><div class="ttdeci">#define CPPEMACS_EXPORT</div><div class="ttdoc">Declare a symbol as being exported from the shared library.</div><div class="ttdef"><b>Definition</b> core.hpp:429</div></div>
 <div class="ttc" id="agroup__cppemacs__core_html_ga7240e646f9bbe16f92711b868329cd00"><div class="ttname"><a href="group__cppemacs__core.html#ga7240e646f9bbe16f92711b868329cd00">emacs_module_init</a></div><div class="ttdeci">CPPEMACS_EXPORT int emacs_module_init(cppemacs::emacs_runtime *runtime) noexcept</div><div class="ttdoc">The main entrypoint of the dynamic module. See the manual.</div><div class="ttdef"><b>Definition</b> brief_example.cpp:34</div></div>
 <div class="ttc" id="astructcppemacs_1_1envw_html"><div class="ttname"><a href="structcppemacs_1_1envw.html">cppemacs::envw</a></div><div class="ttdoc">General Emacs environment wrapper.</div><div class="ttdef"><b>Definition</b> core.hpp:876</div></div>
-<div class="ttc" id="astructcppemacs_1_1envw_html_a826907bd575e978486e692f43af036d7"><div class="ttname"><a href="structcppemacs_1_1envw.html#a826907bd575e978486e692f43af036d7">cppemacs::envw::check_compatible</a></div><div class="ttdeci">void check_compatible() const noexcept(false)</div><div class="ttdoc">Check if this environment supports the given major version's module API, and raises an error otherwis...</div><div class="ttdef"><b>Definition</b> core.hpp:982</div></div>
 <div class="ttc" id="astructcppemacs_1_1envw_html_aa977b2b678096adf617ec7500359d353"><div class="ttname"><a href="structcppemacs_1_1envw.html#aa977b2b678096adf617ec7500359d353">cppemacs::envw::run_catching</a></div><div class="ttdeci">auto run_catching(F &amp;&amp;f) const noexcept -&gt; detail::invoke_result_t&lt; F &gt;</div><div class="ttdoc">Run f() and catch all exceptions, propagating them to Emacs via signal or throw.</div><div class="ttdef"><b>Definition</b> core.hpp:1542</div></div>
+<div class="ttc" id="astructcppemacs_1_1envw_html_ac66cea2ad21bfe21a0c284fbf388d663"><div class="ttname"><a href="structcppemacs_1_1envw.html#ac66cea2ad21bfe21a0c284fbf388d663">cppemacs::envw::assert_compatible</a></div><div class="ttdeci">void assert_compatible() const noexcept(false)</div><div class="ttdoc">Check if this environment supports the given major version's module API, and raises an error otherwis...</div><div class="ttdef"><b>Definition</b> core.hpp:982</div></div>
 </div><!-- fragment --><dl class="section see"><dt>See also</dt><dd><a class="el" href="structcppemacs_1_1envw.html#ac40343a3ce5e040369dd433cef0f6b29" title="Check if this environment supports the module API of the given Emacs major version....">is_compatible()</a> and <a class="el" href="structcppemacs_1_1envw.html#ac2eb49d1993455328a8ec71908578d54" title="Throw an exception with the error message &quot;Emacs major version &lt;MajorVersion&gt; required&quot;.">version_check_error()</a> </dd></dl>
 
 </div>
@@ -954,7 +954,7 @@ template&lt;size_t MajorVersion&gt; </div>
 <div class="line">  <span class="keywordflow">if</span> (!env.<a class="code hl_function" href="structcppemacs_1_1envw.html#ac40343a3ce5e040369dd433cef0f6b29">is_compatible</a>&lt;27&gt;()) <span class="keywordflow">return</span> 1;</div>
 <div class="line">}</div>
 <div class="ttc" id="astructcppemacs_1_1envw_html_ac40343a3ce5e040369dd433cef0f6b29"><div class="ttname"><a href="structcppemacs_1_1envw.html#ac40343a3ce5e040369dd433cef0f6b29">cppemacs::envw::is_compatible</a></div><div class="ttdeci">bool is_compatible() const noexcept</div><div class="ttdoc">Check if this environment supports the module API of the given Emacs major version....</div><div class="ttdef"><b>Definition</b> core.hpp:922</div></div>
-</div><!-- fragment --><dl class="section see"><dt>See also</dt><dd><a class="el" href="structcppemacs_1_1envw.html#a826907bd575e978486e692f43af036d7" title="Check if this environment supports the given major version&#39;s module API, and raises an error otherwis...">check_compatible()</a> which throws an exception if the runtime check fails.</dd>
+</div><!-- fragment --><dl class="section see"><dt>See also</dt><dd><a class="el" href="structcppemacs_1_1envw.html#ac66cea2ad21bfe21a0c284fbf388d663" title="Check if this environment supports the given major version&#39;s module API, and raises an error otherwis...">assert_compatible()</a> which throws an exception if the runtime check fails.</dd>
 <dd>
 <a class="el" href="structcppemacs_1_1envw.html#a46c5a5102a8f2a2adb1dd64bcff12c71" title="Like is_compatible(), but doesn&#39;t fail at compile time if the MajorVersion is newer than the one we a...">is_compatible_relaxed()</a> which returns false, instead of erroring, if the compile-time check fails. </dd></dl>
 
@@ -2327,7 +2327,7 @@ template&lt;size_t MajorVersion&gt; </div>
 
 <p>Throw an exception with the error message <code>"Emacs major version
 &lt;MajorVersion&gt; required"</code>. </p>
-<dl class="section see"><dt>See also</dt><dd><a class="el" href="structcppemacs_1_1envw.html#ac40343a3ce5e040369dd433cef0f6b29" title="Check if this environment supports the module API of the given Emacs major version....">is_compatible()</a> and <a class="el" href="structcppemacs_1_1envw.html#a826907bd575e978486e692f43af036d7" title="Check if this environment supports the given major version&#39;s module API, and raises an error otherwis...">check_compatible()</a> </dd></dl>
+<dl class="section see"><dt>See also</dt><dd><a class="el" href="structcppemacs_1_1envw.html#ac40343a3ce5e040369dd433cef0f6b29" title="Check if this environment supports the module API of the given Emacs major version....">is_compatible()</a> and <a class="el" href="structcppemacs_1_1envw.html#ac66cea2ad21bfe21a0c284fbf388d663" title="Check if this environment supports the given major version&#39;s module API, and raises an error otherwis...">assert_compatible()</a> </dd></dl>
 
 </div>
 </div>
