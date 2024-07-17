@@ -179,6 +179,9 @@ Macros</h2></td></tr>
 <tr class="memitem:gaa1a1d76b9ec039ff2895ea58395c21f2" id="r_gaa1a1d76b9ec039ff2895ea58395c21f2"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__cppemacs__core.html#gaa1a1d76b9ec039ff2895ea58395c21f2">EMACS_MAJOR_VERSION</a>&#160;&#160;&#160;29</td></tr>
 <tr class="memdesc:gaa1a1d76b9ec039ff2895ea58395c21f2"><td class="mdescLeft">&#160;</td><td class="mdescRight">The <em>compile-time</em> major version of Emacs.  <br /></td></tr>
 <tr class="separator:gaa1a1d76b9ec039ff2895ea58395c21f2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga551d403bb37596654a499384db7561cf" id="r_ga551d403bb37596654a499384db7561cf"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__cppemacs__core.html#ga551d403bb37596654a499384db7561cf">CPPEMACS_EXPORT</a></td></tr>
+<tr class="memdesc:ga551d403bb37596654a499384db7561cf"><td class="mdescLeft">&#160;</td><td class="mdescRight">Declare a symbol as being exported from the shared library.  <br /></td></tr>
+<tr class="separator:ga551d403bb37596654a499384db7561cf"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga6ccfebf4642d5452815ca33f8aec0e89" id="r_ga6ccfebf4642d5452815ca33f8aec0e89"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__cppemacs__core.html#ga6ccfebf4642d5452815ca33f8aec0e89">CPPEMACS_SUPPRESS_WCOMPAT_MANGLING_BEGIN</a></td></tr>
 <tr class="memdesc:ga6ccfebf4642d5452815ca33f8aec0e89"><td class="mdescLeft">&#160;</td><td class="mdescRight">On Clang, begin suppressing <code>-Wc++17-compat-mangling</code>.  <br /></td></tr>
 <tr class="separator:ga6ccfebf4642d5452815ca33f8aec0e89"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -226,7 +229,7 @@ Typedefs</h2></td></tr>
 <tr class="memdesc:gabd2db90fff7d715e8649f37147f60a3a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Raw opaque pointer representing an Emacs value. See <a class="el" href="structcppemacs_1_1cell.html">cell</a> for the wrapper, and <a class="el" href="structcppemacs_1_1envw.html">envw</a> for functions that operate on these.  <br /></td></tr>
 <tr class="separator:gabd2db90fff7d715e8649f37147f60a3a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga033e1c05132033352240fe379b14cf9d" id="r_ga033e1c05132033352240fe379b14cf9d"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__cppemacs__core.html#ga033e1c05132033352240fe379b14cf9d">cppemacs::emacs_runtime</a> = ::emacs_runtime</td></tr>
-<tr class="memdesc:ga033e1c05132033352240fe379b14cf9d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Struct passed to <a class="el" href="group__cppemacs__core.html#ga3a13d40e5da070f30ce46bbcea618f01" title="The main entrypoint of the dynamic module. See the manual.">emacs_module_init()</a>.  <br /></td></tr>
+<tr class="memdesc:ga033e1c05132033352240fe379b14cf9d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Struct passed to <a class="el" href="group__cppemacs__core.html#ga7240e646f9bbe16f92711b868329cd00" title="The main entrypoint of the dynamic module. See the manual.">emacs_module_init()</a>.  <br /></td></tr>
 <tr class="separator:ga033e1c05132033352240fe379b14cf9d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga8b10f701e2c3225ed203909023fcbf28" id="r_ga8b10f701e2c3225ed203909023fcbf28"><td class="memItemLeft" align="right" valign="top">using&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__cppemacs__core.html#ga8b10f701e2c3225ed203909023fcbf28">cppemacs::emacs_function</a> = <a class="el" href="group__cppemacs__core.html#gabd2db90fff7d715e8649f37147f60a3a">value</a>(*)(<a class="el" href="group__cppemacs__core.html#gae0592e597dd37c49496e082012c3de92">emacs_env</a> *env, ptrdiff_t nargs, <a class="el" href="group__cppemacs__core.html#gabd2db90fff7d715e8649f37147f60a3a">value</a> *args, void *data) noexcept</td></tr>
 <tr class="memdesc:ga8b10f701e2c3225ed203909023fcbf28"><td class="mdescLeft">&#160;</td><td class="mdescRight">A raw module function, for <a class="el" href="structcppemacs_1_1envw.html#abcfe6e0559744499bdc3c3e7abba5db6" title="Make an Emacs module function from a function pointer and associated data. See the manual.">envw::make_function()</a>.  <br /></td></tr>
@@ -246,11 +249,30 @@ Typedefs</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="func-members" name="func-members"></a>
 Functions</h2></td></tr>
-<tr class="memitem:ga3a13d40e5da070f30ce46bbcea618f01" id="r_ga3a13d40e5da070f30ce46bbcea618f01"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__cppemacs__core.html#ga3a13d40e5da070f30ce46bbcea618f01">emacs_module_init</a> (<a class="el" href="group__cppemacs__core.html#ga033e1c05132033352240fe379b14cf9d">cppemacs::emacs_runtime</a> *runtime) noexcept</td></tr>
-<tr class="memdesc:ga3a13d40e5da070f30ce46bbcea618f01"><td class="mdescLeft">&#160;</td><td class="mdescRight">The main entrypoint of the dynamic module. See the <a href="https://www.gnu.org/software/emacs/manual/html_node/elisp/Module-Initialization.html#index-emacs_005fmodule_005finit-1">manual</a>.  <br /></td></tr>
-<tr class="separator:ga3a13d40e5da070f30ce46bbcea618f01"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ga7240e646f9bbe16f92711b868329cd00" id="r_ga7240e646f9bbe16f92711b868329cd00"><td class="memItemLeft" align="right" valign="top"><a class="el" href="group__cppemacs__core.html#ga551d403bb37596654a499384db7561cf">CPPEMACS_EXPORT</a> int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__cppemacs__core.html#ga7240e646f9bbe16f92711b868329cd00">emacs_module_init</a> (<a class="el" href="group__cppemacs__core.html#ga033e1c05132033352240fe379b14cf9d">cppemacs::emacs_runtime</a> *runtime) noexcept</td></tr>
+<tr class="memdesc:ga7240e646f9bbe16f92711b868329cd00"><td class="mdescLeft">&#160;</td><td class="mdescRight">The main entrypoint of the dynamic module. See the <a href="https://www.gnu.org/software/emacs/manual/html_node/elisp/Module-Initialization.html#index-emacs_005fmodule_005finit-1">manual</a>.  <br /></td></tr>
+<tr class="separator:ga7240e646f9bbe16f92711b868329cd00"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Macro Definition Documentation</h2>
+<a id="ga551d403bb37596654a499384db7561cf" name="ga551d403bb37596654a499384db7561cf"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga551d403bb37596654a499384db7561cf">&#9670;&#160;</a></span>CPPEMACS_EXPORT</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define CPPEMACS_EXPORT</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Declare a symbol as being exported from the shared library. </p>
+<p>On Windows, expands to <code>__declspec(dllexport)</code>, and nothing on other platforms.</p>
+<p>If you have your own export header, such as with CMake <code>GenerateExportHeader</code>, you might need to put <br  />
+<code>#define CPPEMACS_EXPORT MY_LIBRARY_EXPORT</code> before including this file, so it matches <a class="el" href="group__cppemacs__core.html#ga7240e646f9bbe16f92711b868329cd00" title="The main entrypoint of the dynamic module. See the manual.">emacs_module_init()</a>. </p>
+
+</div>
+</div>
 <a id="ga6ccfebf4642d5452815ca33f8aec0e89" name="ga6ccfebf4642d5452815ca33f8aec0e89"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#ga6ccfebf4642d5452815ca33f8aec0e89">&#9670;&#160;</a></span>CPPEMACS_SUPPRESS_WCOMPAT_MANGLING_BEGIN</h2>
 
@@ -341,9 +363,9 @@ template&lt;typename T &gt; </div>
 <div class="line">  <a class="code hl_struct" href="structcppemacs_1_1envw.html">envw</a> env = raw_env;</div>
 <div class="line">  <span class="comment">// ...</span></div>
 <div class="line">}</div>
-<div class="ttc" id="agroup__cppemacs__core_html_gabd2db90fff7d715e8649f37147f60a3a"><div class="ttname"><a href="group__cppemacs__core.html#gabd2db90fff7d715e8649f37147f60a3a">cppemacs::value</a></div><div class="ttdeci">emacs_value value</div><div class="ttdoc">Raw opaque pointer representing an Emacs value. See cell for the wrapper, and envw for functions that...</div><div class="ttdef"><b>Definition</b> core.hpp:339</div></div>
-<div class="ttc" id="agroup__cppemacs__core_html_gae0592e597dd37c49496e082012c3de92"><div class="ttname"><a href="group__cppemacs__core.html#gae0592e597dd37c49496e082012c3de92">cppemacs::emacs_env</a></div><div class="ttdeci">::emacs_env emacs_env</div><div class="ttdoc">Raw Emacs environment. You should use envw in most cases.</div><div class="ttdef"><b>Definition</b> core.hpp:324</div></div>
-<div class="ttc" id="astructcppemacs_1_1envw_html"><div class="ttname"><a href="structcppemacs_1_1envw.html">cppemacs::envw</a></div><div class="ttdoc">General Emacs environment wrapper.</div><div class="ttdef"><b>Definition</b> core.hpp:795</div></div>
+<div class="ttc" id="agroup__cppemacs__core_html_gabd2db90fff7d715e8649f37147f60a3a"><div class="ttname"><a href="group__cppemacs__core.html#gabd2db90fff7d715e8649f37147f60a3a">cppemacs::value</a></div><div class="ttdeci">emacs_value value</div><div class="ttdoc">Raw opaque pointer representing an Emacs value. See cell for the wrapper, and envw for functions that...</div><div class="ttdef"><b>Definition</b> core.hpp:388</div></div>
+<div class="ttc" id="agroup__cppemacs__core_html_gae0592e597dd37c49496e082012c3de92"><div class="ttname"><a href="group__cppemacs__core.html#gae0592e597dd37c49496e082012c3de92">cppemacs::emacs_env</a></div><div class="ttdeci">::emacs_env emacs_env</div><div class="ttdoc">Raw Emacs environment. You should use envw in most cases.</div><div class="ttdef"><b>Definition</b> core.hpp:373</div></div>
+<div class="ttc" id="astructcppemacs_1_1envw_html"><div class="ttname"><a href="structcppemacs_1_1envw.html">cppemacs::envw</a></div><div class="ttdoc">General Emacs environment wrapper.</div><div class="ttdef"><b>Definition</b> core.hpp:870</div></div>
 </div><!-- fragment --> 
 </div>
 </div>
@@ -444,19 +466,20 @@ template&lt;typename T &gt; </div>
       </table>
 </div><div class="memdoc">
 
-<p>Struct passed to <a class="el" href="group__cppemacs__core.html#ga3a13d40e5da070f30ce46bbcea618f01" title="The main entrypoint of the dynamic module. See the manual.">emacs_module_init()</a>. </p>
+<p>Struct passed to <a class="el" href="group__cppemacs__core.html#ga7240e646f9bbe16f92711b868329cd00" title="The main entrypoint of the dynamic module. See the manual.">emacs_module_init()</a>. </p>
 <p>This struct has two (public) fields:</p>
 <ul>
 <li><code>ptrdiff_t size</code>, the size, in bytes, of <a class="el" href="group__cppemacs__core.html#ga033e1c05132033352240fe379b14cf9d">emacs_runtime</a> in the running Emacs binary.</li>
-<li><code><a class="el" href="group__cppemacs__core.html#gae0592e597dd37c49496e082012c3de92">emacs_env</a> *(*get_environment)(<a class="el" href="group__cppemacs__core.html#ga033e1c05132033352240fe379b14cf9d">emacs_runtime</a> *runtime)</code>, which returns an <a class="el" href="group__cppemacs__core.html#gae0592e597dd37c49496e082012c3de92">emacs_env</a> that can be used until <a class="el" href="group__cppemacs__core.html#ga3a13d40e5da070f30ce46bbcea618f01" title="The main entrypoint of the dynamic module. See the manual.">emacs_module_init()</a> returns.</li>
+<li><code><a class="el" href="group__cppemacs__core.html#gae0592e597dd37c49496e082012c3de92">emacs_env</a> *(*get_environment)(<a class="el" href="group__cppemacs__core.html#ga033e1c05132033352240fe379b14cf9d">emacs_runtime</a> *runtime)</code>, which returns an <a class="el" href="group__cppemacs__core.html#gae0592e597dd37c49496e082012c3de92">emacs_env</a> that can be used until <a class="el" href="group__cppemacs__core.html#ga7240e646f9bbe16f92711b868329cd00" title="The main entrypoint of the dynamic module. See the manual.">emacs_module_init()</a> returns.</li>
 </ul>
-<div class="fragment"><div class="line"><span class="keyword">extern</span> <span class="stringliteral">&quot;C&quot;</span> <span class="keywordtype">int</span> <a class="code hl_function" href="group__cppemacs__core.html#ga3a13d40e5da070f30ce46bbcea618f01">emacs_module_init</a>(<a class="code hl_typedef" href="group__cppemacs__core.html#ga033e1c05132033352240fe379b14cf9d">emacs_runtime</a> *rt) <span class="keyword">noexcept</span> {</div>
+<div class="fragment"><div class="line"><a class="code hl_define" href="group__cppemacs__core.html#ga551d403bb37596654a499384db7561cf">CPPEMACS_EXPORT</a> <span class="keywordtype">int</span> <a class="code hl_function" href="group__cppemacs__core.html#ga7240e646f9bbe16f92711b868329cd00">emacs_module_init</a>(<a class="code hl_typedef" href="group__cppemacs__core.html#ga033e1c05132033352240fe379b14cf9d">emacs_runtime</a> *rt) <span class="keyword">noexcept</span> {</div>
 <div class="line">  <span class="keywordflow">if</span> (rt-&gt;size &lt; <span class="keyword">sizeof</span>(*rt)) <span class="keywordflow">return</span> 1; <span class="comment">// check size (though it is unlikely to change)</span></div>
 <div class="line">  <a class="code hl_struct" href="structcppemacs_1_1envw.html">envw</a> env = rt-&gt;get_environment(rt);</div>
 <div class="line">  <span class="comment">// ...</span></div>
 <div class="line">}</div>
-<div class="ttc" id="agroup__cppemacs__core_html_ga033e1c05132033352240fe379b14cf9d"><div class="ttname"><a href="group__cppemacs__core.html#ga033e1c05132033352240fe379b14cf9d">cppemacs::emacs_runtime</a></div><div class="ttdeci">::emacs_runtime emacs_runtime</div><div class="ttdoc">Struct passed to emacs_module_init().</div><div class="ttdef"><b>Definition</b> core.hpp:361</div></div>
-<div class="ttc" id="agroup__cppemacs__core_html_ga3a13d40e5da070f30ce46bbcea618f01"><div class="ttname"><a href="group__cppemacs__core.html#ga3a13d40e5da070f30ce46bbcea618f01">emacs_module_init</a></div><div class="ttdeci">int emacs_module_init(cppemacs::emacs_runtime *runtime) noexcept</div><div class="ttdoc">The main entrypoint of the dynamic module. See the manual.</div><div class="ttdef"><b>Definition</b> brief_example.cpp:34</div></div>
+<div class="ttc" id="agroup__cppemacs__core_html_ga033e1c05132033352240fe379b14cf9d"><div class="ttname"><a href="group__cppemacs__core.html#ga033e1c05132033352240fe379b14cf9d">cppemacs::emacs_runtime</a></div><div class="ttdeci">::emacs_runtime emacs_runtime</div><div class="ttdoc">Struct passed to emacs_module_init().</div><div class="ttdef"><b>Definition</b> core.hpp:410</div></div>
+<div class="ttc" id="agroup__cppemacs__core_html_ga551d403bb37596654a499384db7561cf"><div class="ttname"><a href="group__cppemacs__core.html#ga551d403bb37596654a499384db7561cf">CPPEMACS_EXPORT</a></div><div class="ttdeci">#define CPPEMACS_EXPORT</div><div class="ttdoc">Declare a symbol as being exported from the shared library.</div><div class="ttdef"><b>Definition</b> core.hpp:429</div></div>
+<div class="ttc" id="agroup__cppemacs__core_html_ga7240e646f9bbe16f92711b868329cd00"><div class="ttname"><a href="group__cppemacs__core.html#ga7240e646f9bbe16f92711b868329cd00">emacs_module_init</a></div><div class="ttdeci">CPPEMACS_EXPORT int emacs_module_init(cppemacs::emacs_runtime *runtime) noexcept</div><div class="ttdoc">The main entrypoint of the dynamic module. See the manual.</div><div class="ttdef"><b>Definition</b> brief_example.cpp:34</div></div>
 </div><!-- fragment --> 
 </div>
 </div>
@@ -583,7 +606,7 @@ template&lt;typename T &gt; </div>
 <div class="line">  <a class="code hl_struct" href="structcppemacs_1_1cell.html">cell</a> arg1(env, args[0]);</div>
 <div class="line">  <span class="comment">// ...</span></div>
 <div class="line">}</div>
-<div class="ttc" id="astructcppemacs_1_1cell_html"><div class="ttname"><a href="structcppemacs_1_1cell.html">cppemacs::cell</a></div><div class="ttdoc">General Emacs value wrapper.</div><div class="ttdef"><b>Definition</b> core.hpp:1554</div></div>
+<div class="ttc" id="astructcppemacs_1_1cell_html"><div class="ttname"><a href="structcppemacs_1_1cell.html">cppemacs::cell</a></div><div class="ttdoc">General Emacs value wrapper.</div><div class="ttdef"><b>Definition</b> core.hpp:1650</div></div>
 </div><!-- fragment --> 
 </div>
 </div>
@@ -606,8 +629,8 @@ template&lt;typename... T&gt; </div>
 </div>
 </div>
 <h2 class="groupheader">Function Documentation</h2>
-<a id="ga3a13d40e5da070f30ce46bbcea618f01" name="ga3a13d40e5da070f30ce46bbcea618f01"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ga3a13d40e5da070f30ce46bbcea618f01">&#9670;&#160;</a></span>emacs_module_init()</h2>
+<a id="ga7240e646f9bbe16f92711b868329cd00" name="ga7240e646f9bbe16f92711b868329cd00"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ga7240e646f9bbe16f92711b868329cd00">&#9670;&#160;</a></span>emacs_module_init()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -616,7 +639,7 @@ template&lt;typename... T&gt; </div>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">int emacs_module_init </td>
+          <td class="memname"><a class="el" href="group__cppemacs__core.html#ga551d403bb37596654a499384db7561cf">CPPEMACS_EXPORT</a> int emacs_module_init </td>
           <td>(</td>
           <td class="paramtype"><a class="el" href="group__cppemacs__core.html#ga033e1c05132033352240fe379b14cf9d">cppemacs::emacs_runtime</a> *&#160;</td>
           <td class="paramname"><em>runtime</em></td><td>)</td>
@@ -631,6 +654,7 @@ template&lt;typename... T&gt; </div>
 </div><div class="memdoc">
 
 <p>The main entrypoint of the dynamic module. See the <a href="https://www.gnu.org/software/emacs/manual/html_node/elisp/Module-Initialization.html#index-emacs_005fmodule_005finit-1">manual</a>. </p>
+<p>@info A dynamic module is a shared library from which this function can be loaded. Dynamic modules also have to be GPL compatible, and export a <code>plugin_is_GPL_compatible</code> symbol to indicate this fact. Exposing these symbols requires extra steps in some cases, such as when compiling on Windows. See <a class="el" href="group__cppemacs__core.html#ga551d403bb37596654a499384db7561cf">CPPEMACS_EXPORT</a>.</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">runtime</td><td>The <a class="el" href="group__cppemacs__core.html#ga033e1c05132033352240fe379b14cf9d">emacs_runtime</a>, which can be used to obtain an <a class="el" href="group__cppemacs__core.html#gae0592e597dd37c49496e082012c3de92">emacs_env</a> to access the module API.</td></tr>
@@ -639,7 +663,7 @@ template&lt;typename... T&gt; </div>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>The exit status. If this is non-zero, Emacs will <a href="https://www.gnu.org/software/emacs/manual/html_node/elisp/Signaling-Errors.html#index-signal">raise a signal</a> <code>module-init-failed</code> with it.</dd></dl>
 <div class="fragment"><div class="line"><span class="keyword">using namespace </span><a class="code hl_namespace" href="namespacecppemacs.html">cppemacs</a>;</div>
-<div class="line"><span class="keyword">extern</span> <span class="stringliteral">&quot;C&quot;</span> <span class="keywordtype">int</span> <a class="code hl_function" href="group__cppemacs__core.html#ga3a13d40e5da070f30ce46bbcea618f01">emacs_module_init</a>(<a class="code hl_typedef" href="group__cppemacs__core.html#ga033e1c05132033352240fe379b14cf9d">emacs_runtime</a> *rt) <span class="keyword">noexcept</span> {</div>
+<div class="line"><a class="code hl_define" href="group__cppemacs__core.html#ga551d403bb37596654a499384db7561cf">CPPEMACS_EXPORT</a> <span class="keywordtype">int</span> <a class="code hl_function" href="group__cppemacs__core.html#ga7240e646f9bbe16f92711b868329cd00">emacs_module_init</a>(<a class="code hl_typedef" href="group__cppemacs__core.html#ga033e1c05132033352240fe379b14cf9d">emacs_runtime</a> *rt) <span class="keyword">noexcept</span> {</div>
 <div class="line">  <span class="comment">// check size (though it is unlikely to change)</span></div>
 <div class="line">  <span class="keywordflow">if</span> (rt-&gt;size &lt; <span class="keyword">sizeof</span>(*rt)) <span class="keywordflow">return</span> 1;</div>
 <div class="line">  <a class="code hl_struct" href="structcppemacs_1_1envw.html">envw</a> env = rt-&gt;get_environment(rt);</div>
@@ -648,8 +672,8 @@ template&lt;typename... T&gt; </div>
 <div class="line">  <span class="keywordflow">if</span> (!env.<a class="code hl_function" href="structcppemacs_1_1envw.html#ac40343a3ce5e040369dd433cef0f6b29">is_compatible</a>&lt;27&gt;()) <span class="keywordflow">return</span> 2;</div>
 <div class="line">  <span class="comment">// ...</span></div>
 <div class="line">}</div>
-<div class="ttc" id="anamespacecppemacs_html"><div class="ttname"><a href="namespacecppemacs.html">cppemacs</a></div><div class="ttdoc">cppemacs is a C++11 API wrapper for writing Emacs Dynamic Modules.</div><div class="ttdef"><b>Definition</b> core.hpp:91</div></div>
-<div class="ttc" id="astructcppemacs_1_1envw_html_ac40343a3ce5e040369dd433cef0f6b29"><div class="ttname"><a href="structcppemacs_1_1envw.html#ac40343a3ce5e040369dd433cef0f6b29">cppemacs::envw::is_compatible</a></div><div class="ttdeci">bool is_compatible() const noexcept</div><div class="ttdoc">Check if this environment supports the module API of the given Emacs major version....</div><div class="ttdef"><b>Definition</b> core.hpp:841</div></div>
+<div class="ttc" id="anamespacecppemacs_html"><div class="ttname"><a href="namespacecppemacs.html">cppemacs</a></div><div class="ttdoc">cppemacs is a C++11 API wrapper for writing Emacs Dynamic Modules.</div><div class="ttdef"><b>Definition</b> core.hpp:140</div></div>
+<div class="ttc" id="astructcppemacs_1_1envw_html_ac40343a3ce5e040369dd433cef0f6b29"><div class="ttname"><a href="structcppemacs_1_1envw.html#ac40343a3ce5e040369dd433cef0f6b29">cppemacs::envw::is_compatible</a></div><div class="ttdeci">bool is_compatible() const noexcept</div><div class="ttdoc">Check if this environment supports the module API of the given Emacs major version....</div><div class="ttdef"><b>Definition</b> core.hpp:916</div></div>
 </div><!-- fragment --> 
 </div>
 </div>

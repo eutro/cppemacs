@@ -8,7 +8,7 @@ var searchData=
   ['emacs_5ffunction_5',['emacs_function',['../group__cppemacs__core.html#ga8b10f701e2c3225ed203909023fcbf28',1,'cppemacs']]],
   ['emacs_5flimb_5ft_6',['emacs_limb_t',['../group__cppemacs__core.html#ga48d8eae87b0f97a58731b9fd86afee00',1,'cppemacs']]],
   ['emacs_5fmajor_5fversion_7',['EMACS_MAJOR_VERSION',['../group__cppemacs__core.html#gaa1a1d76b9ec039ff2895ea58395c21f2',1,'core.hpp']]],
-  ['emacs_5fmodule_5finit_8',['emacs_module_init',['../group__cppemacs__core.html#ga3a13d40e5da070f30ce46bbcea618f01',1,'emacs_module_init(cppemacs::emacs_runtime *runtime) noexcept:&#160;brief_example.cpp'],['../group__cppemacs__core.html#ga3a13d40e5da070f30ce46bbcea618f01',1,'emacs_module_init(emacs_runtime *rt) noexcept:&#160;brief_example.cpp']]],
+  ['emacs_5fmodule_5finit_8',['emacs_module_init',['../group__cppemacs__core.html#ga7240e646f9bbe16f92711b868329cd00',1,'emacs_module_init(cppemacs::emacs_runtime *runtime) noexcept:&#160;brief_example.cpp'],['../group__cppemacs__core.html#ga7240e646f9bbe16f92711b868329cd00',1,'emacs_module_init(emacs_runtime *rt) noexcept:&#160;brief_example.cpp']]],
   ['emacs_5fprocess_5finput_5fresult_9',['emacs_process_input_result',['../group__cppemacs__core.html#ga308d7d99197a9196c83dad15126a23cc',1,'cppemacs']]],
   ['emacs_5fruntime_10',['emacs_runtime',['../group__cppemacs__core.html#ga033e1c05132033352240fe379b14cf9d',1,'cppemacs']]],
   ['emacs_5fvalue_11',['emacs_value',['../group__cppemacs__core.html#ga07aff4aebb2c5f7826006461e3fe8d8d',1,'cppemacs']]],
