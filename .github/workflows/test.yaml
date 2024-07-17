@@ -20,7 +20,7 @@ jobs:
 
     runs-on: ${{matrix.os}}
     env:
-      SCRIPT_SUFFIX: ${{ matrix.os == "windows" && ".ps1" || "" }}
+      SCRIPT_SUFFIX: ${{ matrix.os == 'windows' && '.ps1' || '' }}
       EMACS_VERSION: ${{matrix.emacs_version}}
       EMACS_CONFIGURE_FLAGS: >-
         --disable-build-details --with-modules --with-x=no
