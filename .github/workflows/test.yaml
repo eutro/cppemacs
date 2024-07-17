@@ -64,10 +64,10 @@ jobs:
       run: cmake --build "${{github.workspace}}/build" -j 4
 
     - name: Test
-      run: ctest --test-dir "${{github.workspace}}/build" --output-on-failure
+      run: ctest --test-dir "${{github.workspace}}/build" -C debug --output-on-failure
 
-    #- name: Setup tmate session
-    #  if: ${{ failure() }}
-    #  uses: mxschmitt/action-tmate@v3
-    #  with:
-    #    limit-access-to-actor: true
+    - name: Setup tmate session
+      if: ${{ failure() }}
+      uses: mxschmitt/action-tmate@v3
+      with:
+        limit-access-to-actor: true
