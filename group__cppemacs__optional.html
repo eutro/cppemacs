@@ -136,11 +136,8 @@ $(document).ready(function(){initNavTree('group__cppemacs__optional.html',''); i
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="define-members" name="define-members"></a>
 Macros</h2></td></tr>
 <tr class="memitem:gaf3ad98769850f5058e7803b46b5a367a" id="r_gaf3ad98769850f5058e7803b46b5a367a"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__cppemacs__optional.html#gaf3ad98769850f5058e7803b46b5a367a">CPPEMACS_MODULE_INIT_HEADER_HACK</a>&#160;&#160;&#160;0</td></tr>
-<tr class="memdesc:gaf3ad98769850f5058e7803b46b5a367a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Define as 1 before including to work around the missing noexcept specifier on <code><a class="el" href="group__cppemacs__core.html#ga3a13d40e5da070f30ce46bbcea618f01" title="The main entrypoint of the dynamic module. See the manual.">emacs_module_init()</a></code> in <code>&lt;emacs-module.h&gt;</code> in Emacs 25.  <br /></td></tr>
+<tr class="memdesc:gaf3ad98769850f5058e7803b46b5a367a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Define as 1 before including to work around the missing noexcept specifier on <code><a class="el" href="group__cppemacs__core.html#ga7240e646f9bbe16f92711b868329cd00" title="The main entrypoint of the dynamic module. See the manual.">emacs_module_init()</a></code> in <code>&lt;emacs-module.h&gt;</code> in Emacs 25.  <br /></td></tr>
 <tr class="separator:gaf3ad98769850f5058e7803b46b5a367a"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ga075191520e036c825a74da1c6b4ac0ec" id="r_ga075191520e036c825a74da1c6b4ac0ec"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__cppemacs__optional.html#ga075191520e036c825a74da1c6b4ac0ec">CPPEMACS_ENABLE_GMPXX</a>&#160;&#160;&#160;0</td></tr>
-<tr class="memdesc:ga075191520e036c825a74da1c6b4ac0ec"><td class="mdescLeft">&#160;</td><td class="mdescRight">Define as 1 before including &lt;<a class="el" href="core_8hpp_source.html">cppemacs/core.hpp</a>&gt; to enable <a class="el" href="group__cppemacs__conversions.html">conversions</a> for <code>mpz_class</code> from <a href="https://gmplib.org/manual/C_002b_002b-Interface-General">gmpxx</a>.  <br /></td></tr>
-<tr class="separator:ga075191520e036c825a74da1c6b4ac0ec"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ga5e72e9fb5c689de1fa34c5f44157a80d" id="r_ga5e72e9fb5c689de1fa34c5f44157a80d"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="group__cppemacs__optional.html#ga5e72e9fb5c689de1fa34c5f44157a80d">CPPEMACS_ENABLE_EXCEPTION_BOXING</a>&#160;&#160;&#160;0</td></tr>
 <tr class="memdesc:ga5e72e9fb5c689de1fa34c5f44157a80d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Define as 1 before including &lt;<a class="el" href="core_8hpp_source.html">cppemacs/core.hpp</a>&gt; to more tightly integrate Emacs signals with C++ exceptions, at the cost of performance.  <br /></td></tr>
 <tr class="separator:ga5e72e9fb5c689de1fa34c5f44157a80d"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -167,22 +164,6 @@ Macros</h2></td></tr>
 
 </div>
 </div>
-<a id="ga075191520e036c825a74da1c6b4ac0ec" name="ga075191520e036c825a74da1c6b4ac0ec"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ga075191520e036c825a74da1c6b4ac0ec">&#9670;&#160;</a></span>CPPEMACS_ENABLE_GMPXX</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">#define CPPEMACS_ENABLE_GMPXX&#160;&#160;&#160;0</td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-<p>Define as 1 before including &lt;<a class="el" href="core_8hpp_source.html">cppemacs/core.hpp</a>&gt; to enable <a class="el" href="group__cppemacs__conversions.html">conversions</a> for <code>mpz_class</code> from <a href="https://gmplib.org/manual/C_002b_002b-Interface-General">gmpxx</a>. </p>
-
-</div>
-</div>
 <a id="gaf3ad98769850f5058e7803b46b5a367a" name="gaf3ad98769850f5058e7803b46b5a367a"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#gaf3ad98769850f5058e7803b46b5a367a">&#9670;&#160;</a></span>CPPEMACS_MODULE_INIT_HEADER_HACK</h2>
 
@@ -195,7 +176,8 @@ Macros</h2></td></tr>
       </table>
 </div><div class="memdoc">
 
-<p>Define as 1 before including to work around the missing noexcept specifier on <code><a class="el" href="group__cppemacs__core.html#ga3a13d40e5da070f30ce46bbcea618f01" title="The main entrypoint of the dynamic module. See the manual.">emacs_module_init()</a></code> in <code>&lt;emacs-module.h&gt;</code> in Emacs 25. </p>
+<p>Define as 1 before including to work around the missing noexcept specifier on <code><a class="el" href="group__cppemacs__core.html#ga7240e646f9bbe16f92711b868329cd00" title="The main entrypoint of the dynamic module. See the manual.">emacs_module_init()</a></code> in <code>&lt;emacs-module.h&gt;</code> in Emacs 25. </p>
+<p>This is also required on MSVC to work around the fact that <code>&lt;emacs-module.h&gt;</code> uses a <code>__cplusplus</code> comparison to declare noexcept, which isn't correct on MSVC either. </p>
 
 </div>
 </div>

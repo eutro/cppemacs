@@ -102,6 +102,7 @@ var group__cppemacs__core =
       [ "vec_set", "structcppemacs_1_1cell.html#a65641b1b3e9b6c60c18ec5b5fae63b2c", null ],
       [ "vec_size", "structcppemacs_1_1cell.html#a2becd8169e2428a291e4fb81ce7ed04f", null ]
     ] ],
+    [ "CPPEMACS_EXPORT", "group__cppemacs__core.html#ga551d403bb37596654a499384db7561cf", null ],
     [ "CPPEMACS_SUPPRESS_WCOMPAT_MANGLING_BEGIN", "group__cppemacs__core.html#ga6ccfebf4642d5452815ca33f8aec0e89", null ],
     [ "CPPEMACS_SUPPRESS_WCOMPAT_MANGLING_END", "group__cppemacs__core.html#ga3188c0833facb9d85e1ded3031511751", null ],
     [ "EMACS_MAJOR_VERSION", "group__cppemacs__core.html#gaa1a1d76b9ec039ff2895ea58395c21f2", null ],
@@ -121,5 +122,5 @@ var group__cppemacs__core =
     [ "cppemacs::detail::remove_reference_t", "group__cppemacs__core.html#gad288740c28b012aea8845742f1514356", null ],
     [ "cppemacs::value", "group__cppemacs__core.html#gabd2db90fff7d715e8649f37147f60a3a", null ],
     [ "cppemacs::detail::void_t", "group__cppemacs__core.html#gae671b46595be5e99117ec6ac03827610", null ],
-    [ "emacs_module_init", "group__cppemacs__core.html#ga3a13d40e5da070f30ce46bbcea618f01", null ]
+    [ "emacs_module_init", "group__cppemacs__core.html#ga7240e646f9bbe16f92711b868329cd00", null ]
 ];

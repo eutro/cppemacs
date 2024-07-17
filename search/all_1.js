@@ -14,7 +14,7 @@ var searchData=
   ['cppemacs_3a_3aliterals_11',['literals',['../namespacecppemacs_1_1literals.html',1,'cppemacs']]],
   ['cppemacs_3a_3ato_5femacs_5fconvertible_12',['to_emacs_convertible',['../conceptcppemacs_1_1to__emacs__convertible.html',1,'cppemacs']]],
   ['cppemacs_5fenable_5fexception_5fboxing_13',['CPPEMACS_ENABLE_EXCEPTION_BOXING',['../group__cppemacs__optional.html#ga5e72e9fb5c689de1fa34c5f44157a80d',1,'core.hpp']]],
-  ['cppemacs_5fenable_5fgmpxx_14',['CPPEMACS_ENABLE_GMPXX',['../group__cppemacs__optional.html#ga075191520e036c825a74da1c6b4ac0ec',1,'core.hpp']]],
+  ['cppemacs_5fexport_14',['CPPEMACS_EXPORT',['../group__cppemacs__core.html#ga551d403bb37596654a499384db7561cf',1,'core.hpp']]],
   ['cppemacs_5fhave_5fconcepts_15',['CPPEMACS_HAVE_CONCEPTS',['../group__cppemacs__conversions.html#gaea0564e39540bbbfdeb5e54b3e4ce860',1,'core.hpp']]],
   ['cppemacs_5fmodule_5finit_5fheader_5fhack_16',['CPPEMACS_MODULE_INIT_HEADER_HACK',['../group__cppemacs__optional.html#gaf3ad98769850f5058e7803b46b5a367a',1,'core.hpp']]],
   ['cppemacs_5fsuppress_5fwcompat_5fmangling_5fbegin_17',['CPPEMACS_SUPPRESS_WCOMPAT_MANGLING_BEGIN',['../group__cppemacs__core.html#ga6ccfebf4642d5452815ca33f8aec0e89',1,'core.hpp']]],
