@@ -42,6 +42,7 @@ jobs:
     - name: Cache Emacs
       id: cache-emacs
       uses: actions/cache/restore@v4
+      if: ${{ matrix.os != 'windows-latest' }}
       with:
         path: ${{env.EMACS_PREFIX}}
         key: ${{matrix.os}}-emacs-${{env.EMACS_VERSION}}-c${{env.EMACS_CONFIGURE_COUNTER}}
@@ -49,7 +50,7 @@ jobs:
       run: ${{github.workspace}}/.github/scripts/install-emacs${{env.SCRIPT_SUFFIX}}
     - name: Save Emacs Cache
       uses: actions/cache/save@v4
-      if: ${{ steps.cache-emacs.outputs.cache-hit != 'true' }}
+      if: ${{ matrix.os != 'windows-latest' && steps.cache-emacs.outputs.cache-hit != 'true' }}
       with:
         path: ${{env.EMACS_PREFIX}}
         key: ${{ steps.cache-emacs.outputs.cache-primary-key }}

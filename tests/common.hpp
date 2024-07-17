@@ -85,7 +85,7 @@ REGISTER_NAME(eread_literal);
 #ifdef CPPEMACS_HAVE_STRING_VIEW
 REGISTER_NAME(std::string_view);
 #endif
-#ifdef CPPEMACS_ENABLE_GMPXX
+#if CPPEMACS_ENABLE_GMPXX
 REGISTER_NAME(mpz_class);
 #endif
 

@@ -11,8 +11,16 @@ if (!$emacsVersion -or ($emacsVersion -le [Version]"5.0")) {
 }
 echo "Installing Emacs $emacsVersion"
 
-if (Test-Path "$env:EMACS_PREFIX\bin\emacs.exe") {
-    echo "Emacs already installed at $env:EMACS_PREFIX"
+# different ftp directory structures on different versions...
+if ($emacsVersion -ge [Version]"28.0") {
+    $emacsPrefix = "$env:EMACS_PREFIX\emacs-$emacsVersion"
+} else {
+    $archPart = "-x86_64"
+    $emacsPrefix = $env:EMACS_PREFIX
+}
+
+if (Test-Path "$emacsPrefix\bin\emacs.exe") {
+    echo "Emacs already installed at $emacsPrefix"
 } else {
     if ($env:RUNNER_TEMP) {
         $tmpdir = $env:RUNNER_TEMP
@@ -24,9 +32,6 @@ if (Test-Path "$env:EMACS_PREFIX\bin\emacs.exe") {
     $mirrorUrl = "https://ftpmirror.gnu.org/emacs/windows"
     $zipPath = "$tmpdir\emacs-$([System.IO.Path]::GetRandomFileName()).zip"
 
-    if ($emacsVersion -lt [Version]"28.0") {
-        $archPart = "-x86_64"
-    }
     $zipUrl = "$mirrorUrl/emacs-$($emacsVersion.Major)/emacs-$emacsVersion$archPart.zip"
 
     echo "Downloading $zipUrl to: $zipPath"
@@ -36,5 +41,5 @@ if (Test-Path "$env:EMACS_PREFIX\bin\emacs.exe") {
 }
 
 echo "::group::Add Emacs to PATH"
-echo "$env:EMACS_PREFIX\bin" >> $env:GITHUB_PATH
+(Resolve-Path "$emacsPrefix\bin").toString()  >> $env:GITHUB_PATH
 echo "::endgroup::"
