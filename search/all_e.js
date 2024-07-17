@@ -7,7 +7,7 @@ var searchData=
   ['should_5fquit_4',['should_quit',['../structcppemacs_1_1envw.html#a6af555d726477b08fd4eb7756472eefc',1,'cppemacs::envw']]],
   ['signal_5f_5',['signal_',['../structcppemacs_1_1funcall__exit.html#aa999092dc91b40b931c968c011548bbb',1,'cppemacs::funcall_exit']]],
   ['signalled_6',['signalled',['../structcppemacs_1_1signalled.html',1,'cppemacs::signalled'],['../structcppemacs_1_1signalled.html#acd9171c40fdf63a998222aa4759d75eb',1,'cppemacs::signalled::signalled()']]],
-  ['size_7',['size',['../structcppemacs_1_1spreader__restargs.html#a5371d7b33ab4cfa613c7e60b8d8b9648',1,'cppemacs::spreader_restargs::size()'],['../structcppemacs_1_1envw.html#a256132d6b8fbb3a6fd66604c8be4e1fd',1,'cppemacs::envw::size()']]],
+  ['size_7',['size',['../structcppemacs_1_1spreader__restargs.html#a5371d7b33ab4cfa613c7e60b8d8b9648',1,'cppemacs::spreader_restargs::size()'],['../structcppemacs_1_1envw.html#ad23bebf35ce7a5cd598b30bc02113bc5',1,'cppemacs::envw::size()']]],
   ['spread_5finvoker_8',['spread_invoker',['../structcppemacs_1_1detail_1_1spread__invoker.html',1,'cppemacs::detail::spread_invoker&lt; MinArity, MaxArity, IsVariadic, F &gt;'],['../structcppemacs_1_1detail_1_1spread__invoker.html#a2198cbd135a49f99bcfc1ac1e0b776a2',1,'cppemacs::detail::spread_invoker::spread_invoker()']]],
   ['spreader_5farity_9',['spreader_arity',['../structcppemacs_1_1spreader__arity.html',1,'cppemacs']]],
   ['spreader_5fcaller_10',['spreader_caller',['../structcppemacs_1_1detail_1_1spreader__caller.html',1,'cppemacs::detail']]],

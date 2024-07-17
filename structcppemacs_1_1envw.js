@@ -51,7 +51,7 @@ var structcppemacs_1_1envw =
     [ "set_user_finalizer", "structcppemacs_1_1envw.html#a51563c9b13946b97e46791fd4534358e", null ],
     [ "set_user_ptr", "structcppemacs_1_1envw.html#a87d8690a2ed4a92612bcda25f1ad2c9b", null ],
     [ "should_quit", "structcppemacs_1_1envw.html#a6af555d726477b08fd4eb7756472eefc", null ],
-    [ "size", "structcppemacs_1_1envw.html#a256132d6b8fbb3a6fd66604c8be4e1fd", null ],
+    [ "size", "structcppemacs_1_1envw.html#ad23bebf35ce7a5cd598b30bc02113bc5", null ],
     [ "type_of", "structcppemacs_1_1envw.html#a56ec2ca416a4778f8275ffeac8ea80b8", null ],
     [ "vec_get", "structcppemacs_1_1envw.html#aa2dc5ed3a42f7343d03df2ef2051e3a4", null ],
     [ "vec_set", "structcppemacs_1_1envw.html#adb57dae31fb8d7d6dcef728898b63d1a", null ],
