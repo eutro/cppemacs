@@ -913,7 +913,7 @@ public:
    * }
    * @endcode
    *
-   * @see check_compatible() which throws an exception if the runtime check
+   * @see assert_compatible() which throws an exception if the runtime check
    * fails.
    *
    * @see is_compatible_relaxed() which returns false, instead of
@@ -958,7 +958,7 @@ public:
    * @brief Throw an exception with the error message `"Emacs major version
    * <MajorVersion> required"`.
    *
-   * @see is_compatible() and check_compatible()
+   * @see is_compatible() and assert_compatible()
    */
   template <size_t MajorVersion> [[noreturn]] static void version_check_error() noexcept(false) {
     throw std::runtime_error(major_error_message<MajorVersion>::value);
@@ -972,14 +972,14 @@ public:
    * CPPEMACS_EXPORT int emacs_module_init(emacs_runtime *rt) noexcept {
    *   envw env = rt->get_environment(rt);
    *   env.run_catching([&]() {
-   *     env.check_compatible<27>();
+   *     env.assert_compatible<27>();
    *   });
    * }
    * @endcode
    *
    * @see is_compatible() and version_check_error()
    */
-  template <size_t MajorVersion> void check_compatible() const noexcept(false) {
+  template <size_t MajorVersion> void assert_compatible() const noexcept(false) {
     if (!is_compatible<MajorVersion>()) {
       version_check_error<MajorVersion>();
     }

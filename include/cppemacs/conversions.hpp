@@ -125,7 +125,7 @@ value to_emacs(expected_type_t<Int>, envw nv, Int n)
 
 /** @brief Convert a C++ `uintmax_t` to an Emacs integer. Emacs 27+ only. */
 inline value to_emacs(expected_type_t<uintmax_t>, envw nv, uintmax_t n) {
-  nv.check_compatible<27>();
+  nv.assert_compatible<27>();
   using namespace detail;
   // uintmax_t may overflow intmax_t (bad), so fallback to the bigint version
   if (n > static_cast<uintmax_t>(std::numeric_limits<intmax_t>::max())) {
@@ -179,7 +179,7 @@ inline Int from_emacs(expected_type_t<Int>, envw nv, value val) {
 
 /** @brief Convert an Emacs integer to a C++ `uintmax_t`. Emacs 27+ only. */
 inline uintmax_t from_emacs(expected_type_t<uintmax_t>, envw nv, value val) {
-  nv.check_compatible<27>();
+  nv.assert_compatible<27>();
   using namespace detail;
   // always use bigint conversion
   int sign = 0;
@@ -231,10 +231,10 @@ inline Float from_emacs(expected_type_t<Float>, envw nv, value val)
 #if (EMACS_MAJOR_VERSION >= 27)
 /** @brief Convert a C timespec to an Emacs timespec. Emacs 27+ only. */
 inline value to_emacs(expected_type_t<struct timespec>, envw nv, struct timespec time)
-{ nv.check_compatible<27>(); return nv.make_time(time); }
+{ nv.assert_compatible<27>(); return nv.make_time(time); }
 /** @brief Convert a C timespec to an Emacs timespec. Emacs 27+ only. */
 inline struct timespec from_emacs(expected_type_t<struct timespec>, envw nv, value val)
-{ nv.check_compatible<27>(); return nv.extract_time(val); }
+{ nv.assert_compatible<27>(); return nv.extract_time(val); }
 #endif
 
 #if ((EMACS_MAJOR_VERSION >= 27) && CPPEMACS_ENABLE_GMPXX) || defined(CPPEMACS_DOXYGEN_RUNNING)
@@ -245,7 +245,7 @@ inline struct timespec from_emacs(expected_type_t<struct timespec>, envw nv, val
  * Emacs 27+ only. Requires @ref CPPEMACS_ENABLE_GMPXX.
  */
 inline value to_emacs(expected_type_t<mpz_class>, envw nv, const mpz_class &zc) {
-  nv.check_compatible<27>();
+  nv.assert_compatible<27>();
   nv.maybe_non_local_exit();
 
   mpz_srcptr z = zc.get_mpz_t();
@@ -272,7 +272,7 @@ inline value to_emacs(expected_type_t<mpz_class>, envw nv, const mpz_class &zc) 
  * Emacs 27+ only. Requires @ref CPPEMACS_ENABLE_GMPXX.
  */
 inline mpz_class from_emacs(expected_type_t<mpz_class>, envw nv, value x) {
-  nv.check_compatible<27>();
+  nv.assert_compatible<27>();
 
   int sign = 0;
   ptrdiff_t count = 0;
