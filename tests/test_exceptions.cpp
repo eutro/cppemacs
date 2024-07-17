@@ -31,19 +31,19 @@ TEST_SCOPED(SCENARIO("throwing exceptions")) {
     defalias("cppemacs-fun1", envp->*make_spreader_function(
                spreader_arity<2>(),
                "Equivalent to `signal'.",
-               [](envw nv, value sym, value data) -> value
+               [](envw, value sym, value data) -> value
                { throw signalled(sym, data); }));
 
     defalias("cppemacs-fun2", envp->*make_spreader_function(
                spreader_arity<2>(),
                "Equivalent to `throw'.",
-               [](envw nv, value sym, value data) -> value
+               [](envw, value sym, value data) -> value
                { throw thrown(sym, data); }));
 
     defalias("cppemacs-fun3", envp->*make_spreader_function(
                spreader_arity<1>(),
                "Throw a C++ `runtime_error' with the argument.",
-               [](envw nv, cell msg) -> value
+               [](envw, cell msg) -> value
                { throw std::runtime_error(msg.extract<std::string>()); }));
 
     defalias("cppemacs-fun4", envp->*make_spreader_function(
@@ -58,7 +58,7 @@ TEST_SCOPED(SCENARIO("throwing exceptions")) {
     defalias("cppemacs-fun5", envp->*make_spreader_function(
                spreader_thunk(),
                "Throw a `non_local_exit' without an actual non-local exit.",
-               [](envw nv) -> value
+               [](envw) -> value
                { throw non_local_exit{}; }));
 
     auto [expr, sig_type] = GENERATE(

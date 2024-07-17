@@ -500,12 +500,18 @@ using emacs_finalizer = void (*)(void *data) noexcept;
 using emacs_function = value (*)(emacs_env *env, ptrdiff_t nargs, value *args, void *data);
 using emacs_finalizer = void (*)(void *data);
 
-#ifdef __clang__
+#if defined(__clang__)
 #  define CPPEMACS_SUPPRESS_WCOMPAT_MANGLING_BEGIN \
   _Pragma("clang diagnostic push") \
   _Pragma("clang diagnostic ignored \"-Wc++17-compat-mangling\"")
 #  define CPPEMACS_SUPPRESS_WCOMPAT_MANGLING_END \
   _Pragma("clang diagnostic pop")
+#elif defined(__GNUC__)
+#  define CPPEMACS_SUPPRESS_WCOMPAT_MANGLING_BEGIN \
+  _Pragma("GCC diagnostic push") \
+  _Pragma("GCC diagnostic ignored \"-Wnoexcept-type\"")
+#  define CPPEMACS_SUPPRESS_WCOMPAT_MANGLING_END \
+  _Pragma("GCC diagnostic pop")
 #endif
 
 #endif
@@ -887,7 +893,7 @@ public:
    * the module, since newer Emacs versions have more fields and thus a larger
    * size.
    */
-  ptrdiff_t size() const noexcept { return raw->size; }
+  size_t size() const noexcept { return raw->size; }
 
   /**
    * @brief Check if this environment supports the module API of the given Emacs
@@ -1560,8 +1566,6 @@ public:
 #endif
   void run_scoped(F &&f) const noexcept(noexcept(std::declval<F>()(std::declval<envw>()))) {
     constexpr bool is_noexcept = noexcept(std::declval<F>()(std::declval<envw>()));
-    // otherwise it must be captured in the lambda, for some reason
-    using IsNoexcept = std::integral_constant<bool, is_noexcept>;
     using FPtrType = typename std::remove_reference<F>::type *;
 
     if (non_local_exit_check()) return;

@@ -31,7 +31,7 @@ static std::string translate_throw(thrown const &sig) {
   return (envp->*"format")("(throw '%S '%S)"_Estr, sig.symbol, sig.data)
     .extract<std::string>();
 }
-static std::string translate_non_local_exit(non_local_exit const &sig) {
+static std::string translate_non_local_exit(non_local_exit const &) {
   value symbol, data;
   funcall_exit ty = envp.non_local_exit_get(symbol, data);
   envp.non_local_exit_clear();
@@ -46,7 +46,7 @@ class EmacsExnCkListener : public Catch::EventListenerBase {
 public:
   using Catch::EventListenerBase::EventListenerBase;
 
-  void check_status(const char *where, Catch::StringRef name) {
+  void check_status(const char *where, const Catch::StringRef &) {
     if (envp.non_local_exit_check()) {
       std::string transl = translate_non_local_exit(non_local_exit{});
       WARN("Exception (" << where << "): " << transl);
@@ -59,15 +59,15 @@ public:
   { check_status("Test Run Ended", stats.runInfo.name); }
   void testCaseStarting(Catch::TestCaseInfo const &inf) override
   { check_status("Test Case Starting", inf.name); }
-  void testCaseEnded(Catch::TestCaseStats const &stats) override
+  void testCaseEnded(Catch::TestCaseStats const &) override
   { envp.non_local_exit_clear(); }
   void sectionStarting(Catch::SectionInfo const &inf) override
   { check_status("Section Starting", inf.name); }
-  void sectionEnded(Catch::SectionStats const &stats) override
+  void sectionEnded(Catch::SectionStats const &) override
   { envp.non_local_exit_clear(); }
   void assertionStarting(Catch::AssertionInfo const &inf) override
   { check_status("Assertion Starting", inf.capturedExpression); }
-  void assertionEnded(Catch::AssertionStats const &stats) override
+  void assertionEnded(Catch::AssertionStats const &) override
   { envp.non_local_exit_clear(); }
 };
 

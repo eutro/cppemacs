@@ -125,13 +125,11 @@ TEST_SCOPED(SCENARIO("constructing functions")) {
       });
 
     WHEN("it is converted") {
-      unsigned old_count;
       envp.run_scoped([&](envw env) {
         cell f = env->*std::move(func);
         CHECK(sptr.use_count() == 2);
 
         THEN("it updates its state correctly") {
-          cell equal = env->*"equal";
           cell list = env->*"list";
 
           REQUIRE_THAT(f(1, 2, 3, 4), LispEquals(list(0, 0, 0, 0)));

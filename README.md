@@ -48,14 +48,15 @@ depending on your CMake version.
 For example, on CMake 3.14+:
 
 ```cmake
-find_package(cppemacs) # try to use a system installation first
+find_package(cppemacs CONFIG) # try to use a system installation first
 # (if using CMake 3.24 or newer, you can use FIND_PACKAGE_ARGS in FetchContent_Declare instead)
 
 if(NOT cppemacs_FOUND) # fall back to downloading
   include(FetchContent) # (CMake 3.11)
   FetchContent_Declare(
+    cppemacs
     GIT_REPOSITORY https://github.com/eutro/cppemacs
-    GIT_TAG master
+    GIT_TAG main
   )
   FetchContent_MakeAvailable(cppemacs) # (CMake 3.14)
 endif()

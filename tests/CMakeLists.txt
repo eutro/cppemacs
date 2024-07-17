@@ -94,6 +94,15 @@ set_target_properties(${CPPEMACS_TEST2_TARGET} PROPERTIES
 add_test(NAME ${CPPEMACS_TEST2_TARGET}
   COMMAND ${CPPEMACS_TEST2_TARGET})
 
+foreach (target ${CPPEMACS_TEST_TARGET} ${CPPEMACS_TEST2_TARGET})
+  if (CMAKE_CXX_COMPILER_ID MATCHES "Clang|GNU")
+    target_compile_options(${target} PRIVATE
+      -Wall -Wextra -Wpedantic)
+  elseif (CMAKE_CXX_COMPILER_ID MATCHES "MSVC")
+    target_compile_options(${target} PRIVATE /W4)
+  endif()
+endforeach()
+
 if (NOT Emacs_FOUND)
   message(FATAL_ERROR
     [=[Emacs not found, but required to build tests
