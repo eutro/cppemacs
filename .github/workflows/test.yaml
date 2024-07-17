@@ -20,6 +20,7 @@ jobs:
 
     runs-on: ${{matrix.os}}
     env:
+      SCRIPT_SUFFIX: ${{ matrix.os == "windows" && ".ps1" || "" }}
       EMACS_VERSION: ${{matrix.emacs_version}}
       EMACS_CONFIGURE_FLAGS: >-
         --disable-build-details --with-modules --with-x=no
@@ -45,7 +46,7 @@ jobs:
         path: ${{env.EMACS_PREFIX}}
         key: ${{matrix.os}}-emacs-${{env.EMACS_VERSION}}-c${{env.EMACS_CONFIGURE_COUNTER}}
     - name: Install Emacs
-      run: ${{github.workspace}}/.github/scripts/install-emacs
+      run: ${{github.workspace}}/.github/scripts/install-emacs${{env.SCRIPT_SUFFIX}}
     - name: Save Emacs Cache
       uses: actions/cache/save@v4
       if: ${{ steps.cache-emacs.outputs.cache-hit != 'true' }}
@@ -54,9 +55,9 @@ jobs:
         key: ${{ steps.cache-emacs.outputs.cache-primary-key }}
 
     - name: Configure CMake
-      run: |
-        cmake -B "${{github.workspace}}/build" \
-          -DCPPEMACS_Documentation=OFF -DCPPEMACS_Examples=ON -DCPPEMACS_Test=ON
+      run: >-
+        cmake -B "${{github.workspace}}/build"
+        -DCPPEMACS_Documentation=OFF -DCPPEMACS_Examples=ON -DCPPEMACS_Test=ON
 
     - name: Build
       run: cmake --build "${{github.workspace}}/build" -j 4

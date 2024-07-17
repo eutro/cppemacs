@@ -254,7 +254,7 @@ namespace cppemacs {}
  * @addtogroup cppemacs_optional
  * @{
  */
-#if CPPEMACS_ENABLE_GMPXX
+#ifndef CPPEMACS_ENABLE_GMPXX
 /**
  * @brief Define as 1 before including <@ref cppemacs/core.hpp> to enable @ref
  * cppemacs_conversions "conversions" for `mpz_class` from <a
