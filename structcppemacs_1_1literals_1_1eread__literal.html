@@ -137,6 +137,7 @@ $(document).ready(function(){initNavTree('structcppemacs_1_1literals_1_1eread__l
 <a name="details" id="details"></a><h2 class="groupheader">Description</h2>
 <div class="textblock"><p>A readable literal, with <code>""_Eread</code>. </p>
 <p>This is like <a class="el" href="structcppemacs_1_1literals_1_1estring__literal.html">estring_literal</a>, but <a class="el" href="group__cppemacs__conversions.html">converts</a> using Emacs <code>read</code>.</p>
+<dl class="section note"><dt>Note</dt><dd>This reads exactly one object, and leaves the rest of the string as-is.</dd></dl>
 <div class="fragment"><div class="line"><a class="code hl_struct" href="structcppemacs_1_1envw.html">envw</a> env = ...;</div>
 <div class="line"><span class="keyword">using namespace </span><a class="code hl_namespace" href="namespacecppemacs_1_1literals.html">cppemacs::literals</a>;</div>
 <div class="line"><a class="code hl_typedef" href="group__cppemacs__core.html#gabd2db90fff7d715e8649f37147f60a3a">value</a> expr = env-&gt;*<span class="stringliteral">&quot;(foo 1 2)&quot;</span>_Eread; <span class="comment">// == &#39;(foo 1 2)</span></div>

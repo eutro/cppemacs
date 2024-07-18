@@ -395,8 +395,8 @@ template&lt;ptrdiff_t MinArity, ptrdiff_t MaxArity, bool IsVariadic, typename F 
 <div class="line"><span class="preprocessor">#endif</span></div>
 <div class="line">}</div>
 <div class="ttc" id="agroup__cppemacs__core_html_gabd2db90fff7d715e8649f37147f60a3a"><div class="ttname"><a href="group__cppemacs__core.html#gabd2db90fff7d715e8649f37147f60a3a">cppemacs::value</a></div><div class="ttdeci">emacs_value value</div><div class="ttdoc">Raw opaque pointer representing an Emacs value. See cell for the wrapper, and envw for functions that...</div><div class="ttdef"><b>Definition</b> core.hpp:388</div></div>
-<div class="ttc" id="agroup__cppemacs__utilities_html_ga18fe9586cb561bd3a4609527052e502e"><div class="ttname"><a href="group__cppemacs__utilities.html#ga18fe9586cb561bd3a4609527052e502e">cppemacs::make_spreader_function</a></div><div class="ttdeci">auto make_spreader_function(spreader_arity&lt; MinArity, MaxArity, IsVariadic &gt; ar, const char *doc, F &amp;&amp;f)</div><div class="ttdoc">Make a spreader module function with the given minimum and maximum arity.</div><div class="ttdef"><b>Definition</b> utils.hpp:562</div></div>
-<div class="ttc" id="agroup__cppemacs__utilities_html_gacc69cce08917f09d4a75b5b0414a3c12"><div class="ttname"><a href="group__cppemacs__utilities.html#gacc69cce08917f09d4a75b5b0414a3c12">cppemacs::spreader_thunk</a></div><div class="ttdeci">spreader_arity&lt; 0 &gt; spreader_thunk</div><div class="ttdoc">Arity for a function with no arguments.</div><div class="ttdef"><b>Definition</b> utils.hpp:523</div></div>
+<div class="ttc" id="agroup__cppemacs__utilities_html_ga18fe9586cb561bd3a4609527052e502e"><div class="ttname"><a href="group__cppemacs__utilities.html#ga18fe9586cb561bd3a4609527052e502e">cppemacs::make_spreader_function</a></div><div class="ttdeci">auto make_spreader_function(spreader_arity&lt; MinArity, MaxArity, IsVariadic &gt; ar, const char *doc, F &amp;&amp;f)</div><div class="ttdoc">Make a spreader module function with the given minimum and maximum arity.</div><div class="ttdef"><b>Definition</b> utils.hpp:561</div></div>
+<div class="ttc" id="agroup__cppemacs__utilities_html_gacc69cce08917f09d4a75b5b0414a3c12"><div class="ttname"><a href="group__cppemacs__utilities.html#gacc69cce08917f09d4a75b5b0414a3c12">cppemacs::spreader_thunk</a></div><div class="ttdeci">spreader_arity&lt; 0 &gt; spreader_thunk</div><div class="ttdoc">Arity for a function with no arguments.</div><div class="ttdef"><b>Definition</b> utils.hpp:522</div></div>
 <div class="ttc" id="astructcppemacs_1_1envw_html"><div class="ttname"><a href="structcppemacs_1_1envw.html">cppemacs::envw</a></div><div class="ttdoc">General Emacs environment wrapper.</div><div class="ttdef"><b>Definition</b> core.hpp:876</div></div>
 </div><!-- fragment --> 
 </div>
@@ -428,9 +428,9 @@ template&lt;typename T , typename... Args&gt; </div>
 </div><div class="memdoc">
 
 <p>In-place construct a <a class="el" href="structcppemacs_1_1user__ptr.html">user_ptr</a> on the heap. </p>
-<dl class="section warning"><dt>Warning</dt><dd>If this value isn't passed to Emacs via <a class="el" href="structcppemacs_1_1envw.html#a1eec660dd9e009d04c7f237750a74324">envw::inject()</a>, then it will leak memory. The suggested idiom is: <div class="fragment"><div class="line">env.maybe_non_local_exit();</div>
+<dl class="section warning"><dt>Warning</dt><dd>If this value isn't passed to Emacs via <a class="el" href="structcppemacs_1_1envw.html#a1eec660dd9e009d04c7f237750a74324">envw::inject()</a>, then it will leak memory. However, it is okay if a non-local exit is pending at this time. The suggested idiom is: <div class="fragment"><div class="line">env.maybe_non_local_exit(); <span class="comment">// optional, though it saves an allocation</span></div>
 <div class="line">env-&gt;*make_user_ptr&lt;T&gt;(a, b, c);</div>
-</div><!-- fragment --> which will ensure that no allocation is made if there is already a non-local exit pending. </dd></dl>
+</div><!-- fragment --> </dd></dl>
 
 </div>
 </div>
