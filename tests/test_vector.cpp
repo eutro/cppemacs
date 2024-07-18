@@ -24,19 +24,21 @@
 #include "common.hpp"
 #include <vector>
 
-TEST_SCOPED(SCENARIO("using vectors")) {
+SCOPED_CASE("cell.vec_*") {
   GIVEN("a heterogenous vector") {
     cell vec = (envp->*"vector")(1, 1.5, "hello"_Estr, "some-symbol");
 
-    THEN("all the elements are correct") {
-      cell format = envp->*"format";
-      std::vector<std::string> elts;
-      for (ptrdiff_t ii = 0, end = vec.vec_size(); ii < end; ++ii) {
-        elts.push_back(format("%S"_Estr, vec.vec_get(ii)).extract<std::string>());
-      }
+    WHEN("iterating over the vector") {
+      THEN("all the elements are correct") {
+        cell format = envp->*"format";
+        std::vector<std::string> elts;
+        for (ptrdiff_t ii = 0, end = vec.vec_size(); ii < end; ++ii) {
+          elts.push_back(format("%S"_Estr, vec.vec_get(ii)).extract<std::string>());
+        }
 
-      std::vector<std::string> expected{"1", "1.5", "\"hello\"", "some-symbol"};
-      REQUIRE(elts == expected);
+        std::vector<std::string> expected{"1", "1.5", "\"hello\"", "some-symbol"};
+        REQUIRE(elts == expected);
+      }
     }
   }
 }

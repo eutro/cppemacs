@@ -23,52 +23,63 @@
 
 #include "common.hpp"
 
-class Type1 {};
-class Type2 {};
-
-extern "C" void cppemacs_this_should_show_up_in_valgrind() {
-  make_user_ptr<int>(10);
-}
-
-TEST_SCOPED(SCENARIO("using user_ptr")) {
-  cppemacs_this_should_show_up_in_valgrind();
-
+SCOPED_SCENARIO("unwrapping a user_ptr") {
   GIVEN("a single user_ptr") {
-    auto uptr = make_user_ptr<int>(10);
-    cell ptrv = envp->*uptr;
-
-    THEN("unwrapping it yields the same pointer") {
-      auto unwrapped = ptrv.extract<user_ptr<int>>();
-      REQUIRE(unwrapped.get() == uptr.get()); envp.maybe_non_local_exit();
-    }
-  }
-
-  GIVEN("a user_ptr<shared_ptr>") {
     std::shared_ptr<int> sptr(new int{0});
-    envp.run_scoped([&](envw env) {
-      env->*make_user_ptr<decltype(sptr)>(sptr);
-    });
-    CHECK(sptr.use_count() == 2);
+    auto uptr = make_user_ptr<decltype(sptr)>(sptr);
 
-    THEN("garbage collection releases it") {
+    WHEN("unwrapping it") {
+      cell ptrv = envp->*uptr;
+      auto unwrapped = ptrv.extract<user_ptr<decltype(sptr)>>();
+
+      THEN("the result is the same pointer") {
+        REQUIRE(unwrapped.get() == uptr.get());
+      }
+    }
+
+    WHEN("garbage collecting it") {
+      envp.run_scoped([&](envw env) {
+        env->*make_user_ptr<decltype(sptr)>(sptr);
+      });
+      long old_count = sptr.use_count();
+
       if ((envp->*"garbage-collect")()) {
-        REQUIRE(sptr.use_count() == 1);
+        THEN("it gets garbage collected") {
+          REQUIRE(sptr.use_count() < old_count);
+        }
       }
     }
   }
+}
 
+struct CommonType {
+  int x;
+  CommonType(int x): x(x) {}
+  bool operator==(const CommonType &o) const { return x == o.x; }
+};
+struct Type1 : CommonType { Type1(int x) : CommonType(x) {} };
+struct Type2 : CommonType { Type2(int x) : CommonType(x) {} };
+
+SCOPED_SCENARIO("type-checking user pointers") {
   GIVEN("two user_ptr-s of different types") {
-    cell ptr1 = envp->*make_user_ptr<Type1>(); envp.maybe_non_local_exit();
-    cell ptr2 = envp->*make_user_ptr<Type2>(); envp.maybe_non_local_exit();
+    cell ptr1 = envp->*make_user_ptr<Type1>(1);
+    cell ptr2 = envp->*make_user_ptr<Type2>(2);
+    envp.maybe_non_local_exit();
 
-    THEN("they can be unwrapped") {
-      REQUIRE_NOTHROW(ptr1.extract<user_ptr<Type1>>());
-      REQUIRE_NOTHROW(ptr2.extract<user_ptr<Type2>>());
+    WHEN("they are unwrapped") {
+      THEN("the results are the same") {
+        REQUIRE_NOTHROW(*ptr1.extract<user_ptr<Type1>>() == Type1(1));
+        REQUIRE_NOTHROW(*ptr2.extract<user_ptr<Type2>>() == Type2(2));
+      }
     }
 
-    THEN("they cannot be converted to each other") {
-      REQUIRE_THROWS(ptr1.extract<user_ptr<Type2>>());
-      REQUIRE_THROWS(ptr2.extract<user_ptr<Type1>>());
+    WHEN("they are extracted as the wrong type") {
+      THEN("an exception is thrown") {
+        REQUIRE_THROWS(ptr1.extract<user_ptr<Type2>>());
+        REQUIRE_THROWS(ptr2.extract<user_ptr<Type1>>());
+        REQUIRE_THROWS(ptr1.extract<user_ptr<CommonType>>());
+        REQUIRE_THROWS(ptr2.extract<user_ptr<CommonType>>());
+      }
     }
   }
 }

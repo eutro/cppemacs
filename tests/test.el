@@ -25,13 +25,14 @@
 
 (setq backtrace-on-error-noninteractive nil)
 
+(when (equal "--" (car-safe command-line-args-left))
+  (pop command-line-args-left))
 (module-load (pop command-line-args-left))
 
 (let ((status
        (cppemacs-test
         (vconcat
-         command-line-args-left
+         (prog1 command-line-args-left (setq command-line-args-left nil))
          (split-string-and-unquote (or (getenv "CATCH2_FLAGS") ""))))))
   (unless (= status 0)
     (kill-emacs status)))
-

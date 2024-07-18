@@ -104,6 +104,9 @@ inline constexpr estring_literal operator "" _ES(const char *data, size_t len)
  * This is like @ref estring_literal, but @ref cppemacs_conversions
  * "converts" using Emacs `read`.
  *
+ * @note This reads exactly one object, and leaves the rest of the
+ * string as-is.
+ *
  * @code
  * envw env = ...;
  * using namespace cppemacs::literals;

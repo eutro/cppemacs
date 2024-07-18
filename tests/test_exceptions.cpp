@@ -23,7 +23,7 @@
 
 #include "common.hpp"
 
-TEST_SCOPED(SCENARIO("throwing exceptions")) {
+SCOPED_CASE("exceptions") {
   GIVEN("definitions of `cppemacs-funN'") {
     cell defalias = envp->*"defalias";
     cell eval = envp->*"eval";
@@ -103,49 +103,63 @@ TEST_SCOPED(SCENARIO("throwing exceptions")) {
       switch (sig_type) {
       case funcall_exit::signal_:
         THEN("a signal is raised") {
-          REQUIRE_THROWS_AS(eval_expr(), signalled);
+          CHECK_THROWS_AS(eval_expr(), signalled);
         }
         break;
       case funcall_exit::throw_:
         THEN("a value is thrown") {
-          REQUIRE_THROWS_AS(eval_expr(), thrown);
+          CHECK_THROWS_AS(eval_expr(), thrown);
         }
         break;
 
       default:
         THEN("it returns normally") {
-          REQUIRE_NOTHROW(eval_expr());
+          CHECK_NOTHROW(eval_expr());
         }
         break;
       }
     }
-
   }
+}
 
+SCOPED_SCENARIO("transparently throwing exceptions") {
   GIVEN("a new exception type") {
     struct super_cool_boxed_exception {};
 
-    REQUIRE_THROWS_AS(
-      ((envp->*make_spreader_function(
-          spreader_arity<0>(),
-          "Throw `super_cool_boxed_exception'",
-          [](envw env) {
-            return env.run_catching<true>([]() -> value {
-              throw super_cool_boxed_exception();
-            });
-          }))(),
-        envp.rethrow_non_local_exit<true>()),
-      super_cool_boxed_exception
-    );
+    GIVEN("a lambda that throws it") {
+      auto throw_cool_exn = envp->*make_spreader_function(
+        spreader_arity<0>(),
+        "Throw `super_cool_boxed_exception'",
+        [](envw env) {
+          return env.run_catching<true>([]() -> value {
+            throw super_cool_boxed_exception();
+          });
+        });
+
+      WHEN("it is called") {
+        THEN("the correct exception is thrown") {
+          REQUIRE_THROWS_AS(
+            (throw_cool_exn(), envp.rethrow_non_local_exit<true>()),
+            super_cool_boxed_exception
+          );
+        }
+      }
+    }
   }
 
   GIVEN("an expression that raises an 'error") {
-    using Catch::Matchers::Message;
-    REQUIRE_THROWS_MATCHES(
-      ((envp->*"eval")(R"((error "This is an error"))"_Eread),
-       envp.rethrow_non_local_exit<true>()),
-      std::runtime_error,
-      Message("This is an error")
-    );
+    value expr = envp->*R"((error "This is an error"))"_Eread;
+
+    WHEN("it is evaluated") {
+      THEN("it throws an error") {
+        using Catch::Matchers::Message;
+        REQUIRE_THROWS_MATCHES(
+          ((envp->*"eval")(expr),
+           envp.rethrow_non_local_exit<true>()),
+          std::runtime_error,
+          Message("This is an error")
+        );
+      }
+    }
   }
 }

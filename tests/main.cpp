@@ -26,6 +26,9 @@
 envw cppemacs::envp = nullptr;
 
 static int run_tests(envw nv, const std::vector<std::string> &args) {
+  if (args.size() + 1 > INT_MAX) {
+    throw std::runtime_error("Too many arguments");
+  }
   std::vector<const char *> argv(args.size() + 1);
   {
     auto itl = argv.begin() + 1; auto itr = args.begin();
@@ -34,7 +37,7 @@ static int run_tests(envw nv, const std::vector<std::string> &args) {
   argv[0] = "cppemacs-test";
 
   envp = nv;
-  int ret = Catch::Session().run(argv.size(), argv.data());
+  int ret = Catch::Session().run(static_cast<int>(argv.size()), argv.data());
   envp = nullptr;
 
   return ret;

@@ -28,8 +28,8 @@
 struct is_the_same {
   template <typename Lhs, typename Res>
   void operator()(expected_type_t<Res>, const Lhs &lhs, const cell &val) const {
-    THEN("is the same") {
-      REQUIRE(lhs == val.extract<Res>());
+    THEN("the result is the same") {
+      CHECK(lhs == val.extract<Res>());
     }
   }
 };
@@ -37,8 +37,8 @@ struct is_the_same {
 struct throws_an_exception {
   template <typename Lhs, typename Res>
   void operator()(expected_type_t<Res>, Lhs &&, const cell &val) const {
-    THEN("throws an exception") {
-      REQUIRE_THROWS(val.extract<Res>());
+    THEN("an exception is thrown") {
+      CHECK_THROWS(val.extract<Res>());
     }
   }
 };
@@ -53,13 +53,34 @@ static void checkRoundTrip(const Arg &value, F f = {}) {
   }
 }
 
-TEST_SCOPED(SCENARIO("round trip converting values")) {
-  WHEN("reading malformed input") {
-    THEN("an exception is thrown") {
-      REQUIRE_THROWS((envp->*")"_Eread, envp.maybe_non_local_exit())); // mismatched delimiter
+SCOPED_SCENARIO("reading malformed input") {
+  auto input = GENERATE(
+    R"())"_Eread,
+    R"("unmatched quote)"_Eread
+  );
+  GIVEN("an invalid input string " << input) {
+    WHEN("reading the string") {
+      THEN("an exception is thrown") {
+        REQUIRE_THROWS((envp->*input, envp.maybe_non_local_exit()));
+      }
     }
   }
+}
 
+SCOPED_SCENARIO("reading extra data") {
+  auto input = GENERATE(
+    std::make_pair(R"("valid object"))"_Eread, envp->*"valid object"_Estr)
+  );
+  GIVEN("an input string with extra data " << input.first) {
+    WHEN("reading the string") {
+      THEN(input.first << " is produced") {
+        REQUIRE_THAT(envp->*input.first, LispEquals(input.second));
+      }
+    }
+  }
+}
+
+TEST_SCOPED(TEST_CASE("General conversions")) {
   checkRoundTrip<std::string>("abcd");
 
   // check Catch config as well otherwise it might not link
@@ -107,7 +128,7 @@ TEST_SCOPED(SCENARIO("round trip converting values")) {
   checkRoundTrip<std::string, int, throws_an_exception>("abcd");
 }
 
-TEST_SCOPED(SCENARIO("constructing functions")) {
+SCOPED_CASE("module_function") {
   std::shared_ptr<int> sptr{new int{0}};
   REQUIRE(sptr.use_count() == 1);
 
@@ -141,13 +162,15 @@ TEST_SCOPED(SCENARIO("constructing functions")) {
         CHECK(sptr.use_count() == 2);
       });
 
-      THEN("it gets destroyed after garbage collection") {
+      AND_WHEN("it is garbage collected") {
         cell garbage_collect = envp->*"garbage-collect";
         if (garbage_collect() && garbage_collect()) {
-          if (envp.is_compatible_relaxed<28>()) {
-            REQUIRE(sptr.use_count() == 1);
-          } else {
-            CHECK_NOFAIL(sptr.use_count() == 1);
+          THEN("it gets destroyed") {
+            if (envp.is_compatible_relaxed<28>()) {
+              REQUIRE(sptr.use_count() == 1);
+            } else {
+              CHECK_NOFAIL(sptr.use_count() == 1);
+            }
           }
         }
       }

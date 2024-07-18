@@ -54,6 +54,8 @@ inline void test_run_scoped(void (*f)()) {
   static void CPPEMACS_TEST_UNIQUE_NAME(scoped_test)();         \
   TEST_CASE_EXPR { cppemacs::test_run_scoped(CPPEMACS_TEST_UNIQUE_NAME(scoped_test)); } \
   static void CPPEMACS_TEST_UNIQUE_NAME(scoped_test)()
+#define SCOPED_SCENARIO(EXPR) TEST_SCOPED(SCENARIO(EXPR))
+#define SCOPED_CASE(EXPR) TEST_SCOPED(TEST_CASE(EXPR))
 
 using namespace cppemacs;
 using namespace cppemacs::literals;

@@ -86,7 +86,7 @@ public:
    * value.
    */
   friend value to_emacs(expected_type_t<user_ptr>, envw nv, const user_ptr &ptr) noexcept {
-    value ret;
+    value ret = nullptr;
     void *raw = reinterpret_cast<void*>(ptr.ptr);
     if (nv.non_local_exit_check()
         || (ret = nv.make_user_ptr(user_ptr<T, Deleter>::fin, raw),
@@ -119,13 +119,12 @@ public:
  * @brief In-place construct a @ref user_ptr on the heap.
  *
  * @warning If this value isn't passed to Emacs via @ref
- * envw::inject(), then it will leak memory. The suggested idiom is:
+ * envw::inject(), then it will leak memory. However, it is okay if a
+ * non-local exit is pending at this time. The suggested idiom is:
  * @code
- * env.maybe_non_local_exit();
+ * env.maybe_non_local_exit(); // optional, though it saves an allocation
  * env->*make_user_ptr<T>(a, b, c);
  * @endcode
- * which will ensure that no allocation is made if there is already a
- * non-local exit pending.
  */
 template <typename T, typename...Args> inline user_ptr<T>
 make_user_ptr(Args &&...args) { return user_ptr<T>(new T(std::forward<Args>(args)...)); }

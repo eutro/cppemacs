@@ -37,9 +37,6 @@ else()
   FetchContent_MakeAvailable(Catch2)
 endif()
 
-#add_subdirectory(${catch2_SOURCE_DIR} ${catch2_BINARY_DIR})
-#list(APPEND CMAKE_MODULE_PATH "${catch2_SOURCE_DIR}/extras")
-
 include(Catch)
 
 set(CPPEMACS_TEST_TARGET ${PROJECT_NAME}_test)
@@ -112,10 +109,11 @@ You could try to:
 - Disable tests with -DCPPEMACS_Test=OFF]=])
 endif ()
 
-add_test(NAME ${CPPEMACS_TEST_TARGET}
-  COMMAND Emacs::emacs -Q --batch --script
-  "${CMAKE_CURRENT_SOURCE_DIR}/test.el"
-  "$<TARGET_FILE:${CPPEMACS_TEST_TARGET}>")
+# use catch_discover_tests, for this we need to pretend Emacs is a cross compiling emulator for the test library
+set(EMACS_AS_CC_EMULATOR $<TARGET_FILE:Emacs::emacs> -Q --batch --script "${CMAKE_CURRENT_SOURCE_DIR}/test.el" --)
+set_target_properties(${CPPEMACS_TEST_TARGET} PROPERTIES
+  CROSSCOMPILING_EMULATOR "${EMACS_AS_CC_EMULATOR}")
+catch_discover_tests(${CPPEMACS_TEST_TARGET})
 
 if (CPPEMACS_Examples)
   list(APPEND CPPEMACS_TEST_TARGETS "${PROJECT_NAME}_examples")
