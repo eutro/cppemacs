@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['process_5finput_5fresult_0',['process_input_result',['../structcppemacs_1_1process__input__result.html',1,'cppemacs']]]
+  ['non_5flocal_5fexit_0',['non_local_exit',['../structcppemacs_1_1non__local__exit.html',1,'cppemacs']]]
 ];

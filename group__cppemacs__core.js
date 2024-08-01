@@ -26,6 +26,11 @@ var group__cppemacs__core =
       [ "data", "structcppemacs_1_1thrown.html#a2a7c6e435e62e201ebb23581f5834b6d", null ],
       [ "symbol", "structcppemacs_1_1thrown.html#a1514102413832e2daf3de52e78f80aef", null ]
     ] ],
+    [ "cppemacs::default_exception_boxer< Box >", "structcppemacs_1_1default__exception__boxer.html", [
+      [ "do_maybe_exit", "structcppemacs_1_1default__exception__boxer.html#aa5332e22481a566fb9cadfe31502b5d3", null ],
+      [ "do_rethrow_exit", "structcppemacs_1_1default__exception__boxer.html#a24e9fcf9f86bf1c63ed66d40223c6bc5", null ],
+      [ "handle_current", "structcppemacs_1_1default__exception__boxer.html#a0c265e76d1c83d90d330aa9b4c6ab767", null ]
+    ] ],
     [ "cppemacs::envw", "structcppemacs_1_1envw.html", [
       [ "envw", "structcppemacs_1_1envw.html#a701cbd00a3b4b602d286258b0d43fc76", null ],
       [ "assert_compatible", "structcppemacs_1_1envw.html#ac66cea2ad21bfe21a0c284fbf388d663", null ],
@@ -59,7 +64,7 @@ var group__cppemacs__core =
       [ "make_time", "structcppemacs_1_1envw.html#af5e2d31164c89def3521dc3a41090eda", null ],
       [ "make_unibyte_string", "structcppemacs_1_1envw.html#a43d9d5dcf0eebe53c25d78a2cc3a210e", null ],
       [ "make_user_ptr", "structcppemacs_1_1envw.html#ac70f715c427c8090588a19ac643a07e2", null ],
-      [ "maybe_non_local_exit", "structcppemacs_1_1envw.html#aa343c86e3e82410365f74c0fb0421cc0", null ],
+      [ "maybe_non_local_exit", "structcppemacs_1_1envw.html#ac88fcc9737bb4736a2fc165954b0d04a", null ],
       [ "non_local_exit_check", "structcppemacs_1_1envw.html#a80ad1e199f0427ce4620583594a16261", null ],
       [ "non_local_exit_clear", "structcppemacs_1_1envw.html#a9d52fec6b774e57482e94b09fec2e671", null ],
       [ "non_local_exit_get", "structcppemacs_1_1envw.html#ad37ae1c134789f3bdc9c7c38c234e784", null ],
@@ -71,8 +76,8 @@ var group__cppemacs__core =
       [ "operator->", "structcppemacs_1_1envw.html#a99d01d695f88886f11a9786fd8d4e363", null ],
       [ "operator->*", "structcppemacs_1_1envw.html#ac02433ef564e008c8ffb94d9f58c8147", null ],
       [ "process_input", "structcppemacs_1_1envw.html#a79630ec34fa30fbabba94e2cb08248ba", null ],
-      [ "rethrow_non_local_exit", "structcppemacs_1_1envw.html#abc22b0e8abe9817b095870cf43419e0b", null ],
-      [ "run_catching", "structcppemacs_1_1envw.html#aa977b2b678096adf617ec7500359d353", null ],
+      [ "rethrow_non_local_exit", "structcppemacs_1_1envw.html#a55cf4de7ba8a12bf243758386e9da87e", null ],
+      [ "run_catching", "structcppemacs_1_1envw.html#a8606b3a4be19075602505b83afbb7fe6", null ],
       [ "run_scoped", "structcppemacs_1_1envw.html#a2701c940613095331a4786eb108d2da5", null ],
       [ "set_function_finalizer", "structcppemacs_1_1envw.html#a0fa8cbab17e1f0f3304f00d65763b6d1", null ],
       [ "set_user_finalizer", "structcppemacs_1_1envw.html#a51563c9b13946b97e46791fd4534358e", null ],

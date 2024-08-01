@@ -159,11 +159,12 @@ Macros</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Define as 1 before including &lt;<a class="el" href="core_8hpp_source.html">cppemacs/core.hpp</a>&gt; to more tightly integrate Emacs signals with C++ exceptions, at the cost of performance. </p>
-<p>Specifically, unless overridden with their <code>Unbox</code> or <code>Box</code> template parameters:</p>
+<p>Specifically, unless overridden with their <code>Boxing</code> template parameters:</p>
 <ul>
-<li><a class="el" href="structcppemacs_1_1envw.html#aa343c86e3e82410365f74c0fb0421cc0">envw::maybe_non_local_exit()</a> will <a class="el" href="structcppemacs_1_1envw.html#abc22b0e8abe9817b095870cf43419e0b">rethrow</a> the non-local exit, so it can be caught as <a class="el" href="structcppemacs_1_1signalled.html">cppemacs::signalled</a> or <a class="el" href="structcppemacs_1_1thrown.html">cppemacs::thrown</a>, and without leaving the non-local exit pending. Most parts of cppemacs that fail using exceptions use <code>maybe_non_local_exit()</code> to raise the error.</li>
-<li><a class="el" href="structcppemacs_1_1envw.html#aa977b2b678096adf617ec7500359d353">envw::run_catching()</a> stores C++ exceptions as <code>user-ptr</code>s of <code>std::exception_ptr</code>s, and <a class="el" href="structcppemacs_1_1envw.html#abc22b0e8abe9817b095870cf43419e0b">envw::rethrow_non_local_exit()</a> unboxes them. </li>
+<li><a class="el" href="structcppemacs_1_1envw.html#ac88fcc9737bb4736a2fc165954b0d04a">envw::maybe_non_local_exit()</a> will <a class="el" href="structcppemacs_1_1envw.html#a55cf4de7ba8a12bf243758386e9da87e">rethrow</a> the non-local exit, so it can be caught as <a class="el" href="structcppemacs_1_1signalled.html">cppemacs::signalled</a> or <a class="el" href="structcppemacs_1_1thrown.html">cppemacs::thrown</a>, and without leaving the non-local exit pending. Most parts of cppemacs that fail using exceptions use <code>maybe_non_local_exit()</code> to raise the error.</li>
+<li><a class="el" href="structcppemacs_1_1envw.html#a8606b3a4be19075602505b83afbb7fe6">envw::run_catching()</a> stores C++ exceptions as <code>user-ptr</code>s of <code>std::exception_ptr</code>s, and <a class="el" href="structcppemacs_1_1envw.html#a55cf4de7ba8a12bf243758386e9da87e">envw::rethrow_non_local_exit()</a> unboxes them.</li>
 </ul>
+<dl class="section see"><dt>See also</dt><dd><a class="el" href="group__cppemacs__conversions.html#ga11ee5d885db46a74e6c9fac2c8c147c4" title="The default Boxer used by envw::run_catching() , envw::maybe_non_local_exit()  and envw::rethrow_non_...">CPPEMACS_DEFAULT_EXCEPTION_BOXER</a> for more fine-grained control over the default <code>Boxing</code> parameter. </dd></dl>
 
 </div>
 </div>

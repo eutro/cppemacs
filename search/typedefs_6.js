@@ -1,5 +1,4 @@
 var searchData=
 [
-  ['value_0',['value',['../group__cppemacs__core.html#gabd2db90fff7d715e8649f37147f60a3a',1,'cppemacs']]],
-  ['void_5ft_1',['void_t',['../group__cppemacs__core.html#gae671b46595be5e99117ec6ac03827610',1,'cppemacs::detail']]]
+  ['try_5fbox_5fexceptions_0',['try_box_exceptions',['../group__cppemacs__conversions.html#ga1f4f3c0cdaa508e8e7863463d95cecd8',1,'cppemacs']]]
 ];

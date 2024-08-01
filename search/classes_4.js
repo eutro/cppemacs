@@ -1,5 +1,4 @@
 var searchData=
 [
-  ['module_5ffunction_0',['module_function',['../structcppemacs_1_1module__function.html',1,'cppemacs']]],
-  ['module_5ffunction_5frepr_1',['module_function_repr',['../structcppemacs_1_1module__function__repr.html',1,'cppemacs']]]
+  ['is_5fintegral_5fsmaller_5fthan_5fintmax_0',['is_integral_smaller_than_intmax',['../structcppemacs_1_1detail_1_1is__integral__smaller__than__intmax.html',1,'cppemacs::detail']]]
 ];

@@ -61,7 +61,8 @@ var NAVTREE =
 
 var NAVTREEINDEX =
 [
-"GFDL-1_83-or-later.html"
+"GFDL-1_83-or-later.html",
+"utils_8hpp_source.html"
 ];
 
 var SYNCONMSG = 'click to disable panel synchronisation';

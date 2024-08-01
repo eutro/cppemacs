@@ -1,4 +1,5 @@
 var searchData=
 [
-  ['quit_5f_0',['quit_',['../structcppemacs_1_1process__input__result.html#aa2e31bb07533a1d687ccf6f3d37a5c58',1,'cppemacs::process_input_result']]]
+  ['process_5finput_0',['process_input',['../structcppemacs_1_1envw.html#a79630ec34fa30fbabba94e2cb08248ba',1,'cppemacs::envw']]],
+  ['process_5finput_5fresult_1',['process_input_result',['../structcppemacs_1_1process__input__result.html',1,'cppemacs::process_input_result'],['../structcppemacs_1_1process__input__result.html#a6cfab76261a5f1ec8bc76d669e309781',1,'cppemacs::process_input_result::process_input_result()']]]
 ];

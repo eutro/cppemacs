@@ -16,6 +16,7 @@ var annotated_dup =
       ] ],
       [ "cell", "structcppemacs_1_1cell.html", "structcppemacs_1_1cell" ],
       [ "cell_extracted", "structcppemacs_1_1cell__extracted.html", "structcppemacs_1_1cell__extracted" ],
+      [ "default_exception_boxer", "structcppemacs_1_1default__exception__boxer.html", "structcppemacs_1_1default__exception__boxer" ],
       [ "envw", "structcppemacs_1_1envw.html", "structcppemacs_1_1envw" ],
       [ "expected_type_t", "structcppemacs_1_1expected__type__t.html", null ],
       [ "funcall_exit", "structcppemacs_1_1funcall__exit.html", "structcppemacs_1_1funcall__exit" ],

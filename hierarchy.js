@@ -2,6 +2,7 @@ var hierarchy =
 [
     [ "cppemacs::cell", "structcppemacs_1_1cell.html", null ],
     [ "cppemacs::cell_extracted< FromEmacsType, ValueType >", "structcppemacs_1_1cell__extracted.html", null ],
+    [ "cppemacs::default_exception_boxer< Box >", "structcppemacs_1_1default__exception__boxer.html", null ],
     [ "cppemacs::envw", "structcppemacs_1_1envw.html", null ],
     [ "cppemacs::literals::estring_literal", "structcppemacs_1_1literals_1_1estring__literal.html", [
       [ "cppemacs::literals::eread_literal", "structcppemacs_1_1literals_1_1eread__literal.html", null ]

@@ -140,12 +140,12 @@ $(document).ready(function(){initNavTree('structcppemacs_1_1envw.html',''); init
 <ul>
 <li>Member functions for invoking all function pointers in <a class="el" href="group__cppemacs__core.html#gae0592e597dd37c49496e082012c3de92">emacs_env</a>. Where C has to do <code>env-&gt;function_name(env, ...)</code>, C++ can do <code>env.function_name(...)</code> instead.</li>
 <li>Conversions <a class="el" href="structcppemacs_1_1envw.html#a1eec660dd9e009d04c7f237750a74324">from C++ to Emacs</a> and <a class="el" href="structcppemacs_1_1envw.html#a25ee0a095d9e15b7da3588ca2dcb88c3">vice-versa</a>. Most Lisp value creation/inspection can be done this way. See <a class="el" href="group__cppemacs__conversions.html">Type Conversions</a>.</li>
-<li>Idiomatic non-local exit handling, via <a class="el" href="structcppemacs_1_1envw.html#aa977b2b678096adf617ec7500359d353" title="Run f() and catch all exceptions, propagating them to Emacs via signal or throw.">run_catching()</a>, <a class="el" href="structcppemacs_1_1envw.html#aa343c86e3e82410365f74c0fb0421cc0" title="Check for non-local exit, and throw an exception if there is one.">maybe_non_local_exit()</a>, and <a class="el" href="structcppemacs_1_1envw.html#abc22b0e8abe9817b095870cf43419e0b" title="Check for non-local exit, and throw it as a C++ exception (signalled or thrown) if there is one.">rethrow_non_local_exit()</a>.</li>
+<li>Idiomatic non-local exit handling, via <a class="el" href="structcppemacs_1_1envw.html#a8606b3a4be19075602505b83afbb7fe6" title="Run f() and catch all exceptions, propagating them to Emacs via signal or throw.">run_catching()</a>, <a class="el" href="structcppemacs_1_1envw.html#ac88fcc9737bb4736a2fc165954b0d04a" title="Check for non-local exit, and throw an exception if there is one.">maybe_non_local_exit()</a>, and <a class="el" href="structcppemacs_1_1envw.html#a55cf4de7ba8a12bf243758386e9da87e" title="Check for non-local exit, and throw it as a C++ exception (signalled or thrown) if there is one.">rethrow_non_local_exit()</a>.</li>
 </ul>
 <p>@important An environment and most <a class="el" href="group__cppemacs__core.html#gabd2db90fff7d715e8649f37147f60a3a">values</a> obtained from it are invalidated when the function it was first obtained in returns (either <a class="el" href="group__cppemacs__core.html#ga7240e646f9bbe16f92711b868329cd00">emacs_module_init()</a> or a <a class="el" href="structcppemacs_1_1envw.html#abcfe6e0559744499bdc3c3e7abba5db6">module function</a> to which it is a parameter). Emacs environment functions cannot be used outside of the dynamic extent of these functions and <a class="el" href="group__cppemacs__core.html#gabd2db90fff7d715e8649f37147f60a3a">values</a> (except for <a class="el" href="structcppemacs_1_1envw.html#a30f5e112d7e62b8abeccdce17126e51b">make_global_ref()</a>), cannot be shared between invocations either.</p>
 <dl class="section warning"><dt>Warning</dt><dd>If a <code>noexcept</code> method on this class fails, or is called while a <a class="el" href="structcppemacs_1_1envw.html#a80ad1e199f0427ce4620583594a16261">non-local exit is pending</a>, it returns a meaningless result instead of throwing an exception. This is usually harmless, but the program should check and try to return to Emacs as soon as possible.</dd>
 <dd>
-For better integration with C++ exception handling, <a class="el" href="structcppemacs_1_1envw.html#aa977b2b678096adf617ec7500359d353" title="Run f() and catch all exceptions, propagating them to Emacs via signal or throw.">run_catching()</a> and <a class="el" href="structcppemacs_1_1envw.html#aa343c86e3e82410365f74c0fb0421cc0" title="Check for non-local exit, and throw an exception if there is one.">maybe_non_local_exit()</a> can be used. </dd></dl>
+For better integration with C++ exception handling, <a class="el" href="structcppemacs_1_1envw.html#a8606b3a4be19075602505b83afbb7fe6" title="Run f() and catch all exceptions, propagating them to Emacs via signal or throw.">run_catching()</a> and <a class="el" href="structcppemacs_1_1envw.html#ac88fcc9737bb4736a2fc165954b0d04a" title="Check for non-local exit, and throw an exception if there is one.">maybe_non_local_exit()</a> can be used. </dd></dl>
 </div><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
@@ -188,10 +188,10 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a25ee0a095d9e15b7da3588ca2dcb88c3"><td class="memTemplItemLeft" align="right" valign="top">T&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="structcppemacs_1_1envw.html#a25ee0a095d9e15b7da3588ca2dcb88c3">extract</a> (<a class="el" href="group__cppemacs__core.html#gabd2db90fff7d715e8649f37147f60a3a">value</a> val) const noexcept(false)</td></tr>
 <tr class="memdesc:a25ee0a095d9e15b7da3588ca2dcb88c3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Perform an arbitrary conversion from Emacs.  <br /></td></tr>
 <tr class="separator:a25ee0a095d9e15b7da3588ca2dcb88c3"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa977b2b678096adf617ec7500359d353" id="r_aa977b2b678096adf617ec7500359d353"><td class="memTemplParams" colspan="2">template&lt;bool Box = CPPEMACS_ENABLE_EXCEPTION_BOXING, typename F &gt; </td></tr>
-<tr class="memitem:aa977b2b678096adf617ec7500359d353"><td class="memTemplItemLeft" align="right" valign="top">auto&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="structcppemacs_1_1envw.html#aa977b2b678096adf617ec7500359d353">run_catching</a> (F &amp;&amp;f) const noexcept -&gt; <a class="el" href="group__cppemacs__core.html#gac178ba75a935094d28d7b37e083e2804">detail::invoke_result_t</a>&lt; F &gt;</td></tr>
-<tr class="memdesc:aa977b2b678096adf617ec7500359d353"><td class="mdescLeft">&#160;</td><td class="mdescRight">Run <code>f()</code> and catch all exceptions, propagating them to Emacs via <code>signal</code> or <code>throw</code>.  <br /></td></tr>
-<tr class="separator:aa977b2b678096adf617ec7500359d353"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8606b3a4be19075602505b83afbb7fe6" id="r_a8606b3a4be19075602505b83afbb7fe6"><td class="memTemplParams" colspan="2">template&lt;class Boxer  = CPPEMACS_DEFAULT_EXCEPTION_BOXER, typename F &gt; </td></tr>
+<tr class="memitem:a8606b3a4be19075602505b83afbb7fe6"><td class="memTemplItemLeft" align="right" valign="top">auto&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="structcppemacs_1_1envw.html#a8606b3a4be19075602505b83afbb7fe6">run_catching</a> (F &amp;&amp;f, Boxer &amp;&amp;b={}) const noexcept -&gt; <a class="el" href="group__cppemacs__core.html#gac178ba75a935094d28d7b37e083e2804">detail::invoke_result_t</a>&lt; F &gt;</td></tr>
+<tr class="memdesc:a8606b3a4be19075602505b83afbb7fe6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Run <code>f()</code> and catch all exceptions, propagating them to Emacs via <code>signal</code> or <code>throw</code>.  <br /></td></tr>
+<tr class="separator:a8606b3a4be19075602505b83afbb7fe6"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a2701c940613095331a4786eb108d2da5" id="r_a2701c940613095331a4786eb108d2da5"><td class="memTemplParams" colspan="2">template&lt;typename F &gt; <br />
 requires std::invocable&lt;F, <a class="el" href="structcppemacs_1_1envw.html">envw</a>&gt;</td></tr>
 <tr class="memitem:a2701c940613095331a4786eb108d2da5"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="structcppemacs_1_1envw.html#a2701c940613095331a4786eb108d2da5">run_scoped</a> (F &amp;&amp;f) const noexcept(noexcept(std::declval&lt; F &gt;()(std::declval&lt; <a class="el" href="structcppemacs_1_1envw.html">envw</a> &gt;())))</td></tr>
@@ -219,14 +219,14 @@ requires std::invocable&lt;F, <a class="el" href="structcppemacs_1_1envw.html">e
 <tr class="memitem:a45b3a28471c8f02ffaf28f8501d8e97d" id="r_a45b3a28471c8f02ffaf28f8501d8e97d"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structcppemacs_1_1envw.html#a45b3a28471c8f02ffaf28f8501d8e97d">non_local_exit_throw</a> (<a class="el" href="group__cppemacs__core.html#gabd2db90fff7d715e8649f37147f60a3a">value</a> symbol, <a class="el" href="group__cppemacs__core.html#gabd2db90fff7d715e8649f37147f60a3a">value</a> data) const noexcept</td></tr>
 <tr class="memdesc:a45b3a28471c8f02ffaf28f8501d8e97d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Throw a value with a tag. See the <a href="https://www.gnu.org/software/emacs/manual/html_node/elisp/Module-Nonlocal.html#index-non_005flocal_005fexit_005fthrow">manual</a>.  <br /></td></tr>
 <tr class="separator:a45b3a28471c8f02ffaf28f8501d8e97d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:abc22b0e8abe9817b095870cf43419e0b" id="r_abc22b0e8abe9817b095870cf43419e0b"><td class="memTemplParams" colspan="2">template&lt;bool Unbox = CPPEMACS_ENABLE_EXCEPTION_BOXING&gt; </td></tr>
-<tr class="memitem:abc22b0e8abe9817b095870cf43419e0b"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="structcppemacs_1_1envw.html#abc22b0e8abe9817b095870cf43419e0b">rethrow_non_local_exit</a> () const noexcept(false)</td></tr>
-<tr class="memdesc:abc22b0e8abe9817b095870cf43419e0b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Check for <a class="el" href="structcppemacs_1_1envw.html#a80ad1e199f0427ce4620583594a16261">non-local exit</a>, and throw it as a C++ exception (<a class="el" href="structcppemacs_1_1signalled.html">signalled</a> or <a class="el" href="structcppemacs_1_1thrown.html">thrown</a>) if there is one.  <br /></td></tr>
-<tr class="separator:abc22b0e8abe9817b095870cf43419e0b"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa343c86e3e82410365f74c0fb0421cc0" id="r_aa343c86e3e82410365f74c0fb0421cc0"><td class="memTemplParams" colspan="2">template&lt;bool Unbox = CPPEMACS_ENABLE_EXCEPTION_BOXING&gt; </td></tr>
-<tr class="memitem:aa343c86e3e82410365f74c0fb0421cc0"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="structcppemacs_1_1envw.html#aa343c86e3e82410365f74c0fb0421cc0">maybe_non_local_exit</a> () const noexcept(false)</td></tr>
-<tr class="memdesc:aa343c86e3e82410365f74c0fb0421cc0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Check for <a class="el" href="structcppemacs_1_1envw.html#a80ad1e199f0427ce4620583594a16261">non-local exit</a>, and throw an exception if there is one.  <br /></td></tr>
-<tr class="separator:aa343c86e3e82410365f74c0fb0421cc0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a55cf4de7ba8a12bf243758386e9da87e" id="r_a55cf4de7ba8a12bf243758386e9da87e"><td class="memTemplParams" colspan="2">template&lt;class Boxer  = CPPEMACS_DEFAULT_EXCEPTION_BOXER&gt; </td></tr>
+<tr class="memitem:a55cf4de7ba8a12bf243758386e9da87e"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="structcppemacs_1_1envw.html#a55cf4de7ba8a12bf243758386e9da87e">rethrow_non_local_exit</a> (Boxer &amp;&amp;b={}) const noexcept(false)</td></tr>
+<tr class="memdesc:a55cf4de7ba8a12bf243758386e9da87e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Check for <a class="el" href="structcppemacs_1_1envw.html#a80ad1e199f0427ce4620583594a16261">non-local exit</a>, and throw it as a C++ exception (<a class="el" href="structcppemacs_1_1signalled.html">signalled</a> or <a class="el" href="structcppemacs_1_1thrown.html">thrown</a>) if there is one.  <br /></td></tr>
+<tr class="separator:a55cf4de7ba8a12bf243758386e9da87e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac88fcc9737bb4736a2fc165954b0d04a" id="r_ac88fcc9737bb4736a2fc165954b0d04a"><td class="memTemplParams" colspan="2">template&lt;class Boxer  = CPPEMACS_DEFAULT_EXCEPTION_BOXER&gt; </td></tr>
+<tr class="memitem:ac88fcc9737bb4736a2fc165954b0d04a"><td class="memTemplItemLeft" align="right" valign="top">void&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="structcppemacs_1_1envw.html#ac88fcc9737bb4736a2fc165954b0d04a">maybe_non_local_exit</a> (Boxer &amp;&amp;b={}) const noexcept(false)</td></tr>
+<tr class="memdesc:ac88fcc9737bb4736a2fc165954b0d04a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Check for <a class="el" href="structcppemacs_1_1envw.html#a80ad1e199f0427ce4620583594a16261">non-local exit</a>, and throw an exception if there is one.  <br /></td></tr>
+<tr class="separator:ac88fcc9737bb4736a2fc165954b0d04a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:abcfe6e0559744499bdc3c3e7abba5db6" id="r_abcfe6e0559744499bdc3c3e7abba5db6"><td class="memItemLeft" align="right" valign="top"><a class="el" href="group__cppemacs__core.html#gabd2db90fff7d715e8649f37147f60a3a">value</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structcppemacs_1_1envw.html#abcfe6e0559744499bdc3c3e7abba5db6">make_function</a> (ptrdiff_t min_arity, ptrdiff_t max_arity, <a class="el" href="group__cppemacs__core.html#ga8b10f701e2c3225ed203909023fcbf28">emacs_function</a> func, const char *docstring, void *data) const noexcept</td></tr>
 <tr class="memdesc:abcfe6e0559744499bdc3c3e7abba5db6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Make an Emacs <em>module function</em> from a function pointer and associated data. See the <a href="https://www.gnu.org/software/emacs/manual/html_node/elisp/Module-Functions.html#index-make_005ffunction">manual</a>.  <br /></td></tr>
 <tr class="separator:abcfe6e0559744499bdc3c3e7abba5db6"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -399,16 +399,16 @@ template&lt;size_t MajorVersion&gt; </div>
 <p>Check if this environment supports the given major version's module API, and raises an error otherwise. </p>
 <div class="fragment"><div class="line"><a class="code hl_define" href="group__cppemacs__core.html#ga551d403bb37596654a499384db7561cf">CPPEMACS_EXPORT</a> <span class="keywordtype">int</span> <a class="code hl_function" href="group__cppemacs__core.html#ga7240e646f9bbe16f92711b868329cd00">emacs_module_init</a>(<a class="code hl_typedef" href="group__cppemacs__core.html#ga033e1c05132033352240fe379b14cf9d">emacs_runtime</a> *rt) <span class="keyword">noexcept</span> {</div>
 <div class="line">  <a class="code hl_struct" href="structcppemacs_1_1envw.html">envw</a> env = rt-&gt;get_environment(rt);</div>
-<div class="line">  env.<a class="code hl_function" href="structcppemacs_1_1envw.html#aa977b2b678096adf617ec7500359d353">run_catching</a>([&amp;]() {</div>
+<div class="line">  env.<a class="code hl_function" href="structcppemacs_1_1envw.html#a8606b3a4be19075602505b83afbb7fe6">run_catching</a>([&amp;]() {</div>
 <div class="line">    env.<a class="code hl_function" href="structcppemacs_1_1envw.html#ac66cea2ad21bfe21a0c284fbf388d663">assert_compatible</a>&lt;27&gt;();</div>
 <div class="line">  });</div>
 <div class="line">}</div>
-<div class="ttc" id="agroup__cppemacs__core_html_ga033e1c05132033352240fe379b14cf9d"><div class="ttname"><a href="group__cppemacs__core.html#ga033e1c05132033352240fe379b14cf9d">cppemacs::emacs_runtime</a></div><div class="ttdeci">::emacs_runtime emacs_runtime</div><div class="ttdoc">Struct passed to emacs_module_init().</div><div class="ttdef"><b>Definition</b> core.hpp:410</div></div>
-<div class="ttc" id="agroup__cppemacs__core_html_ga551d403bb37596654a499384db7561cf"><div class="ttname"><a href="group__cppemacs__core.html#ga551d403bb37596654a499384db7561cf">CPPEMACS_EXPORT</a></div><div class="ttdeci">#define CPPEMACS_EXPORT</div><div class="ttdoc">Declare a symbol as being exported from the shared library.</div><div class="ttdef"><b>Definition</b> core.hpp:429</div></div>
+<div class="ttc" id="agroup__cppemacs__core_html_ga033e1c05132033352240fe379b14cf9d"><div class="ttname"><a href="group__cppemacs__core.html#ga033e1c05132033352240fe379b14cf9d">cppemacs::emacs_runtime</a></div><div class="ttdeci">::emacs_runtime emacs_runtime</div><div class="ttdoc">Struct passed to emacs_module_init().</div><div class="ttdef"><b>Definition</b> core.hpp:411</div></div>
+<div class="ttc" id="agroup__cppemacs__core_html_ga551d403bb37596654a499384db7561cf"><div class="ttname"><a href="group__cppemacs__core.html#ga551d403bb37596654a499384db7561cf">CPPEMACS_EXPORT</a></div><div class="ttdeci">#define CPPEMACS_EXPORT</div><div class="ttdoc">Declare a symbol as being exported from the shared library.</div><div class="ttdef"><b>Definition</b> core.hpp:430</div></div>
 <div class="ttc" id="agroup__cppemacs__core_html_ga7240e646f9bbe16f92711b868329cd00"><div class="ttname"><a href="group__cppemacs__core.html#ga7240e646f9bbe16f92711b868329cd00">emacs_module_init</a></div><div class="ttdeci">CPPEMACS_EXPORT int emacs_module_init(cppemacs::emacs_runtime *runtime) noexcept</div><div class="ttdoc">The main entrypoint of the dynamic module. See the manual.</div><div class="ttdef"><b>Definition</b> brief_example.cpp:34</div></div>
-<div class="ttc" id="astructcppemacs_1_1envw_html"><div class="ttname"><a href="structcppemacs_1_1envw.html">cppemacs::envw</a></div><div class="ttdoc">General Emacs environment wrapper.</div><div class="ttdef"><b>Definition</b> core.hpp:876</div></div>
-<div class="ttc" id="astructcppemacs_1_1envw_html_aa977b2b678096adf617ec7500359d353"><div class="ttname"><a href="structcppemacs_1_1envw.html#aa977b2b678096adf617ec7500359d353">cppemacs::envw::run_catching</a></div><div class="ttdeci">auto run_catching(F &amp;&amp;f) const noexcept -&gt; detail::invoke_result_t&lt; F &gt;</div><div class="ttdoc">Run f() and catch all exceptions, propagating them to Emacs via signal or throw.</div><div class="ttdef"><b>Definition</b> core.hpp:1542</div></div>
-<div class="ttc" id="astructcppemacs_1_1envw_html_ac66cea2ad21bfe21a0c284fbf388d663"><div class="ttname"><a href="structcppemacs_1_1envw.html#ac66cea2ad21bfe21a0c284fbf388d663">cppemacs::envw::assert_compatible</a></div><div class="ttdeci">void assert_compatible() const noexcept(false)</div><div class="ttdoc">Check if this environment supports the given major version's module API, and raises an error otherwis...</div><div class="ttdef"><b>Definition</b> core.hpp:982</div></div>
+<div class="ttc" id="astructcppemacs_1_1envw_html"><div class="ttname"><a href="structcppemacs_1_1envw.html">cppemacs::envw</a></div><div class="ttdoc">General Emacs environment wrapper.</div><div class="ttdef"><b>Definition</b> core.hpp:972</div></div>
+<div class="ttc" id="astructcppemacs_1_1envw_html_a8606b3a4be19075602505b83afbb7fe6"><div class="ttname"><a href="structcppemacs_1_1envw.html#a8606b3a4be19075602505b83afbb7fe6">cppemacs::envw::run_catching</a></div><div class="ttdeci">auto run_catching(F &amp;&amp;f, Boxer &amp;&amp;b={}) const noexcept -&gt; detail::invoke_result_t&lt; F &gt;</div><div class="ttdoc">Run f() and catch all exceptions, propagating them to Emacs via signal or throw.</div><div class="ttdef"><b>Definition</b> core.hpp:1555</div></div>
+<div class="ttc" id="astructcppemacs_1_1envw_html_ac66cea2ad21bfe21a0c284fbf388d663"><div class="ttname"><a href="structcppemacs_1_1envw.html#ac66cea2ad21bfe21a0c284fbf388d663">cppemacs::envw::assert_compatible</a></div><div class="ttdeci">void assert_compatible() const noexcept(false)</div><div class="ttdoc">Check if this environment supports the given major version's module API, and raises an error otherwis...</div><div class="ttdef"><b>Definition</b> core.hpp:1078</div></div>
 </div><!-- fragment --><dl class="section see"><dt>See also</dt><dd><a class="el" href="structcppemacs_1_1envw.html#ac40343a3ce5e040369dd433cef0f6b29" title="Check if this environment supports the module API of the given Emacs major version....">is_compatible()</a> and <a class="el" href="structcppemacs_1_1envw.html#ac2eb49d1993455328a8ec71908578d54" title="Throw an exception with the error message &quot;Emacs major version &lt;MajorVersion&gt; required&quot;.">version_check_error()</a> </dd></dl>
 
 </div>
@@ -526,7 +526,7 @@ template&lt;<a class="el" href="group__cppemacs__conversions.html#ga21cfcfb2f7e1
 </div><div class="memdoc">
 
 <p>Perform an arbitrary conversion from Emacs. </p>
-<dl class="section warning"><dt>Warning</dt><dd>This throws an exception (via <a class="el" href="structcppemacs_1_1envw.html#aa343c86e3e82410365f74c0fb0421cc0" title="Check for non-local exit, and throw an exception if there is one.">maybe_non_local_exit()</a>) if Emacs is in a non-local exit state, since the return value is typically meaningless. Conversions themselves are also encouraged to throw exceptions for this reason.</dd></dl>
+<dl class="section warning"><dt>Warning</dt><dd>This throws an exception (via <a class="el" href="structcppemacs_1_1envw.html#ac88fcc9737bb4736a2fc165954b0d04a" title="Check for non-local exit, and throw an exception if there is one.">maybe_non_local_exit()</a>) if Emacs is in a non-local exit state, since the return value is typically meaningless. Conversions themselves are also encouraged to throw exceptions for this reason.</dd></dl>
 <dl class="section see"><dt>See also</dt><dd>from_emacs_convertible for what values can be converted.</dd></dl>
 <p><a class="el" href="structcppemacs_1_1cell.html#accd34273cde7212352b07c7f3b736767" title="Convert this cell to the given C++ type. See Type Conversions.">cell::extract()</a> which is often more convenient. </p>
 
@@ -885,7 +885,7 @@ template&lt;<a class="el" href="group__cppemacs__conversions.html#ga2ac10d5f485b
 </div><div class="memdoc">
 
 <p>Perform an arbitrary conversion to Emacs. </p>
-<dl class="section warning"><dt>Warning</dt><dd>This may thrown an exception, depending on the type, which is not allowed in the top-level <a class="el" href="group__cppemacs__core.html#ga7240e646f9bbe16f92711b868329cd00" title="The main entrypoint of the dynamic module. See the manual.">emacs_module_init()</a> function. If you want to be safe, use <a class="el" href="structcppemacs_1_1envw.html#aa977b2b678096adf617ec7500359d353">run_catching()</a>.</dd></dl>
+<dl class="section warning"><dt>Warning</dt><dd>This may thrown an exception, depending on the type, which is not allowed in the top-level <a class="el" href="group__cppemacs__core.html#ga7240e646f9bbe16f92711b868329cd00" title="The main entrypoint of the dynamic module. See the manual.">emacs_module_init()</a> function. If you want to be safe, use <a class="el" href="structcppemacs_1_1envw.html#a8606b3a4be19075602505b83afbb7fe6">run_catching()</a>.</dd></dl>
 <dl class="section see"><dt>See also</dt><dd>to_emacs_convertible for what values can be converted.</dd></dl>
 <p><a class="el" href="structcppemacs_1_1envw.html#ac02433ef564e008c8ffb94d9f58c8147" title="Perform an arbitrary conversion to Emacs. Synonym for inject().">operator-&gt;*()</a> for a terser alias. </p>
 
@@ -953,7 +953,7 @@ template&lt;size_t MajorVersion&gt; </div>
 <div class="line">  <a class="code hl_struct" href="structcppemacs_1_1envw.html">envw</a> env = rt-&gt;get_environment(rt);</div>
 <div class="line">  <span class="keywordflow">if</span> (!env.<a class="code hl_function" href="structcppemacs_1_1envw.html#ac40343a3ce5e040369dd433cef0f6b29">is_compatible</a>&lt;27&gt;()) <span class="keywordflow">return</span> 1;</div>
 <div class="line">}</div>
-<div class="ttc" id="astructcppemacs_1_1envw_html_ac40343a3ce5e040369dd433cef0f6b29"><div class="ttname"><a href="structcppemacs_1_1envw.html#ac40343a3ce5e040369dd433cef0f6b29">cppemacs::envw::is_compatible</a></div><div class="ttdeci">bool is_compatible() const noexcept</div><div class="ttdoc">Check if this environment supports the module API of the given Emacs major version....</div><div class="ttdef"><b>Definition</b> core.hpp:922</div></div>
+<div class="ttc" id="astructcppemacs_1_1envw_html_ac40343a3ce5e040369dd433cef0f6b29"><div class="ttname"><a href="structcppemacs_1_1envw.html#ac40343a3ce5e040369dd433cef0f6b29">cppemacs::envw::is_compatible</a></div><div class="ttdeci">bool is_compatible() const noexcept</div><div class="ttdoc">Check if this environment supports the module API of the given Emacs major version....</div><div class="ttdef"><b>Definition</b> core.hpp:1018</div></div>
 </div><!-- fragment --><dl class="section see"><dt>See also</dt><dd><a class="el" href="structcppemacs_1_1envw.html#ac66cea2ad21bfe21a0c284fbf388d663" title="Check if this environment supports the given major version&#39;s module API, and raises an error otherwis...">assert_compatible()</a> which throws an exception if the runtime check fails.</dd>
 <dd>
 <a class="el" href="structcppemacs_1_1envw.html#a46c5a5102a8f2a2adb1dd64bcff12c71" title="Like is_compatible(), but doesn&#39;t fail at compile time if the MajorVersion is newer than the one we a...">is_compatible_relaxed()</a> which returns false, instead of erroring, if the compile-time check fails. </dd></dl>
@@ -1173,10 +1173,10 @@ template&lt;size_t MajorVersion&gt; </div>
 <div class="line"> </div>
 <div class="line">  <span class="keywordflow">return</span> 0;</div>
 <div class="line">}</div>
-<div class="ttc" id="agroup__cppemacs__core_html_gabd2db90fff7d715e8649f37147f60a3a"><div class="ttname"><a href="group__cppemacs__core.html#gabd2db90fff7d715e8649f37147f60a3a">cppemacs::value</a></div><div class="ttdeci">emacs_value value</div><div class="ttdoc">Raw opaque pointer representing an Emacs value. See cell for the wrapper, and envw for functions that...</div><div class="ttdef"><b>Definition</b> core.hpp:388</div></div>
-<div class="ttc" id="agroup__cppemacs__core_html_gae0592e597dd37c49496e082012c3de92"><div class="ttname"><a href="group__cppemacs__core.html#gae0592e597dd37c49496e082012c3de92">cppemacs::emacs_env</a></div><div class="ttdeci">::emacs_env emacs_env</div><div class="ttdoc">Raw Emacs environment. You should use envw in most cases.</div><div class="ttdef"><b>Definition</b> core.hpp:373</div></div>
-<div class="ttc" id="astructcppemacs_1_1envw_html_aaa610d1bed0752f07707913d1b496693"><div class="ttname"><a href="structcppemacs_1_1envw.html#aaa610d1bed0752f07707913d1b496693">cppemacs::envw::intern</a></div><div class="ttdeci">value intern(const char *name) const noexcept</div><div class="ttdoc">Get the interned Emacs symbol with the given null-terminated ASCII name. See the manual....</div><div class="ttdef"><b>Definition</b> core.hpp:1202</div></div>
-<div class="ttc" id="astructcppemacs_1_1envw_html_abcfe6e0559744499bdc3c3e7abba5db6"><div class="ttname"><a href="structcppemacs_1_1envw.html#abcfe6e0559744499bdc3c3e7abba5db6">cppemacs::envw::make_function</a></div><div class="ttdeci">value make_function(ptrdiff_t min_arity, ptrdiff_t max_arity, emacs_function func, const char *docstring, void *data) const noexcept</div><div class="ttdoc">Make an Emacs module function from a function pointer and associated data. See the manual.</div><div class="ttdef"><b>Definition</b> core.hpp:1182</div></div>
+<div class="ttc" id="agroup__cppemacs__core_html_gabd2db90fff7d715e8649f37147f60a3a"><div class="ttname"><a href="group__cppemacs__core.html#gabd2db90fff7d715e8649f37147f60a3a">cppemacs::value</a></div><div class="ttdeci">emacs_value value</div><div class="ttdoc">Raw opaque pointer representing an Emacs value. See cell for the wrapper, and envw for functions that...</div><div class="ttdef"><b>Definition</b> core.hpp:389</div></div>
+<div class="ttc" id="agroup__cppemacs__core_html_gae0592e597dd37c49496e082012c3de92"><div class="ttname"><a href="group__cppemacs__core.html#gae0592e597dd37c49496e082012c3de92">cppemacs::emacs_env</a></div><div class="ttdeci">::emacs_env emacs_env</div><div class="ttdoc">Raw Emacs environment. You should use envw in most cases.</div><div class="ttdef"><b>Definition</b> core.hpp:374</div></div>
+<div class="ttc" id="astructcppemacs_1_1envw_html_aaa610d1bed0752f07707913d1b496693"><div class="ttname"><a href="structcppemacs_1_1envw.html#aaa610d1bed0752f07707913d1b496693">cppemacs::envw::intern</a></div><div class="ttdeci">value intern(const char *name) const noexcept</div><div class="ttdoc">Get the interned Emacs symbol with the given null-terminated ASCII name. See the manual....</div><div class="ttdef"><b>Definition</b> core.hpp:1277</div></div>
+<div class="ttc" id="astructcppemacs_1_1envw_html_abcfe6e0559744499bdc3c3e7abba5db6"><div class="ttname"><a href="structcppemacs_1_1envw.html#abcfe6e0559744499bdc3c3e7abba5db6">cppemacs::envw::make_function</a></div><div class="ttdeci">value make_function(ptrdiff_t min_arity, ptrdiff_t max_arity, emacs_function func, const char *docstring, void *data) const noexcept</div><div class="ttdoc">Make an Emacs module function from a function pointer and associated data. See the manual.</div><div class="ttdef"><b>Definition</b> core.hpp:1257</div></div>
 </div><!-- fragment --> 
 </div>
 </div>
@@ -1474,13 +1474,13 @@ template&lt;size_t MajorVersion&gt; </div>
 
 </div>
 </div>
-<a id="aa343c86e3e82410365f74c0fb0421cc0" name="aa343c86e3e82410365f74c0fb0421cc0"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aa343c86e3e82410365f74c0fb0421cc0">&#9670;&#160;</a></span>maybe_non_local_exit()</h2>
+<a id="ac88fcc9737bb4736a2fc165954b0d04a" name="ac88fcc9737bb4736a2fc165954b0d04a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac88fcc9737bb4736a2fc165954b0d04a">&#9670;&#160;</a></span>maybe_non_local_exit()</h2>
 
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;bool Unbox = CPPEMACS_ENABLE_EXCEPTION_BOXING&gt; </div>
+template&lt;class Boxer  = CPPEMACS_DEFAULT_EXCEPTION_BOXER&gt; </div>
 <table class="mlabels">
   <tr>
   <td class="mlabels-left">
@@ -1488,7 +1488,8 @@ template&lt;bool Unbox = CPPEMACS_ENABLE_EXCEPTION_BOXING&gt; </div>
         <tr>
           <td class="memname">void cppemacs::envw::maybe_non_local_exit </td>
           <td>(</td>
-          <td class="paramname"></td><td>)</td>
+          <td class="paramtype">Boxer &amp;&amp;&#160;</td>
+          <td class="paramname"><em>b</em> = <code>{}</code></td><td>)</td>
           <td> const</td>
         </tr>
       </table>
@@ -1503,9 +1504,11 @@ template&lt;bool Unbox = CPPEMACS_ENABLE_EXCEPTION_BOXING&gt; </div>
 <p>This allows using C++ stack unwinding to return control to Emacs naturally.</p>
 <dl class="tparams"><dt>Template Parameters</dt><dd>
   <table class="tparams">
-    <tr><td class="paramname">Unbox</td><td>Determines how the non-local exit should be performed: <ul>
+    <tr><td class="paramname">Boxer</td><td><p class="starttd">Determines how the non-local exit should be performed. See <a class="el" href="structcppemacs_1_1default__exception__boxer.html">default_exception_boxer</a> which describes how to override the behavior.</p>
+<p class="intertd">The default behavior depends on CPPEMACS_ENABLE_EXCEPTION_BOXING:</p>
+<ul>
 <li>If false, this method does <b>not</b> clear the pending non-local exit, and does not capture the type (signal/throw) or its data, it merely throws <a class="el" href="structcppemacs_1_1non__local__exit.html">non_local_exit</a>.</li>
-<li>If true, this method uses <a class="el" href="structcppemacs_1_1envw.html#abc22b0e8abe9817b095870cf43419e0b" title="Check for non-local exit, and throw it as a C++ exception (signalled or thrown) if there is one.">rethrow_non_local_exit()</a> (which see) to re-raise the exception. </li>
+<li>If true, this method uses <a class="el" href="structcppemacs_1_1envw.html#a55cf4de7ba8a12bf243758386e9da87e" title="Check for non-local exit, and throw it as a C++ exception (signalled or thrown) if there is one.">rethrow_non_local_exit()</a> (which see) to re-raise the exception. </li>
 </ul>
 </td></tr>
   </table>
@@ -1540,7 +1543,7 @@ template&lt;bool Unbox = CPPEMACS_ENABLE_EXCEPTION_BOXING&gt; </div>
 <p>Check if there is a non-local exit pending. </p>
 <p>Emacs lisp has two types of non-local exit: <code>signal</code> and <code>throw</code>. The semantics of both of these are that they unwind to the nearest enclosing handler that matches (<code>condition-case</code> or <code>throw</code>). A function can also simply return normally. These different statuses are described by the <a class="el" href="structcppemacs_1_1funcall__exit.html">funcall_exit</a> type.</p>
 <p>When a non-local exit (<code>signal</code> or <code>throw</code>) is pending, to ensure correct semantics, module code is expected to yield back to Emacs without performing other work. This method is used to check whether control should return to Emacs quickly. See also the <a href="https://www.gnu.org/software/emacs/manual/html_node/elisp/Module-Nonlocal.html#index-non_005flocal_005fexit_005fcheck">manual</a>.</p>
-<p>Most code may be better served by <a class="el" href="structcppemacs_1_1envw.html#aa343c86e3e82410365f74c0fb0421cc0" title="Check for non-local exit, and throw an exception if there is one.">maybe_non_local_exit()</a>, which throws C++ exceptions to handle non-local exits. <em>This</em> method is best used by code that has intricate error handling, or must be <code>noexcept</code>.</p>
+<p>Most code may be better served by <a class="el" href="structcppemacs_1_1envw.html#ac88fcc9737bb4736a2fc165954b0d04a" title="Check for non-local exit, and throw an exception if there is one.">maybe_non_local_exit()</a>, which throws C++ exceptions to handle non-local exits. <em>This</em> method is best used by code that has intricate error handling, or must be <code>noexcept</code>.</p>
 <div class="fragment"><div class="line"><span class="keywordtype">void</span> critical_noexcept_function(<a class="code hl_struct" href="structcppemacs_1_1envw.html">envw</a> env) <span class="keyword">noexcept</span> {</div>
 <div class="line">  do_something_that_might_fail(env);</div>
 <div class="line">  <span class="keywordflow">if</span> (env.non_local_exit_check()) {</div>
@@ -1549,7 +1552,7 @@ template&lt;bool Unbox = CPPEMACS_ENABLE_EXCEPTION_BOXING&gt; </div>
 <div class="line">  }</div>
 <div class="line">  <span class="comment">// ...</span></div>
 <div class="line">}</div>
-</div><!-- fragment --><dl class="section warning"><dt>Warning</dt><dd>If this returns anything other than <a class="el" href="structcppemacs_1_1funcall__exit.html#a4eb4b7d90ac22a4b9586a0d0ca6490f1">funcall_exit::return_</a>, then most other methods return meaningless values, unless specified otherwise. Functions that require meaningful values should either return as soon as possible, or use <a class="el" href="structcppemacs_1_1envw.html#aa343c86e3e82410365f74c0fb0421cc0" title="Check for non-local exit, and throw an exception if there is one.">maybe_non_local_exit()</a> to throw an exception.</dd></dl>
+</div><!-- fragment --><dl class="section warning"><dt>Warning</dt><dd>If this returns anything other than <a class="el" href="structcppemacs_1_1funcall__exit.html#a4eb4b7d90ac22a4b9586a0d0ca6490f1">funcall_exit::return_</a>, then most other methods return meaningless values, unless specified otherwise. Functions that require meaningful values should either return as soon as possible, or use <a class="el" href="structcppemacs_1_1envw.html#ac88fcc9737bb4736a2fc165954b0d04a" title="Check for non-local exit, and throw an exception if there is one.">maybe_non_local_exit()</a> to throw an exception.</dd></dl>
 <dl class="section return"><dt>Returns</dt><dd>The current <a class="el" href="structcppemacs_1_1funcall__exit.html">function exit status</a>. </dd></dl>
 
 </div>
@@ -1855,13 +1858,13 @@ template&lt;<a class="el" href="group__cppemacs__conversions.html#ga2ac10d5f485b
 
 </div>
 </div>
-<a id="abc22b0e8abe9817b095870cf43419e0b" name="abc22b0e8abe9817b095870cf43419e0b"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#abc22b0e8abe9817b095870cf43419e0b">&#9670;&#160;</a></span>rethrow_non_local_exit()</h2>
+<a id="a55cf4de7ba8a12bf243758386e9da87e" name="a55cf4de7ba8a12bf243758386e9da87e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a55cf4de7ba8a12bf243758386e9da87e">&#9670;&#160;</a></span>rethrow_non_local_exit()</h2>
 
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;bool Unbox = CPPEMACS_ENABLE_EXCEPTION_BOXING&gt; </div>
+template&lt;class Boxer  = CPPEMACS_DEFAULT_EXCEPTION_BOXER&gt; </div>
 <table class="mlabels">
   <tr>
   <td class="mlabels-left">
@@ -1869,7 +1872,8 @@ template&lt;bool Unbox = CPPEMACS_ENABLE_EXCEPTION_BOXING&gt; </div>
         <tr>
           <td class="memname">void cppemacs::envw::rethrow_non_local_exit </td>
           <td>(</td>
-          <td class="paramname"></td><td>)</td>
+          <td class="paramtype">Boxer &amp;&amp;&#160;</td>
+          <td class="paramname"><em>b</em> = <code>{}</code></td><td>)</td>
           <td> const</td>
         </tr>
       </table>
@@ -1881,10 +1885,10 @@ template&lt;bool Unbox = CPPEMACS_ENABLE_EXCEPTION_BOXING&gt; </div>
 </div><div class="memdoc">
 
 <p>Check for <a class="el" href="structcppemacs_1_1envw.html#a80ad1e199f0427ce4620583594a16261">non-local exit</a>, and throw it as a C++ exception (<a class="el" href="structcppemacs_1_1signalled.html">signalled</a> or <a class="el" href="structcppemacs_1_1thrown.html">thrown</a>) if there is one. </p>
-<p>Unlike <a class="el" href="structcppemacs_1_1envw.html#aa343c86e3e82410365f74c0fb0421cc0">maybe_non_local_exit()</a>, this method <b>always</b> clears the pending non-local exit, and does capture the type and its data.</p>
+<p>Unlike <a class="el" href="structcppemacs_1_1envw.html#ac88fcc9737bb4736a2fc165954b0d04a">maybe_non_local_exit()</a>, this method is expected to clear the pending non-local exit, and to capture the type and its data.</p>
 <dl class="tparams"><dt>Template Parameters</dt><dd>
   <table class="tparams">
-    <tr><td class="paramname">Unbox</td><td>Whether <code>cppemacs--exception</code> signals should be re-raised as their captured C++ exceptions.</td></tr>
+    <tr><td class="paramname">Boxer</td><td>The exception boxing handler. The default is that, when <a class="el" href="group__cppemacs__optional.html#ga5e72e9fb5c689de1fa34c5f44157a80d">CPPEMACS_ENABLE_EXCEPTION_BOXING</a> is true, <code>cppemacs--exception</code> signals are re-raised as their captured C++ exceptions. See <a class="el" href="structcppemacs_1_1default__exception__boxer.html">default_exception_boxer</a> which describes how to override this behavior.</td></tr>
   </table>
   </dd>
 </dl>
@@ -1892,20 +1896,20 @@ template&lt;bool Unbox = CPPEMACS_ENABLE_EXCEPTION_BOXING&gt; </div>
   <table class="exception">
     <tr><td class="paramname">signal</td><td>If a signal is pending. </td></tr>
     <tr><td class="paramname">thrown</td><td>If a throw is pending. </td></tr>
-    <tr><td class="paramname">...</td><td>Any C++ exception, if <code>Unbox</code> is true and a boxed one is pending </td></tr>
+    <tr><td class="paramname">...</td><td>Any C++ exception that <code>Boxer</code> chooses to raise. </td></tr>
   </table>
   </dd>
 </dl>
 
 </div>
 </div>
-<a id="aa977b2b678096adf617ec7500359d353" name="aa977b2b678096adf617ec7500359d353"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aa977b2b678096adf617ec7500359d353">&#9670;&#160;</a></span>run_catching()</h2>
+<a id="a8606b3a4be19075602505b83afbb7fe6" name="a8606b3a4be19075602505b83afbb7fe6"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a8606b3a4be19075602505b83afbb7fe6">&#9670;&#160;</a></span>run_catching()</h2>
 
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
-template&lt;bool Box = CPPEMACS_ENABLE_EXCEPTION_BOXING, typename F &gt; </div>
+template&lt;class Boxer  = CPPEMACS_DEFAULT_EXCEPTION_BOXER, typename F &gt; </div>
 <table class="mlabels">
   <tr>
   <td class="mlabels-left">
@@ -1914,8 +1918,18 @@ template&lt;bool Box = CPPEMACS_ENABLE_EXCEPTION_BOXING, typename F &gt; </div>
           <td class="memname">auto cppemacs::envw::run_catching </td>
           <td>(</td>
           <td class="paramtype">F &amp;&amp;&#160;</td>
-          <td class="paramname"><em>f</em></td><td>)</td>
-          <td> const -&gt; <a class="el" href="group__cppemacs__core.html#gac178ba75a935094d28d7b37e083e2804">detail::invoke_result_t</a>&lt;F&gt; </td>
+          <td class="paramname"><em>f</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">Boxer &amp;&amp;&#160;</td>
+          <td class="paramname"><em>b</em> = <code>{}</code>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td> const -&gt; <a class="el" href="group__cppemacs__core.html#gac178ba75a935094d28d7b37e083e2804">detail::invoke_result_t</a>&lt;F&gt; </td>
         </tr>
       </table>
   </td>
@@ -1928,7 +1942,8 @@ template&lt;bool Box = CPPEMACS_ENABLE_EXCEPTION_BOXING, typename F &gt; </div>
 <p>Run <code>f()</code> and catch all exceptions, propagating them to Emacs via <code>signal</code> or <code>throw</code>. </p>
 <dl class="section note"><dt>Note</dt><dd>This should be used in procedures which have to be <code>noexcept</code>, like <a class="el" href="group__cppemacs__core.html#ga7240e646f9bbe16f92711b868329cd00" title="The main entrypoint of the dynamic module. See the manual.">emacs_module_init()</a> which is directly called from <code>module-load</code>. Some forms, like <a class="el" href="group__cppemacs__utilities.html#ga67e111365e428a5fc759b439a10b5ef2" title="Make a module_function with the given minimum and maximum arity.">make_module_function()</a> and <a class="el" href="group__cppemacs__utilities.html#ga18fe9586cb561bd3a4609527052e502e" title="Make a spreader module function with the given minimum and maximum arity.">make_spreader_function()</a> implicitly wrap their function argument with this, so you might not need to worry about this.</dd></dl>
 <p>If <code>noexcept(f())</code> is true, then this simply calls the function directly, and no exception handling is done. Otherwise the return type must be void, or default-constructible, so that something can be returned when an exception is thrown.</p>
-<p>Caught exceptions are converted as follows:</p>
+<p>Caught exceptions are converted via the <code>Boxer</code> parameter, which will be called with <code>b.handle_current(*this)</code> during exception handling (as for <code>std::current_exception</code>).</p>
+<p>By default the behaviour is as follows, where <code>Box = CPPEMACS_ENABLE_EXCEPTION_BOXING</code>:</p>
 <ul>
 <li>If a non-local exit is pending when the exception is caught, do nothing.</li>
 <li>If it is <a class="el" href="structcppemacs_1_1signalled.html">signalled</a> or <a class="el" href="structcppemacs_1_1thrown.html">thrown</a>, raise it with <a class="el" href="structcppemacs_1_1envw.html#a5126e7614215b819a8d12b3b2232820f">non_local_exit_signal()</a> or <a class="el" href="structcppemacs_1_1envw.html#a45b3a28471c8f02ffaf28f8501d8e97d">non_local_exit_throw()</a>, respectively.</li>
@@ -1940,14 +1955,14 @@ template&lt;bool Box = CPPEMACS_ENABLE_EXCEPTION_BOXING, typename F &gt; </div>
 </ul>
 </li>
 </ul>
-<p>In all cases, the <a class="el" href="structcppemacs_1_1envw.html#a80ad1e199f0427ce4620583594a16261">non-local exit status </a> will be <code>signal</code> or <code>throw</code> if an exception was caught.</p>
+<p>In all cases (whether or not <code>Boxer</code> is customized), the <a class="el" href="structcppemacs_1_1envw.html#a80ad1e199f0427ce4620583594a16261">non-local exit status </a> will be <code>signal</code> or <code>throw</code> if an exception was caught. If this is not ensured by the provided <code>Boxer</code>, the program will abort via <code>std::terminate()</code>.</p>
 <div class="fragment"><div class="line"><a class="code hl_struct" href="structcppemacs_1_1envw.html">envw</a> env = ..;</div>
-<div class="line">env.<a class="code hl_function" href="structcppemacs_1_1envw.html#aa977b2b678096adf617ec7500359d353">run_catching</a>([]() {</div>
+<div class="line">env.<a class="code hl_function" href="structcppemacs_1_1envw.html#a8606b3a4be19075602505b83afbb7fe6">run_catching</a>([]() {</div>
 <div class="line">  <span class="keywordflow">throw</span> std::runtime_error(<span class="stringliteral">&quot;This will be an Emacs error&quot;</span>);</div>
 <div class="line">});</div>
 </div><!-- fragment --><dl class="tparams"><dt>Template Parameters</dt><dd>
   <table class="tparams">
-    <tr><td class="paramname">Box</td><td>Controls the behavior when catching general exceptions. </td></tr>
+    <tr><td class="paramname">Boxer</td><td>Controls the behavior when catching general exceptions. See <a class="el" href="structcppemacs_1_1default__exception__boxer.html">default_exception_boxer</a> which describes how to override the behavior. </td></tr>
   </table>
   </dd>
 </dl>

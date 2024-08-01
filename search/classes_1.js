@@ -1,7 +1,4 @@
 var searchData=
 [
-  ['envw_0',['envw',['../structcppemacs_1_1envw.html',1,'cppemacs']]],
-  ['eread_5fliteral_1',['eread_literal',['../structcppemacs_1_1literals_1_1eread__literal.html',1,'cppemacs::literals']]],
-  ['estring_5fliteral_2',['estring_literal',['../structcppemacs_1_1literals_1_1estring__literal.html',1,'cppemacs::literals']]],
-  ['expected_5ftype_5ft_3',['expected_type_t',['../structcppemacs_1_1expected__type__t.html',1,'cppemacs']]]
+  ['default_5fexception_5fboxer_0',['default_exception_boxer',['../structcppemacs_1_1default__exception__boxer.html',1,'cppemacs']]]
 ];
