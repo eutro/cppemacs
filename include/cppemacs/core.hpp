@@ -50,8 +50,6 @@
 #endif
 
 #ifndef CPPEMACS_MODULE_INIT_HEADER_HACK
-/** @addtogroup cppemacs_optional
- *@{*/
 #  ifdef _MSC_VER
 #    define CPPEMACS_MODULE_INIT_HEADER_HACK 1
 #  else
@@ -63,10 +61,11 @@
  * This is also required on MSVC to work around the fact that
  * `<emacs-module.h>` uses a `__cplusplus` comparison to declare
  * noexcept, which isn't correct on MSVC either.
+ *
+ * @ingroup cppemacs_optional
  */
 #    define CPPEMACS_MODULE_INIT_HEADER_HACK 0
 #  endif
-/**@}*/
 #endif
 
 #if CPPEMACS_MODULE_INIT_HEADER_HACK
@@ -244,6 +243,7 @@ namespace cppemacs {}
  * @defgroup cppemacs_core Core Types
  *
  * @brief Core wrapper type definitions for the Emacs module API.
+ * @{ @}
  */
 
 /**
@@ -251,7 +251,6 @@ namespace cppemacs {}
  *
  * @brief Optional features, which can be enabled with pre-defined macros.
  *
- * @addtogroup cppemacs_optional
  * @{
  */
 #ifndef CPPEMACS_ENABLE_GMPXX
@@ -268,8 +267,7 @@ namespace cppemacs {}
  * @brief Define as 1 before including <@ref cppemacs/core.hpp> to more tightly
  * integrate Emacs signals with C++ exceptions, at the cost of performance.
  *
- * Specifically, unless overridden with their `Unbox` or `Box` template
- * parameters:
+ * Specifically, unless overridden with their `Boxing` template parameters:
  *
  * - @ref cppemacs::envw::maybe_non_local_exit() "envw::maybe_non_local_exit()"
  *   will @ref cppemacs::envw::rethrow_non_local_exit() "rethrow" the non-local
@@ -282,6 +280,9 @@ namespace cppemacs {}
  *   exceptions as `user-ptr`s of `std::exception_ptr`s, and @ref
  *   cppemacs::envw::rethrow_non_local_exit() "envw::rethrow_non_local_exit()"
  *   unboxes them.
+ *
+ * @see CPPEMACS_DEFAULT_EXCEPTION_BOXER for more fine-grained control
+ * over the default `Boxing` parameter.
  */
 #  define CPPEMACS_ENABLE_EXCEPTION_BOXING 0
 #endif
@@ -422,7 +423,7 @@ using emacs_runtime = ::emacs_runtime;
  * other platforms.
  *
  * If you have your own export header, such as with CMake
- * `GenerateExportHeader`, you might need to put <br><code>#define
+ * `GenerateExportHeader`, you might need to put <br><code>\#define
  * CPPEMACS_EXPORT MY_LIBRARY_EXPORT</code> before including this
  * file, so it matches emacs_module_init().
  */
@@ -434,7 +435,7 @@ using emacs_runtime = ::emacs_runtime;
  * @brief The main entrypoint of the dynamic module.
  * @manual{Module-Initialization.html#index-emacs_005fmodule_005finit-1}
  *
- * @info A dynamic module is a shared library from which this function
+ * @note A dynamic module is a shared library from which this function
  * can be loaded. Dynamic modules also have to be GPL compatible, and
  * export a `plugin_is_GPL_compatible` symbol to indicate this
  * fact. Exposing these symbols requires extra steps in some cases,
@@ -835,6 +836,101 @@ inline value to_emacs(expected_type_t<value>, emacs_env *, value x) { return x; 
 inline std::string from_emacs(expected_type_t<std::string>, emacs_env *raw_env, value val) noexcept;
 #endif
 
+namespace detail {
+template <bool Box> inline void do_box_exceptions(emacs_env *raw) noexcept;
+template <bool Box> inline void do_rethrow(emacs_env *raw);
+};
+
+/**
+ * @brief The default exception boxing type.
+ *
+ * This implements the default behavior described by @ref
+ * envw::run_catching(), @ref envw::maybe_non_local_exit(), and @ref
+ * envw::rethrow_non_local_exit(), which is documented on those
+ * methods.
+ *
+ * This type defines the three methods which are used to control the
+ * exception behavior. Clients can derive from this type to customise
+ * the behavior.
+ *
+ * @see CPPEMACS_ENABLE_EXCEPTION_BOXING and
+ * CPPEMACS_DEFAULT_EXCEPTION_BOXER which can be used to override
+ * the default exception boxing behavior.
+ */
+template <bool Box = CPPEMACS_ENABLE_EXCEPTION_BOXING>
+struct default_exception_boxer {
+  /**
+   * @brief Handle the current C++ exception (from a `catch` block),
+   * and re-raise it to Emacs.
+   *
+   * This is called by @ref envw::run_catching() to catch the
+   * exception. The environment @b must have a non-local exit pending
+   * when this returns, or the program will abort.
+   */
+  void handle_current(emacs_env *raw) { detail::do_box_exceptions<Box>(raw); }
+
+  /**
+   * @brief Clear and raise the current non-local exit, preserving the data.
+   *
+   * This is called directly by @ref envw::rethrow_non_local_exit() to
+   * throw the exception to C++. This should return normally if no
+   * non-local exit is pending.
+   */
+  void do_rethrow_exit(emacs_env *raw) { detail::do_rethrow<Box>(raw); }
+
+  /**
+   * @brief Raise a C++ exception based on the current non-local exit status.
+   *
+   * This is called by @ref envw::maybe_non_local_exit() when a @ref
+   * envw::non_local_exit_check() is true. It is expected to raise a
+   * C++ exception, but may or may not clear the non-local exit status.
+   */
+  void do_maybe_exit(emacs_env *raw) {
+    CPPEMACS_MAYBE_IF_CONSTEXPR(Box) {
+      do_rethrow_exit(raw);
+    } else {
+      throw non_local_exit();
+    }
+  }
+};
+
+// exceptions, these belong in conversions still
+
+/** @brief Try to perform some expensive, but more faithful,
+ * conversions between C++ and Emacs non-local exits. */
+using try_box_exceptions = default_exception_boxer<true>;
+/** @brief Only perform cheap conversion between C++ and Emacs non-local exits. */
+using dont_box_exceptions = default_exception_boxer<false>;
+
+#ifdef CPPEMACS_DEFAULT_EXCEPTION_BOXER
+static_assert(
+  !CPPEMACS_ENABLE_EXCEPTION_BOXING,
+  "CPPEMACS_ENABLE_EXCEPTION_BOXING and CPPEMACS_DEFAULT_EXCEPTION_BOXER cannot both be specified"
+);
+#else
+#  if CPPEMACS_ENABLE_EXCEPTION_BOXING
+#    define CPPEMACS_DEFAULT_EXCEPTION_BOXER ::cppemacs::try_box_exceptions
+#  else
+/**
+ * @brief The default `Boxer` used by @link
+ * cppemacs::envw::run_catching envw::run_catching() @endlink, @link
+ * cppemacs::envw::maybe_non_local_exit() envw::maybe_non_local_exit()
+ * @endlink and @link cppemacs::envw::rethrow_non_local_exit()
+ * envw::rethrow_non_local_exit(). @endlink
+ *
+ * This can be overridden by defining it before including <@ref
+ * cppemacs/core.hpp>.
+ *
+ * @see @ref ::cppemacs::try_box_exceptions and @ref
+ * ::cppemacs::dont_box_exceptions, which are the default for when
+ * CPPEMACS_ENABLE_EXCEPTION_BOXING is true or false, respectively;
+ * and ::cppemacs::default_exception_boxer which describes how to
+ * extend the default behavior.
+ */
+#    define CPPEMACS_DEFAULT_EXCEPTION_BOXER ::cppemacs::dont_box_exceptions
+#  endif
+#endif
+
 /**@}*/
 /** @addtogroup cppemacs_core
  * @{ */
@@ -1059,45 +1155,23 @@ public:
    * @brief Check for @ref non_local_exit_check() "non-local exit", and throw it
    * as a C++ exception (@ref signalled or @ref thrown) if there is one.
    *
-   * Unlike @ref maybe_non_local_exit(), this method @b always clears the
-   * pending non-local exit, and does capture the type and its data.
+   * Unlike @ref maybe_non_local_exit(), this method is expected to
+   * clear the pending non-local exit, and to capture the type and its
+   * data.
    *
-   * @tparam Unbox Whether `cppemacs--exception` signals
-   * should be re-raised as their captured C++ exceptions.
+   * @tparam Boxer The exception boxing handler. The default is that,
+   * when @ref CPPEMACS_ENABLE_EXCEPTION_BOXING is true,
+   * `cppemacs--exception` signals are re-raised as their captured C++
+   * exceptions. See @ref default_exception_boxer which describes how
+   * to override this behavior.
    *
    * @throws signal If a signal is pending.
    * @throws thrown If a throw is pending.
-   * @throws ... Any C++ exception, if `Unbox` is true and a boxed one is pending
+   * @throws ... Any C++ exception that `Boxer` chooses to raise.
    */
-  template <bool Unbox = CPPEMACS_ENABLE_EXCEPTION_BOXING>
-  void rethrow_non_local_exit() const noexcept(false) {
-    value symbol, data;
-    funcall_exit kind = non_local_exit_get(symbol, data);
-    if (!kind) return;
-    non_local_exit_clear();
-    if (kind == funcall_exit::signal_) {
-      CPPEMACS_MAYBE_IF_CONSTEXPR (Unbox) {
-        if (eq(symbol, intern("error"))) {
-          value msg = funcall(intern("car"), {data});
-          std::string msg_string = from_emacs(expected_type_t<std::string>{}, *this, msg);
-          if (non_local_exit_check()) {
-            non_local_exit_clear();
-          } else {
-            throw std::runtime_error(std::move(msg_string));
-          }
-        } if (eq(symbol, intern("cppemacs--exception"))) {
-          auto eptr = reinterpret_cast<std::exception_ptr *>(get_user_ptr(data));
-          if (non_local_exit_check()) {
-            non_local_exit_clear();
-          } else if (eptr && *eptr) {
-            std::rethrow_exception(*eptr);
-          }
-        }
-      }
-      throw signalled(symbol, data);
-    } else {
-      throw thrown(symbol, data);
-    }
+  template <class Boxer = CPPEMACS_DEFAULT_EXCEPTION_BOXER>
+  void rethrow_non_local_exit(Boxer &&b = {}) const noexcept(false) {
+    std::forward<Boxer>(b).do_rethrow_exit(*this);
   }
 
   /**
@@ -1107,8 +1181,13 @@ public:
    * This allows using C++ stack unwinding to return control to Emacs
    * naturally.
    *
-   * @tparam Unbox Determines how the non-local exit should be performed:
-   * @parblock
+   * @tparam Boxer @parblock Determines how the non-local exit should be
+   * performed. See @ref default_exception_boxer which describes how
+   * to override the behavior.
+   *
+   * The default behavior depends
+   * on @ref CPPEMACS_ENABLE_EXCEPTION_BOXING:
+   * 
    * - If false, this method does @b not clear the pending non-local exit, and
    *   does not capture the type (signal/throw) or its data, it merely throws
    *   @ref non_local_exit.
@@ -1117,14 +1196,10 @@ public:
    *   re-raise the exception.
    * @endparblock
    */
-  template <bool Unbox = CPPEMACS_ENABLE_EXCEPTION_BOXING>
-  void maybe_non_local_exit() const noexcept(false) {
+  template <class Boxer = CPPEMACS_DEFAULT_EXCEPTION_BOXER>
+  void maybe_non_local_exit(Boxer &&b = {}) const noexcept(false) {
     if (non_local_exit_check()) {
-      CPPEMACS_MAYBE_IF_CONSTEXPR (Unbox) {
-        rethrow_non_local_exit<Unbox>();
-      } else {
-        throw non_local_exit{};
-      }
+      std::forward<Boxer>(b).do_maybe_exit(*this);
     }
   }
 
@@ -1392,87 +1467,14 @@ public:
 
 private:
   // F doesn't throw
-  template <typename BoxV, typename F, detail::enable_if_t<noexcept(std::declval<F>()()), bool> = true>
-  auto run_catching_internal(BoxV, F &&f) const noexcept -> detail::invoke_result_t<F> {
+  template <class Boxer, typename F, detail::enable_if_t<noexcept(std::declval<F>()()), bool> = true>
+  auto run_catching_internal(Boxer &&, F &&f) const noexcept -> detail::invoke_result_t<F> {
     return std::forward<F>(f)();
   }
 
-  static void exception_ptr_fin(void *v) noexcept {
-    delete reinterpret_cast<std::exception_ptr*>(v);
-  }
-
-  /* Extracted to a non-generic (over F) function, to reduce code size, and
-   * for the (not correctness-bearing) `static bool is_init;`. */
-  template <bool Box>
-  void run_catching_handle_current(std::integral_constant<bool, Box>) const noexcept {
-    if (non_local_exit_check()) return;
-    try {
-      try {
-        throw;
-      } catch (const signalled &s) {
-        non_local_exit_signal(s.symbol, s.data);
-      } catch (const thrown &s) {
-        non_local_exit_throw(s.symbol, s.data);
-      } catch (const non_local_exit &) {
-        CPPEMACS_MAYBE_IF_CONSTEXPR(Box) {
-          throw;
-        } else {
-          funcall(
-            intern("error"),
-            {make_string("Expected non-local exit")}
-          );
-        }
-      } catch (const std::exception &err) {
-        CPPEMACS_MAYBE_IF_CONSTEXPR(Box) {
-          // std::runtime_error is thrown directly as error
-          if (typeid(err) != typeid(std::runtime_error)) {
-            throw;
-          }
-        }
-        const char *str = err.what();
-        funcall(
-          intern("error"),
-          {make_string(str, std::char_traits<char>::length(str))}
-        );
-      }
-    } catch (...) {
-      CPPEMACS_MAYBE_IF_CONSTEXPR(Box) {
-        static bool is_init = false;
-        value tag = intern("cppemacs--exception");
-        if (!is_init) {
-          funcall(intern("define-error"), {
-              tag,
-              make_string("Opaque C++ exception")
-            });
-          is_init = true;
-        }
-
-        if (!non_local_exit_check()) {
-          auto eptr = new std::exception_ptr(std::current_exception());
-          value uptr = make_user_ptr(
-            &envw::exception_ptr_fin,
-            static_cast<void *>(eptr)
-          );
-          if (non_local_exit_check()) {
-            // delete if it didn't make it to the GC
-            delete eptr;
-          } else {
-            funcall(intern("signal"), {tag, uptr});
-          }
-        }
-      } else {
-        funcall(
-          intern("error"),
-          {make_string("Unrecognised exception")}
-        );
-      }
-    }
-    assert(non_local_exit_check());
-  }
-
   // F might throw
-  template <typename BoxV, typename F, detail::enable_if_t<!noexcept(std::declval<F>()()), bool> = true>
-  auto run_catching_internal(BoxV, F &&f) const noexcept -> detail::invoke_result_t<F> {
+  template <class Boxer, typename F, detail::enable_if_t<!noexcept(std::declval<F>()()), bool> = true>
+  auto run_catching_internal(Boxer &&b, F &&f) const noexcept -> detail::invoke_result_t<F> {
     using return_type = detail::invoke_result_t<F>;
     static_assert(
       std::is_void<return_type>::value ||
@@ -1482,7 +1484,10 @@ private:
     try {
       return std::forward<F>(f)();
     } catch(...) {
-      run_catching_handle_current(BoxV{});
+      std::forward<Boxer>(b).handle_current(*this);
+      if (!non_local_exit_check()) {
+        std::terminate(); // Boxer was bad
+      }
     }
     return return_type();
   }
@@ -1503,7 +1508,11 @@ public:
    * or default-constructible, so that something can be returned when an
    * exception is thrown.
    *
-   * Caught exceptions are converted as follows:
+   * Caught exceptions are converted via the @p Boxer parameter, which will be called with
+   * `b.handle_current(*this)` during exception handling (as for `std::current_exception`).
+   *
+   * By default the behaviour is as follows, where <code>Box =
+   * CPPEMACS_ENABLE_EXCEPTION_BOXING</code>:
    *
    * - If a non-local exit is pending when the exception is caught, do nothing.
    *
@@ -1525,9 +1534,11 @@ public:
    *
    *   - If `Box` is false, signal an unspecified `error`.
    *
-   * In all cases, the @link cppemacs::envw::non_local_exit_check() non-local
-   * exit status @endlink will be `signal` or `throw` if an exception was
-   * caught.
+   * In all cases (whether or not `Boxer` is customized), the @link
+   * cppemacs::envw::non_local_exit_check() non-local exit status
+   * @endlink will be `signal` or `throw` if an exception was caught.
+   * If this is not ensured by the provided `Boxer`, the program will
+   * abort via `std::terminate()`.
    *
    * @code
    * envw env = ..;
@@ -1536,13 +1547,13 @@ public:
    * });
    * @endcode
    *
-   * @tparam Box Controls the behavior when catching general exceptions.
+   * @tparam Boxer Controls the behavior when catching general
+   * exceptions. See @ref default_exception_boxer which describes how
+   * to override the behavior.
    */
-  template <bool Box = CPPEMACS_ENABLE_EXCEPTION_BOXING, typename F>
-  auto run_catching(F &&f) const noexcept -> detail::invoke_result_t<F> {
-    return run_catching_internal(
-      std::integral_constant<bool, Box>{},
-      std::forward<F>(f));
+  template <class Boxer = CPPEMACS_DEFAULT_EXCEPTION_BOXER, typename F>
+  auto run_catching(F &&f, Boxer &&b = {}) const noexcept -> detail::invoke_result_t<F> {
+    return run_catching_internal(std::forward<Boxer>(b), std::forward<F>(f));
   }
 
   /**
@@ -1596,6 +1607,110 @@ public:
     }
   }
 };
+
+namespace detail {
+
+inline void exception_ptr_fin(void *v) noexcept {
+  delete reinterpret_cast<std::exception_ptr*>(v);
+}
+
+template <bool Box> inline void do_box_exceptions(emacs_env *raw) noexcept {
+  envw env = raw;
+  if (env.non_local_exit_check()) return;
+  try {
+    try {
+      throw;
+    } catch (const signalled &s) {
+      env.non_local_exit_signal(s.symbol, s.data);
+    } catch (const thrown &s) {
+      env.non_local_exit_throw(s.symbol, s.data);
+    } catch (const non_local_exit &) {
+      CPPEMACS_MAYBE_IF_CONSTEXPR(Box) {
+        throw;
+      } else {
+        env.funcall(
+          env.intern("error"),
+          {env.make_string("Expected non-local exit")}
+        );
+      }
+    } catch (const std::exception &err) {
+      CPPEMACS_MAYBE_IF_CONSTEXPR(Box) {
+        // std::runtime_error is thrown directly as error
+        if (typeid(err) != typeid(std::runtime_error)) {
+          throw;
+        }
+      }
+      const char *str = err.what();
+      env.funcall(
+        env.intern("error"),
+        {env.make_string(str, std::char_traits<char>::length(str))}
+      );
+    }
+  } catch (...) {
+    CPPEMACS_MAYBE_IF_CONSTEXPR(Box) {
+      static bool is_init = false;
+      value tag = env.intern("cppemacs--exception");
+      if (!is_init) {
+        env.funcall(env.intern("define-error"), {
+            tag,
+            env.make_string("Opaque C++ exception")
+          });
+        is_init = true;
+      }
+
+      if (!env.non_local_exit_check()) {
+        auto eptr = new std::exception_ptr(std::current_exception());
+        value uptr = env.make_user_ptr(
+          &exception_ptr_fin,
+          static_cast<void *>(eptr)
+        );
+        if (env.non_local_exit_check()) {
+          // delete if it didn't make it to the GC
+          delete eptr;
+        } else {
+          env.funcall(env.intern("signal"), {tag, uptr});
+        }
+      }
+    } else {
+      env.funcall(
+        env.intern("error"),
+        {env.make_string("Unrecognised exception")}
+      );
+    }
+  }
+}
+
+template <bool Box> inline void do_rethrow(emacs_env *raw) {
+  envw env = raw;
+  value symbol, data;
+  funcall_exit kind = env.non_local_exit_get(symbol, data);
+  if (!kind) return;
+  env.non_local_exit_clear();
+  if (kind == funcall_exit::signal_) {
+    CPPEMACS_MAYBE_IF_CONSTEXPR (Box) {
+      if (env.eq(symbol, env.intern("error"))) {
+        value msg = env.funcall(env.intern("car"), {data});
+        std::string msg_string = from_emacs(expected_type_t<std::string>{}, env, msg);
+        if (env.non_local_exit_check()) {
+          env.non_local_exit_clear();
+        } else {
+          throw std::runtime_error(std::move(msg_string));
+        }
+      } if (env.eq(symbol, env.intern("cppemacs--exception"))) {
+        auto eptr = reinterpret_cast<std::exception_ptr *>(env.get_user_ptr(data));
+        if (env.non_local_exit_check()) {
+          env.non_local_exit_clear();
+        } else if (eptr && *eptr) {
+          std::rethrow_exception(*eptr);
+        }
+      }
+    }
+    throw signalled(symbol, data);
+  } else {
+    throw thrown(symbol, data);
+  }
+}
+}
 
 #ifndef CPPEMACS_DOXYGEN_RUNNING
 // specializations for is_compatible, these must be defined out of line, GCC complains otherwise
@@ -1770,7 +1885,7 @@ inline cell from_emacs(expected_type_t<cell>, envw nv, value x) { return cell(nv
 inline value to_emacs(expected_type_t<cell>, envw, cell x) { return x; }
 #endif
 
-/** @} */
+/**@}*/
 
 /**
  * @addtogroup cppemacs_conversions

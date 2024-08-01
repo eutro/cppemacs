@@ -337,7 +337,7 @@ struct module_function {
  *
  * @param max_arity
  * The maximum number of arguments the function can be
- * invoked with. <br> If this is @ref emacs_variadic_function, the function can be called
+ * invoked with. <br> If this is `emacs_variadic_function`, the function can be called
  * with any number of arguments `>= min_arity`.
  *
  * @param doc The documentation string of the
@@ -351,7 +351,7 @@ struct module_function {
  * `min_arity <= nargs <= max_arity`, and return a <code>::value</code>. It will
  * be wrapped with envw::run_catching().
  *
- * @returns A <code>@ref "module_function"<F></code>, suitable for @ref
+ * @returns A <code>@ref "module_function"\<F></code>, suitable for @ref
  * cppemacs_conversions "conversion" to an Emacs function.
  *
  * @see make_spreader_function() which automatically unpacks the arguments.

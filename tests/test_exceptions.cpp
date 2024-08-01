@@ -99,7 +99,7 @@ SCOPED_CASE("exceptions") {
       )
     );
     WHEN("evaluating " << expr) {
-      auto eval_expr = [&]() { (eval(expr), envp.rethrow_non_local_exit<false>()); };
+      auto eval_expr = [&]() { (eval(expr), envp.rethrow_non_local_exit<dont_box_exceptions>()); };
       switch (sig_type) {
       case funcall_exit::signal_:
         THEN("a signal is raised") {
@@ -131,7 +131,7 @@ SCOPED_SCENARIO("transparently throwing exceptions") {
         spreader_arity<0>(),
         "Throw `super_cool_boxed_exception'",
         [](envw env) {
-          return env.run_catching<true>([]() -> value {
+          return env.run_catching<try_box_exceptions>([]() -> value {
             throw super_cool_boxed_exception();
           });
         });
@@ -139,7 +139,7 @@ SCOPED_SCENARIO("transparently throwing exceptions") {
       WHEN("it is called") {
         THEN("the correct exception is thrown") {
           REQUIRE_THROWS_AS(
-            (throw_cool_exn(), envp.rethrow_non_local_exit<true>()),
+            (throw_cool_exn(), envp.rethrow_non_local_exit<try_box_exceptions>()),
             super_cool_boxed_exception
           );
         }
@@ -155,7 +155,7 @@ SCOPED_SCENARIO("transparently throwing exceptions") {
         using Catch::Matchers::Message;
         REQUIRE_THROWS_MATCHES(
           ((envp->*"eval")(expr),
-           envp.rethrow_non_local_exit<true>()),
+           envp.rethrow_non_local_exit<try_box_exceptions>()),
           std::runtime_error,
           Message("This is an error")
         );
