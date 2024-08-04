@@ -1849,6 +1849,8 @@ public:
 
   /** @brief Return `true` if this value is `eq` to some other. */
   bool operator==(value o) const noexcept { return nv.eq(val, o); }
+  /** @brief Return `true` if this value is `eq` to some other. */
+  bool operator==(const cell &o) const noexcept { return nv.eq(val, o.val); }
 
   /**
    * @brief Convert this cell to the given C++ type. See @ref cppemacs_conversions.
