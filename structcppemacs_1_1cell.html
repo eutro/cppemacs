@@ -207,6 +207,9 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a94f3ad99b8bf6cec0d3aac88065588b2" id="r_a94f3ad99b8bf6cec0d3aac88065588b2"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structcppemacs_1_1cell.html#a94f3ad99b8bf6cec0d3aac88065588b2">operator==</a> (<a class="el" href="group__cppemacs__core.html#gabd2db90fff7d715e8649f37147f60a3a">value</a> o) const noexcept</td></tr>
 <tr class="memdesc:a94f3ad99b8bf6cec0d3aac88065588b2"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return <code>true</code> if this value is <code>eq</code> to some other.  <br /></td></tr>
 <tr class="separator:a94f3ad99b8bf6cec0d3aac88065588b2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa4eae278e3af70cb57c4089507cf102b" id="r_aa4eae278e3af70cb57c4089507cf102b"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structcppemacs_1_1cell.html#aa4eae278e3af70cb57c4089507cf102b">operator==</a> (const <a class="el" href="structcppemacs_1_1cell.html">cell</a> &amp;o) const noexcept</td></tr>
+<tr class="memdesc:aa4eae278e3af70cb57c4089507cf102b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Return <code>true</code> if this value is <code>eq</code> to some other.  <br /></td></tr>
+<tr class="separator:aa4eae278e3af70cb57c4089507cf102b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:accd34273cde7212352b07c7f3b736767" id="r_accd34273cde7212352b07c7f3b736767"><td class="memTemplParams" colspan="2">template&lt;<a class="el" href="group__cppemacs__conversions.html#ga21cfcfb2f7e16b51932eb3df84af4de4">FROM_EMACS_TYPE</a> T&gt; </td></tr>
 <tr class="memitem:accd34273cde7212352b07c7f3b736767"><td class="memTemplItemLeft" align="right" valign="top">T&#160;</td><td class="memTemplItemRight" valign="bottom"><a class="el" href="structcppemacs_1_1cell.html#accd34273cde7212352b07c7f3b736767">extract</a> () const noexcept(false)</td></tr>
 <tr class="memdesc:accd34273cde7212352b07c7f3b736767"><td class="mdescLeft">&#160;</td><td class="mdescRight">Convert this cell to the given C++ type. See <a class="el" href="group__cppemacs__conversions.html">Type Conversions</a>.  <br /></td></tr>
@@ -352,7 +355,7 @@ template&lt;<a class="el" href="group__cppemacs__conversions.html#ga21cfcfb2f7e1
 <div class="fragment"><div class="line"><a class="code hl_struct" href="structcppemacs_1_1cell.html">cell</a> x = ...;</div>
 <div class="line"><span class="keywordtype">int</span> x_int = x.<a class="code hl_function" href="structcppemacs_1_1cell.html#accd34273cde7212352b07c7f3b736767">extract</a>&lt;<span class="keywordtype">int</span>&gt;();</div>
 <div class="line"><span class="keywordtype">double</span> x_double = x.<a class="code hl_function" href="structcppemacs_1_1cell.html#accd34273cde7212352b07c7f3b736767">extract</a>&lt;<span class="keywordtype">double</span>&gt;();</div>
-<div class="ttc" id="astructcppemacs_1_1cell_html_accd34273cde7212352b07c7f3b736767"><div class="ttname"><a href="structcppemacs_1_1cell.html#accd34273cde7212352b07c7f3b736767">cppemacs::cell::extract</a></div><div class="ttdeci">T extract() const noexcept(false)</div><div class="ttdoc">Convert this cell to the given C++ type. See Type Conversions.</div><div class="ttdef"><b>Definition</b> core.hpp:1865</div></div>
+<div class="ttc" id="astructcppemacs_1_1cell_html_accd34273cde7212352b07c7f3b736767"><div class="ttname"><a href="structcppemacs_1_1cell.html#accd34273cde7212352b07c7f3b736767">cppemacs::cell::extract</a></div><div class="ttdeci">T extract() const noexcept(false)</div><div class="ttdoc">Convert this cell to the given C++ type. See Type Conversions.</div><div class="ttdef"><b>Definition</b> core.hpp:1867</div></div>
 </div><!-- fragment --> 
 </div>
 </div>
@@ -528,8 +531,36 @@ template&lt;<a class="el" href="group__cppemacs__conversions.html#ga2ac10d5f485b
 
 </div>
 </div>
+<a id="aa4eae278e3af70cb57c4089507cf102b" name="aa4eae278e3af70cb57c4089507cf102b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa4eae278e3af70cb57c4089507cf102b">&#9670;&#160;</a></span>operator==() <span class="overload">[1/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool cppemacs::cell::operator== </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="structcppemacs_1_1cell.html">cell</a> &amp;&#160;</td>
+          <td class="paramname"><em>o</em></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">noexcept</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Return <code>true</code> if this value is <code>eq</code> to some other. </p>
+
+</div>
+</div>
 <a id="a94f3ad99b8bf6cec0d3aac88065588b2" name="a94f3ad99b8bf6cec0d3aac88065588b2"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a94f3ad99b8bf6cec0d3aac88065588b2">&#9670;&#160;</a></span>operator==()</h2>
+<h2 class="memtitle"><span class="permalink"><a href="#a94f3ad99b8bf6cec0d3aac88065588b2">&#9670;&#160;</a></span>operator==() <span class="overload">[2/2]</span></h2>
 
 <div class="memitem">
 <div class="memproto">

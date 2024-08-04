@@ -19,6 +19,6 @@ var searchData=
   ['operator_2d_3e_2a_16',['operator-&gt;*',['../structcppemacs_1_1envw.html#ac02433ef564e008c8ffb94d9f58c8147',1,'cppemacs::envw::operator-&gt;*()'],['../structcppemacs_1_1cell.html#a3e93d6aae063dc818d259f6fb1f992ae',1,'cppemacs::cell::operator-&gt;*()']]],
   ['operator_3c_3c_17',['operator&lt;&lt;',['../group__cppemacs__utilities.html#ga6caa3e6b2c2e18a503f9b1a8585a6bfb',1,'cppemacs']]],
   ['operator_3d_18',['operator=',['../structcppemacs_1_1cell.html#a4e6dfca5936b810b4ed4fe3f08a1d2ab',1,'cppemacs::cell']]],
-  ['operator_3d_3d_19',['operator==',['../structcppemacs_1_1cell.html#a94f3ad99b8bf6cec0d3aac88065588b2',1,'cppemacs::cell']]],
+  ['operator_3d_3d_19',['operator==',['../structcppemacs_1_1cell.html#a94f3ad99b8bf6cec0d3aac88065588b2',1,'cppemacs::cell::operator==(value o) const noexcept'],['../structcppemacs_1_1cell.html#aa4eae278e3af70cb57c4089507cf102b',1,'cppemacs::cell::operator==(const cell &amp;o) const noexcept']]],
   ['operator_5b_5d_20',['operator[]',['../structcppemacs_1_1spreader__restargs.html#ae8924f255669d1df01b3a04deba730fe',1,'cppemacs::spreader_restargs']]]
 ];

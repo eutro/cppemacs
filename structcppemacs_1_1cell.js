@@ -10,6 +10,7 @@ var structcppemacs_1_1cell =
     [ "operator->", "structcppemacs_1_1cell.html#a6c5d6159e11f8c6916728ac6cf35f6e5", null ],
     [ "operator->*", "structcppemacs_1_1cell.html#a3e93d6aae063dc818d259f6fb1f992ae", null ],
     [ "operator=", "structcppemacs_1_1cell.html#a4e6dfca5936b810b4ed4fe3f08a1d2ab", null ],
+    [ "operator==", "structcppemacs_1_1cell.html#aa4eae278e3af70cb57c4089507cf102b", null ],
     [ "operator==", "structcppemacs_1_1cell.html#a94f3ad99b8bf6cec0d3aac88065588b2", null ],
     [ "set", "structcppemacs_1_1cell.html#a84dd764ee87e1aa0b2bfe6421e96ca9d", null ],
     [ "type", "structcppemacs_1_1cell.html#a4cf0b642ec60331361ea8caa08cf684b", null ],
