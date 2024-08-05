@@ -61,6 +61,15 @@ SCOPED_CASE("exceptions") {
                [](envw) -> value
                { throw non_local_exit{}; }));
 
+    defalias("cppemacs-fun6", envp->*make_spreader_function(
+               spreader_variadic<0>(),
+               "Call `ignore'.",
+               [](envw nv, spreader_restargs rest) {
+                 nv.funcall(nv->*"ignore", rest.size(), rest.data());
+                 nv.maybe_non_local_exit();
+                 return false;
+               }));
+
     auto [expr, sig_type] = GENERATE(
       std::make_pair(
         R"((signal 'error '("normal error")))"_Eread,
@@ -96,6 +105,11 @@ SCOPED_CASE("exceptions") {
       std::make_pair(
         R"((cppemacs-fun5))"_Eread,
         funcall_exit::signal_
+      ),
+
+      std::make_pair(
+        R"((cppemacs-fun6 1 2 3))"_Eread,
+        funcall_exit::return_
       )
     );
     WHEN("evaluating " << expr) {

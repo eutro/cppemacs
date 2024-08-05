@@ -570,7 +570,9 @@ auto make_spreader_function(
   static_assert(is_variadic || MaxArity >= MinArity, "MaxArity must be greater than or equal to MinArity");
   static_assert(MinArity >= 0, "MinArity must be nonnegative");
   return make_module_function(
-    MinArity, MaxArity, doc,
+    MinArity,
+    is_variadic ? emacs_variadic_function : MaxArity,
+    doc,
     detail::spread_invoker<MinArity, MaxArity, is_variadic,
     detail::remove_reference_t<F>>(std::forward<F>(f)));
 }
